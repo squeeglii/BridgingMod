@@ -9,10 +9,15 @@ import net.fabricmc.api.ModInitializer;
 
 import java.util.logging.Logger;
 
-public class PlacementMod implements ClientModInitializer {
+public class PlacementMod implements ClientModInitializer, ModInitializer {
 
     @Override
     public void onInitializeClient() {
+
+    }
+
+    @Override
+    public void onInitialize() {
 
     }
 }

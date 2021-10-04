@@ -18,6 +18,9 @@
 
   "environment": "*",
   "entrypoints": {
+    "main": [
+      "me.cg360.mod.placement.PlacementMod"
+    ],
     "client": [
       "me.cg360.mod.placement.PlacementMod"
     ]

@@ -38,7 +38,7 @@ public class RayTraceHandler {
     }
 
     public static double getEntityRange(PlayerEntity player) {
-        return 4d; //TODO: Check if the player is in survival or creative
+        return 3d; //TODO: Check if the player is in survival or creative
     }
 
     /** *
