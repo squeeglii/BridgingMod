@@ -38,7 +38,7 @@ public class RayTraceHandler {
     }
 
     public static double getEntityRange(PlayerEntity player) {
-        return 3d; //TODO: Check if the player is in survival or creative
+        return 5d; //TODO: Check if the player is in survival or creative
     }
 
     /** *
@@ -52,7 +52,7 @@ public class RayTraceHandler {
         Vec3d pos = player.getPos();
         double posX = player.prevX + (pos.x - player.prevX);
         double posY = player.prevY + (pos.y - player.prevY);
-        if (player instanceof PlayerEntity) posY += ((PlayerEntity) player).getEyeHeight(player.getPose());
+        if (player instanceof PlayerEntity) posY += player.getEyeHeight(player.getPose());
         double posZ = player.prevZ + (pos.z - player.prevZ);
         Vec3d rayPos = new Vec3d(posX, posY, posZ);
 

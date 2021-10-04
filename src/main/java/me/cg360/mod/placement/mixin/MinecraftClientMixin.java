@@ -1,7 +1,5 @@
 package me.cg360.mod.placement.mixin;
 
-import com.mojang.datafixers.util.Function4;
-import me.cg360.mod.placement.PlacementMod;
 import me.cg360.mod.placement.raytrace.ReacharoundTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -11,8 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
-import net.minecraft.resource.DataPackSettings;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -56,6 +52,7 @@ public abstract class MinecraftClientMixin {
     @Inject(at = @At("HEAD"), method = "doItemUse()V", cancellable = true)
     public void onItemUse(CallbackInfo info) {
         PlayerEntity player = MinecraftClient.getInstance().player;
+        
         if(player != null) {
 
             for(Hand hand : Hand.values()) {
@@ -85,14 +82,12 @@ public abstract class MinecraftClientMixin {
                             }
 
                         } else if (res == ActionResult.CONSUME) {
-                            BlockPos placedPos = pos;
-                            BlockState state = player.world.getBlockState(placedPos);
+                            BlockState state = player.world.getBlockState(pos);
                             BlockSoundGroup soundType = state.getSoundGroup();
 
                             if(player.world instanceof ServerWorld) {
-                                ((ServerWorld) player.world).playSound(null, placedPos, soundType.getPlaceSound(), SoundCategory.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+                                player.world.playSound(null, pos, soundType.getPlaceSound(), SoundCategory.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
                             }
-
                         }
 
                         if (player.isCreative() && stack.getCount() < count && !remote) stack.setCount(count);
