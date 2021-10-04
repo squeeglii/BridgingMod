@@ -13,13 +13,16 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ReacharoundTracker {
 
-    public static double leniency = 0.8;
+    public static final String PLACE_TEXT_VERTICAL = "| + |";
+    public static final String PLACE_TEXT_HORIZONTAL = "- + -";
+
+    public static double leniency = 0.8; //TODO: Make this configurable.
+    public static boolean verticalOrientation = true;
 
     public static Pair<BlockPos, Direction> currentTarget = null;
     public static int ticksDisplayed = 0;
@@ -46,11 +49,13 @@ public class ReacharoundTracker {
 
             Pair<BlockPos, Direction>  target = getVerticalTarget(player, world, rayPos, ray);
             if(target != null) {
+                verticalOrientation = true;
                 return target;
             }
 
             target = getHorizontalTarget(player, world, rayPos, ray);
             if(target != null) {
+                verticalOrientation = false;
                 return target;
             }
         }
