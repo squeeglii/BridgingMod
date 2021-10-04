@@ -1,4 +1,4 @@
-# Survival Builder's Toolkit 🛠
+# Survival Building Toolkit (Fabric) 🛠
 
 I plan for this Minecraft mod to include a collection of utilities that can be used when building in Survival Mode without the need 
 for a server-side mod.

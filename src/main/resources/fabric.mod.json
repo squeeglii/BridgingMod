@@ -3,14 +3,14 @@
   "id": "placementpog",
   "version": "${version}",
 
-  "name": "Builders Toolkit",
+  "name": "Survival Building Toolkit",
   "description": "A collection of building utilities to be used when building, primarily in survival.",
   "authors": [
     "CG360"
   ],
   "contact": {
     "homepage": "",
-    "sources": "https://github.com/CloudG360/placement-from-quark"
+    "sources": "https://github.com/CloudG360/Survival-Building-Toolkit"
   },
 
   "license": "CC0-1.0",
