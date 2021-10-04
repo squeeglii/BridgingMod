@@ -52,7 +52,7 @@ public abstract class MinecraftClientMixin {
     @Inject(at = @At("HEAD"), method = "doItemUse()V", cancellable = true)
     public void onItemUse(CallbackInfo info) {
         PlayerEntity player = MinecraftClient.getInstance().player;
-        
+
         if(player != null) {
 
             for(Hand hand : Hand.values()) {
