@@ -3,8 +3,8 @@
   "id": "placementpog",
   "version": "${version}",
 
-  "name": "Placement Poggers",
-  "description": "I stole some placement stuff from Quark. No regrets.",
+  "name": "Builders Toolkit",
+  "description": "A collection of building utilities to be used when building, primarily in survival.",
   "authors": [
     "CG360"
   ],
