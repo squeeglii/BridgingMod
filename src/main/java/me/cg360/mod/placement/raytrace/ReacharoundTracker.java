@@ -16,11 +16,8 @@ import net.minecraft.world.World;
 
 public class ReacharoundTracker {
 
-    public static final String PLACE_TEXT_VERTICAL = "| + |";
-    public static final String PLACE_TEXT_HORIZONTAL = "- + -";
-
     public static double leniency = 1f;
-    public static boolean verticalOrientation = true;
+    private static boolean verticalOrientation = true;
 
     public static Pair<BlockPos, Direction> currentTarget = null;
     public static int ticksDisplayed = 0;
@@ -100,4 +97,7 @@ public class ReacharoundTracker {
         return item instanceof BlockItem;
     }
 
+    public static boolean isInVerticalOrientation() {
+        return ReacharoundTracker.verticalOrientation;
+    }
 }
