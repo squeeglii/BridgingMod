@@ -4,6 +4,8 @@ import me.cg360.mod.placement.raytrace.ReacharoundTracker;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +21,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,6 +33,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MinecraftClientMixin {
 
     @Shadow @Nullable public abstract ClientPlayNetworkHandler getNetworkHandler();
+
+    @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
+
+    @Shadow @Nullable public ClientPlayerEntity player;
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
@@ -51,46 +58,33 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("HEAD"), method = "doItemUse()V")
     public void onItemUse(CallbackInfo info) {
-        PlayerEntity player = MinecraftClient.getInstance().player;
-
-        if(player != null) {
+        if(this.player != null) {
 
             for(Hand hand : Hand.values()) {
-                ItemStack stack = player.getStackInHand(hand);
-                Pair<BlockPos, Direction> pair = ReacharoundTracker.getPlayerReacharoundTarget(player);
+                ItemStack itemStack = this.player.getStackInHand(hand);
+                Pair<BlockPos, Direction> pair = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
 
                 if (pair != null) {
                     BlockPos pos = pair.getLeft();
                     Direction dir = pair.getRight();
 
-                    if (!player.canPlaceOn(pos, dir, stack)) return;
-                    int count = stack.getCount();
+                    if (!this.player.canPlaceOn(pos, dir, itemStack)) return;
+                    if(this.interactionManager == null) return;
 
-                    BlockHitResult result = new BlockHitResult(new Vec3d(0.5F, 1F, 0.5F), dir, pos, false);
-                    ItemUsageContext context = new ItemUsageContext(player, hand, result);
-                    boolean remote = !player.world.isClient;
-                    Item item = stack.getItem();
-                    ActionResult res = remote ? ActionResult.SUCCESS : item.useOnBlock(context);
+                    BlockHitResult blockHitResult = new BlockHitResult(new Vec3d(0, 1F, 0).add(Vec3d.ofCenter(pos)), dir, pos, false);
 
-                    if (res != ActionResult.PASS) {
+                    int i = itemStack.getCount();
+                    ActionResult blockPlaceResult = this.interactionManager.interactBlock(this.player, hand, blockHitResult);
 
-                        if (res == ActionResult.SUCCESS){
-                            player.swingHand(hand);
-
-                            if(this.getNetworkHandler() != null) {
-                                this.getNetworkHandler().sendPacket(new PlayerInteractBlockC2SPacket(hand, result, 0));
-                            }
-
-                        } else if (res == ActionResult.CONSUME) {
-                            BlockState state = player.world.getBlockState(pos);
-                            BlockSoundGroup soundType = state.getSoundGroup();
-
-                            if(player.world instanceof ServerWorld) {
-                                player.world.playSound(null, pos, soundType.getPlaceSound(), SoundCategory.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+                    if (blockPlaceResult.isAccepted()) {
+                        if (blockPlaceResult.shouldSwingHand()) {
+                            this.player.swingHand(hand);
+                            if (!itemStack.isEmpty() && (itemStack.getCount() != i || this.interactionManager.hasCreativeInventory())) {
+                                MinecraftClient.getInstance().gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
                             }
                         }
 
-                        if (player.isCreative() && stack.getCount() < count && !remote) stack.setCount(count);
+                        return;
                     }
                 }
             }

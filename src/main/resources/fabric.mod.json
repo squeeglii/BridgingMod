@@ -29,6 +29,8 @@
     "placementpog.mixins.json"
   ],
 
+  "accessWidener": "placementpog.accesswidener",
+
   "depends": {
     "fabricloader": ">=0.14.8",
     "fabric": "*",
