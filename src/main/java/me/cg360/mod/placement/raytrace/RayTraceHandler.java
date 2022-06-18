@@ -1,7 +1,7 @@
 package me.cg360.mod.placement.raytrace;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.Vector3d;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Pair;
@@ -33,7 +33,13 @@ public class RayTraceHandler {
     }
 
     public static double getEntityRange(PlayerEntity player) {
-        return 5d; //TODO: Check if the player is in survival or creative
+        if(player.getWorld().isClient) {
+            MinecraftClient cli = MinecraftClient.getInstance();
+            ClientPlayerInteractionManager interact = cli.interactionManager;
+            if (interact != null)
+                return interact.getReachDistance();
+        }
+        return 5d;
     }
 
     /** *
