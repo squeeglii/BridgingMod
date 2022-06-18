@@ -1,17 +1,19 @@
-# Survival Building Toolkit (Fabric) 🛠
+# Bridging
 
-I plan for this Minecraft mod to include a collection of utilities that can be used when building in Survival Mode without the need 
-for a server-side mod.
+![Version: Commons](https://img.shields.io/badge/Version-1.1-blue?style=for-the-badge)
+![Version: Commons](https://img.shields.io/badge/Java-17-red?style=for-the-badge)
+![Version: Commons](https://img.shields.io/badge/Fabric-1.19.0-orange?style=for-the-badge)
 
-### ⚠ Multiplayer Warning: 
-Do not use this mod on servers which don't outright approve of its use. It can provide an unfair competitive advantage
-and may trigger anticheats. You have been warned! ^^
+A fabric port of Quark's Reach-Around Placement feature with some tweaks to refine its experience. It's similar to Minecraft:
+Bedrock Edition's bridging features. Blocks can be placed horizontally for adjacent block gaps or vertically underneath
+blocks where the interactable surface is not visible.
 
 
-### Current Features:
+Changes from Quark include:
 
- - Reacharound Placement:
-   - Ported from [Quark (Forge)](https://github.com/VazkiiMods/Quark) with some modifications
-     - [🔗 License](https://github.com/VazkiiMods/Quark/blob/master/LICENSE.md)
-   - Allows for Bedrock-Style bridging where you can place blocks in the air in front of or below the block you're 
-     currently standing on.
+- Coloured crosshair icons when a block can be placed using the modified placement
+  - Located at `assets/placementpog/textures/gui/placement_icons.png`
+- More forgiving placement logic
+  - Can place when under 2 block ceilings
+  - Target areas are larger
+

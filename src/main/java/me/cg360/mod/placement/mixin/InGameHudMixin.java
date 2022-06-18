@@ -21,12 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
 
-    private static final int FADE_IN_TICKS = 40;
-
     @Shadow private int scaledHeight;
     @Shadow private int scaledWidth;
-
-    @Shadow private int ticks;
 
     @Inject(method = "Lnet/minecraft/client/gui/hud/InGameHud;renderCrosshair(Lnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V", shift = At.Shift.AFTER, ordinal = 0))
     public void renderPlacementAssistText(MatrixStack matrices, CallbackInfo ci) {
