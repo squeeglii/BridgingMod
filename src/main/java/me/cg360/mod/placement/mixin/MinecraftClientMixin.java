@@ -49,7 +49,7 @@ public abstract class MinecraftClientMixin {
     }
 
 
-    @Inject(at = @At("HEAD"), method = "doItemUse()V", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "doItemUse()V")
     public void onItemUse(CallbackInfo info) {
         PlayerEntity player = MinecraftClient.getInstance().player;
 
@@ -78,7 +78,7 @@ public abstract class MinecraftClientMixin {
                             player.swingHand(hand);
 
                             if(this.getNetworkHandler() != null) {
-                                this.getNetworkHandler().sendPacket(new PlayerInteractBlockC2SPacket(hand, result));
+                                this.getNetworkHandler().sendPacket(new PlayerInteractBlockC2SPacket(hand, result, 0));
                             }
 
                         } else if (res == ActionResult.CONSUME) {
