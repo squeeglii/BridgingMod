@@ -19,7 +19,7 @@ public class ReacharoundTracker {
     public static final String PLACE_TEXT_VERTICAL = "| + |";
     public static final String PLACE_TEXT_HORIZONTAL = "- + -";
 
-    public static double leniency = 0.8; //TODO: Make this configurable.
+    public static double leniency = 1f;
     public static boolean verticalOrientation = true;
 
     public static Pair<BlockPos, Direction> currentTarget = null;
@@ -27,7 +27,7 @@ public class ReacharoundTracker {
 
 
 
-    public static Pair<BlockPos, Direction>  getPlayerReacharoundTarget(PlayerEntity player) {
+    public static Pair<BlockPos, Direction> getPlayerReacharoundTarget(PlayerEntity player) {
 
         // Check if either stack can be placed, else don't show the guide.
         if(!(isSupportedStack(player.getMainHandStack()) || isSupportedStack(player.getOffHandStack()))) return null;
@@ -39,7 +39,7 @@ public class ReacharoundTracker {
         Vec3d rayPos = rayDetails.getLeft();
         Vec3d ray = rayDetails.getRight().multiply(range);
 
-        HitResult regularCollision = RayTraceHandler.rayTrace(player, world, rayPos, ray, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
+        HitResult regularCollision = RayTraceHandler.rayTrace(player, world, rayPos, rayPos.add(ray), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
 
         // If there is not a normal block for the player to hit, attempt to raycast
         // reacharound targets.
@@ -64,10 +64,11 @@ public class ReacharoundTracker {
     private static Pair<BlockPos, Direction> getVerticalTarget(PlayerEntity player, World world, Vec3d rayPos, Vec3d ray) {
         if(player.getPitch() < 0) return null;
 
-        rayPos = rayPos.add(new Vec3d(0, leniency, 0));
-        HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
+        Vec3d endPos = rayPos.add(new Vec3d(0, leniency, 0)).add(ray);
+        HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, endPos, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
 
         if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
+
             BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().down();
             BlockState state = world.getBlockState(pos);
 
@@ -80,8 +81,9 @@ public class ReacharoundTracker {
 
     private static Pair<BlockPos, Direction> getHorizontalTarget(PlayerEntity player, World world, Vec3d rayPos, Vec3d ray) {
         Direction dir = Direction.fromRotation(player.headYaw);
-        rayPos = rayPos.add(new Vec3d(-(leniency * dir.getOffsetX()), 0, -(leniency * dir.getOffsetZ())));
-        HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, ray, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
+
+        Vec3d newPos = rayPos.add(new Vec3d(-(leniency * dir.getOffsetX()), 0, -(leniency * dir.getOffsetZ())));
+        HitResult take2Res = RayTraceHandler.rayTrace(player, world, newPos, newPos.add(ray), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
 
         if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
             BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().offset(dir);
