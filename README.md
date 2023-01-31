@@ -3,8 +3,10 @@
 [![Minecraft Version](https://img.shields.io/badge/Minecraft-v1.19.2-blue?style=flat-square)](https://www.minecraft.net/en-us)
 [![Fabric Loader Version](https://img.shields.io/badge/Fabric_Loader-v0.14.13-AA8554?style=flat-square)](https://fabricmc.net/use/installer/)
 
-[![Attribution-NonCommercial-ShareAlike 3.0 Unported](https://img.shields.io/badge/License-GNU_GPL_3.0-mint?style=flat-square)]()
+[![Attribution-NonCommercial-ShareAlike 3.0 Unported](https://img.shields.io/badge/License-GNU_GPL_3.0-mint?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 
+[![Curseforge](https://cf.way2muchnoise.eu/full_bridging-mod_downloads.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/bridging-mod)
+[![Modrinth](https://modrinth-utils.vercel.app/api/badge/downloads?id=lO3s8hjs&badge_style=flat-square)](https://modrinth.com/mod/bridging-mod)
 
 A fabric/quilt port of [Quark's](https://github.com/VazkiiMods/Quark) Reach-Around Placement feature with some tweaks to 
 refine its experience. It's similar to Minecraft: Bedrock Edition's bridging features. Blocks can be placed 
