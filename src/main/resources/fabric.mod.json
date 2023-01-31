@@ -32,9 +32,9 @@
   "accessWidener": "placementpog.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.14.8",
+    "fabricloader": ">=0.14.13",
+    "fabric": "*",
     "minecraft": "1.19.x",
     "java": ">=17"
-  },
-  "suggests": { }
+  }
 }
