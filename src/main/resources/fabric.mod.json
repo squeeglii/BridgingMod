@@ -3,14 +3,14 @@
   "id": "placementpog",
   "version": "${version}",
 
-  "name": "Survival Building Toolkit",
-  "description": "A collection of building utilities to be used when building, primarily in survival.",
+  "name": "Bridging Mod",
+  "description": "A Fabric implementation of Quark's bridging mechanics",
   "authors": [
     "CG360"
   ],
   "contact": {
     "homepage": "",
-    "sources": "https://github.com/CloudG360/Survival-Building-Toolkit"
+    "sources": "https://github.com/CloudG360/BridgingMod"
   },
 
   "license": "CC0-1.0",
@@ -33,7 +33,6 @@
 
   "depends": {
     "fabricloader": ">=0.14.8",
-    "fabric": "*",
     "minecraft": "1.19.x",
     "java": ">=17"
   },
