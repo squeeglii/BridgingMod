@@ -32,16 +32,9 @@ public abstract class MinecraftClientMixin {
         ReacharoundTracker.currentTarget = null;
 
         Player player = Minecraft.getInstance().player;
-        if(player != null) {
+        if(player != null)
             ReacharoundTracker.currentTarget = ReacharoundTracker.getPlayerReacharoundTarget(player);
-        }
 
-        if(ReacharoundTracker.currentTarget != null) {
-            if(ReacharoundTracker.ticksDisplayed < 5) ReacharoundTracker.ticksDisplayed++;
-
-        } else {
-            ReacharoundTracker.ticksDisplayed = 0;
-        }
     }
 
 

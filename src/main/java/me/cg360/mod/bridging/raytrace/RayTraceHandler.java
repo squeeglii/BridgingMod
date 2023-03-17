@@ -15,7 +15,6 @@ public class RayTraceHandler {
 
     public static HitResult rayTrace(Entity entity, Level world, Vec3 startPos, Vec3 endPos, ClipContext.Block blockMode, ClipContext.Fluid fluidMode) {
         ClipContext context = new ClipContext(startPos, endPos, blockMode, fluidMode, entity);
-
         return world.clip(context);
     }
 
@@ -25,12 +24,14 @@ public class RayTraceHandler {
      * @return the distance at which the player can place.
      */
     public static double getEntityRange(Player player) {
-        if(player.getLevel().isClientSide) {
+        if(!player.getLevel().isClientSide) {
             Minecraft cli = Minecraft.getInstance();
             MultiPlayerGameMode interact = cli.gameMode;
+
             if (interact != null)
                 return interact.getPickRange();
         }
+
         return 4.5d;
     }
 
@@ -42,9 +43,12 @@ public class RayTraceHandler {
         float pitch = player.xRotO + (player.getXRot() - player.xRotO);
         float yaw = player.yRotO + (player.getYRot() - player.yRotO);
         Vec3 pos = player.position();
+
         double posX = player.xo + (pos.x - player.xo);
         double posY = player.yo + (pos.y - player.yo);
-        if (player instanceof Player) posY += player.getEyeHeight(player.getPose());
+        if (player instanceof Player)
+            posY += player.getEyeHeight(player.getPose());
+
         double posZ = player.zo + (pos.z - player.zo);
         Vec3 rayPos = new Vec3(posX, posY, posZ);
 

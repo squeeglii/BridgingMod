@@ -9,13 +9,6 @@ public class BridgingMod implements ClientModInitializer, ModInitializer {
 
     public static final ResourceLocation PLACEMENT_ICONS_TEXTURE = ResourceLocation.tryBuild("bridgingmod", "textures/gui/placement_icons.png");
 
-    @Override
-    public void onInitializeClient() {
-
-    }
-
-    @Override
-    public void onInitialize() {
-
-    }
+    @Override public void onInitializeClient() { }
+    @Override public void onInitialize() { }
 }
