@@ -1,40 +1,38 @@
 {
-  "schemaVersion": 1,
-  "id": "placementpog",
-  "version": "${version}",
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
 
-  "name": "Bridging Mod",
-  "description": "A Fabric implementation of Quark's bridging mechanics",
-  "authors": [
-    "CG360"
-  ],
-  "contact": {
-    "homepage": "",
-    "sources": "https://github.com/CloudG360/BridgingMod"
-  },
+    "name": "Bridging Mod",
+    "description": "A Fabric implementation of Quark's bridging mechanics",
+    "authors": [ "CG360" ],
+    "contact": {
+        "homepage": "https://github.com/CloudG360/BridgingMod",
+        "sources": "https://github.com/CloudG360/BridgingMod"
+    },
 
-  "license": "CC0-1.0",
-  "icon": "assets/placementpog/icon.png",
+    "license": "CC0-1.0",
+    "icon": "assets/${mod_id}/icon.png",
 
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "me.cg360.mod.placement.PlacementMod"
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "me.cg360.mod.placement.PlacementMod"
+        ],
+        "client": [
+            "me.cg360.mod.placement.PlacementMod"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json"
     ],
-    "client": [
-      "me.cg360.mod.placement.PlacementMod"
-    ]
-  },
-  "mixins": [
-    "placementpog.mixins.json"
-  ],
 
-  "accessWidener": "placementpog.accesswidener",
+    "accessWidener": "${mod_id}.accesswidener",
 
-  "depends": {
-    "fabricloader": ">=0.14.13",
-    "fabric": "*",
-    "minecraft": "1.19.x",
-    "java": ">=17"
-  }
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=17"
+    }
 }

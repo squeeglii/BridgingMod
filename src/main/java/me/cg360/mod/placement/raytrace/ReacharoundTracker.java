@@ -1,48 +1,48 @@
 package me.cg360.mod.placement.raytrace;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Pair;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class ReacharoundTracker {
 
     public static double leniency = 1f;
     private static boolean verticalOrientation = true;
 
-    public static Pair<BlockPos, Direction> currentTarget = null;
+    public static Tuple<BlockPos, Direction> currentTarget = null;
     public static int ticksDisplayed = 0;
 
 
 
-    public static Pair<BlockPos, Direction> getPlayerReacharoundTarget(PlayerEntity player) {
+    public static Tuple<BlockPos, Direction> getPlayerReacharoundTarget(Player player) {
 
         // Check if either stack can be placed, else don't show the guide.
-        if(!(isSupportedStack(player.getMainHandStack()) || isSupportedStack(player.getOffHandStack()))) return null;
+        if(!(isSupportedStack(player.getMainHandItem()) || isSupportedStack(player.getOffhandItem()))) return null;
 
-        Pair<Vec3d, Vec3d> rayDetails = RayTraceHandler.getEntityParams(player);
-        World world = player.world;
+        Tuple<Vec3, Vec3> rayDetails = RayTraceHandler.getEntityParams(player);
+        Level world = player.level;
 
         double range = RayTraceHandler.getEntityRange(player);
-        Vec3d rayPos = rayDetails.getLeft();
-        Vec3d ray = rayDetails.getRight().multiply(range);
+        Vec3 rayPos = rayDetails.getA();
+        Vec3 ray = rayDetails.getB().scale(range);
 
-        HitResult regularCollision = RayTraceHandler.rayTrace(player, world, rayPos, rayPos.add(ray), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
+        HitResult regularCollision = RayTraceHandler.rayTrace(player, world, rayPos, rayPos.add(ray), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
 
         // If there is not a normal block for the player to hit, attempt to raycast
         // reacharound targets.
         if (regularCollision.getType() == HitResult.Type.MISS) {
 
-            Pair<BlockPos, Direction>  target = getVerticalTarget(player, world, rayPos, ray);
+            Tuple<BlockPos, Direction>  target = getVerticalTarget(player, world, rayPos, ray);
             if(target != null) {
                 verticalOrientation = true;
                 return target;
@@ -58,35 +58,35 @@ public class ReacharoundTracker {
         return null;
     }
 
-    private static Pair<BlockPos, Direction> getVerticalTarget(PlayerEntity player, World world, Vec3d rayPos, Vec3d ray) {
-        if(player.getPitch() < 0) return null;
+    private static Tuple<BlockPos, Direction> getVerticalTarget(Player player, Level world, Vec3 rayPos, Vec3 ray) {
+        if(player.getXRot() < 0) return null;
 
-        Vec3d endPos = rayPos.add(new Vec3d(0, leniency, 0)).add(ray);
-        HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, endPos, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
+        Vec3 endPos = rayPos.add(new Vec3(0, leniency, 0)).add(ray);
+        HitResult take2Res = RayTraceHandler.rayTrace(player, world, rayPos, endPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
 
         if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
 
-            BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().down();
+            BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().below();
             BlockState state = world.getBlockState(pos);
 
-            if (player.getPos().y - pos.getY() > 1 && (world.isAir(pos) || state.getMaterial().isReplaceable()))
-                return new Pair<>(pos, Direction.DOWN);
+            if (player.position().y - pos.getY() > 1 && (world.isEmptyBlock(pos) || state.getMaterial().isReplaceable()))
+                return new Tuple<>(pos, Direction.DOWN);
         }
 
         return null;
     }
 
-    private static Pair<BlockPos, Direction> getHorizontalTarget(PlayerEntity player, World world, Vec3d rayPos, Vec3d ray) {
-        Direction dir = Direction.fromRotation(player.headYaw);
+    private static Tuple<BlockPos, Direction> getHorizontalTarget(Player player, Level world, Vec3 rayPos, Vec3 ray) {
+        Direction dir = Direction.fromYRot(player.yHeadRot);
 
-        Vec3d newPos = rayPos.add(new Vec3d(-(leniency * dir.getOffsetX()), 0, -(leniency * dir.getOffsetZ())));
-        HitResult take2Res = RayTraceHandler.rayTrace(player, world, newPos, newPos.add(ray), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE);
+        Vec3 newPos = rayPos.add(new Vec3(-(leniency * dir.getStepX()), 0, -(leniency * dir.getStepZ())));
+        HitResult take2Res = RayTraceHandler.rayTrace(player, world, newPos, newPos.add(ray), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
 
         if (take2Res.getType() == HitResult.Type.BLOCK && take2Res instanceof BlockHitResult) {
-            BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().offset(dir);
+            BlockPos pos = ((BlockHitResult) take2Res).getBlockPos().relative(dir);
             BlockState state = world.getBlockState(pos);
 
-            if ((world.isAir(pos) || state.getMaterial().isReplaceable())) return new Pair<>(pos, dir.getOpposite());
+            if ((world.isEmptyBlock(pos) || state.getMaterial().isReplaceable())) return new Tuple<>(pos, dir.getOpposite());
         }
 
         return null;

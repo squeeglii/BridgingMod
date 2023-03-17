@@ -1,32 +1,40 @@
 plugins {
-	id 'fabric-loom' version '1.1-SNAPSHOT'
+	id 'fabric-loom' version '1.0-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
-version = project.mod_version
-group = project.maven_group
+String targetVersion = project.properties["mod_version"] == null || project.properties["mod_version"].toString().length() == 0
+		? "-indev"
+		:"-v" + project.properties["mod_version"].toString()
+project.setVersion(project.properties["minecraft_version"] + targetVersion)
 
 loom {
-	accessWidenerPath = file("src/main/resources/placementpog.accesswidener")
+	accessWidenerPath = file("src/main/resources/${project.properties["archives_base_name"].toString().toLowerCase()}.accesswidener")
+
+	runs {
+		client { runDir "run/client"}
+		server { runDir "run/server" }
+	}
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+	// Mappings
+	maven {
+		name = 'ParchmentMC'
+		url = "https://maven.parchmentmc.org/"
+	}
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
 
+		if(project.parchment_version != "")
+			parchment("org.parchmentmc.data:${project.parchment_version}@zip")
+	}
+
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
@@ -34,23 +42,40 @@ processResources {
 	inputs.property "version", project.version
 	filteringCharset "UTF-8"
 
+	// Trying to update to 1.19.4-rc3 was problematic because the mappings had
+	// a slightly different version to the dependency (rc3 vs rc.3)
+
+	// This just adds a workaround so the dependency version can be ignored when
+	// developing for a snapshot.
+	HashMap modifiedSrc = new HashMap<>(project.properties)
+	modifiedSrc.put("snapshot_version_workaround",
+			project.properties["fix_it_not_launching_for_snapshots"] == "yes"
+					? "*"
+					: project.properties["minecraft_version"]
+	)
+	modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
+
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand modifiedSrc
 	}
 }
 
+def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying correctly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	// If Javadoc is generated, this must be specified in that task too.
 	it.options.encoding = "UTF-8"
-
-	// Minecraft 1.18 upwards uses Java 17.
-	it.options.release = 17
+	if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+		it.options.release = targetJavaVersion
+	}
 }
 
 java {
+	def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+	if (JavaVersion.current() < javaVersion) {
+		toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+	}
+
+	archivesBaseName = project.archives_base_name
+
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
 	// If you remove this line, sources will not be generated.
