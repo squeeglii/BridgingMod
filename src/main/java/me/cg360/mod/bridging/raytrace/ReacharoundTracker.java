@@ -1,4 +1,4 @@
-package me.cg360.mod.placement.raytrace;
+package me.cg360.mod.bridging.raytrace;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

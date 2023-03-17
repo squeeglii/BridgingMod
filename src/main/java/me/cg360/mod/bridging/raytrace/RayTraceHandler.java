@@ -1,4 +1,4 @@
-package me.cg360.mod.placement.raytrace;
+package me.cg360.mod.bridging.raytrace;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -12,19 +12,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class RayTraceHandler {
-
-    public static HitResult rayTrace(Entity entity, Level world, Player player, ClipContext.Block blockMode, ClipContext.Fluid fluidMode) {
-        return rayTrace(entity, world, player, blockMode, fluidMode, getEntityRange(player));
-    }
-
-    public static HitResult rayTrace(Entity entity, Level world, Entity player, ClipContext.Block blockMode, ClipContext.Fluid fluidMode, double range) {
-        Tuple<Vec3, Vec3> params = getEntityParams(player);
-        return rayTrace(entity, world, params.getA(), params.getB(), blockMode, fluidMode, range);
-    }
-
-    public static HitResult rayTrace(Entity entity, Level world, Vec3 startPos, Vec3 ray, ClipContext.Block blockMode, ClipContext.Fluid fluidMode, double range) {
-        return rayTrace(entity, world, startPos, startPos.add(ray.scale(range)), blockMode, fluidMode);
-    }
 
     public static HitResult rayTrace(Entity entity, Level world, Vec3 startPos, Vec3 endPos, ClipContext.Block blockMode, ClipContext.Fluid fluidMode) {
         ClipContext context = new ClipContext(startPos, endPos, blockMode, fluidMode, entity);

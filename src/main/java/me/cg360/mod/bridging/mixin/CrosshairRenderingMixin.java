@@ -1,10 +1,10 @@
-package me.cg360.mod.placement.mixin;
+package me.cg360.mod.bridging.mixin;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import me.cg360.mod.placement.PlacementMod;
-import me.cg360.mod.placement.raytrace.ReacharoundTracker;
+import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -28,7 +28,7 @@ public class CrosshairRenderingMixin {
         if(ReacharoundTracker.currentTarget != null) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, PlacementMod.PLACEMENT_ICONS_TEXTURE);
+            RenderSystem.setShaderTexture(0, BridgingMod.PLACEMENT_ICONS_TEXTURE);
             RenderSystem.enableBlend();
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 

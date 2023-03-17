@@ -1,6 +1,6 @@
-package me.cg360.mod.placement.mixin;
+package me.cg360.mod.bridging.mixin;
 
-import me.cg360.mod.placement.raytrace.ReacharoundTracker;
+import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
