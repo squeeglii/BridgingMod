@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
-public class InGameHudMixin {
+public class CrosshairRenderingMixin {
 
     private static final int ICON_SIZE = 31;
 
-    @Shadow private int scaledHeight;
-    @Shadow private int scaledWidth;
+    @Shadow private int screenHeight;
+    @Shadow private int screenWidth;
 
-    @Inject(method = "renderCrosshair(Lnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V", shift = At.Shift.AFTER, ordinal = 0))
+    @Inject(method = "renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V", shift = At.Shift.AFTER, ordinal = 0))
     public void renderPlacementAssistText(PoseStack matrices, CallbackInfo ci) {
 
         if(ReacharoundTracker.currentTarget != null) {
@@ -32,14 +32,14 @@ public class InGameHudMixin {
             RenderSystem.enableBlend();
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-            int w = this.scaledWidth;
-            int h = this.scaledHeight;
+            int w = this.screenHeight;
+            int h = this.screenWidth;
 
             if (ReacharoundTracker.isInVerticalOrientation()) {
-                ((Gui) (Object) this).blit(matrices, ((w - ICON_SIZE) / 2), (h - ICON_SIZE) / 2, 0, 0, ICON_SIZE, ICON_SIZE);
+                GuiComponent.blit(matrices, ((w - ICON_SIZE) / 2), (h - ICON_SIZE) / 2, 0, 0, ICON_SIZE, ICON_SIZE);
 
             } else {
-                ((Gui) (Object) this).blit(matrices, ((w - ICON_SIZE) / 2), (h - ICON_SIZE) / 2, 32, 0, ICON_SIZE, ICON_SIZE);
+                GuiComponent.blit(matrices, ((w - ICON_SIZE) / 2), (h - ICON_SIZE) / 2, 32, 0, ICON_SIZE, ICON_SIZE);
             }
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

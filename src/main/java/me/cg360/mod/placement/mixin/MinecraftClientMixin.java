@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class MinecraftClientMixin {
 
-    @Shadow @Nullable public MultiPlayerGameMode interactionManager;
+    @Shadow @Nullable public MultiPlayerGameMode gameMode;
 
     @Shadow @Nullable public LocalPlayer player;
 
@@ -45,7 +45,7 @@ public abstract class MinecraftClientMixin {
     }
 
 
-    @Inject(at = @At("HEAD"), method = "doItemUse()V")
+    @Inject(at = @At("HEAD"), method = "startUseItem()V")
     public void onItemUse(CallbackInfo info) {
         if(this.player != null) {
 
@@ -58,17 +58,17 @@ public abstract class MinecraftClientMixin {
                     Direction dir = pair.getB();
 
                     if (!this.player.mayUseItemAt(pos, dir, itemStack)) return;
-                    if(this.interactionManager == null) return;
+                    if(this.gameMode == null) return;
 
                     BlockHitResult blockHitResult = new BlockHitResult(new Vec3(0, 1F, 0).add(Vec3.atCenterOf(pos)), dir, pos, false);
 
                     int i = itemStack.getCount();
-                    InteractionResult blockPlaceResult = this.interactionManager.useItemOn(this.player, hand, blockHitResult);
+                    InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
 
                     if (blockPlaceResult.consumesAction()) {
                         if (blockPlaceResult.shouldSwing()) {
                             this.player.swing(hand);
-                            if (!itemStack.isEmpty() && (itemStack.getCount() != i || this.interactionManager.hasInfiniteItems())) {
+                            if (!itemStack.isEmpty() && (itemStack.getCount() != i || this.gameMode.hasInfiniteItems())) {
                                 Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
                             }
                         }

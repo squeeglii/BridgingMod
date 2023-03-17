@@ -8,7 +8,7 @@
   ],
   "client": [
     "MinecraftClientMixin",
-    "InGameHudMixin"
+    "CrosshairRenderingMixin"
   ],
   "injectors": {
     "defaultRequire": 1
