@@ -42,17 +42,7 @@ processResources {
 	inputs.property "version", project.version
 	filteringCharset "UTF-8"
 
-	// Trying to update to 1.19.4-rc3 was problematic because the mappings had
-	// a slightly different version to the dependency (rc3 vs rc.3)
-
-	// This just adds a workaround so the dependency version can be ignored when
-	// developing for a snapshot.
 	HashMap modifiedSrc = new HashMap<>(project.properties)
-	modifiedSrc.put("snapshot_version_workaround",
-			project.properties["fix_it_not_launching_for_snapshots"] == "yes"
-					? "*"
-					: project.properties["minecraft_version"]
-	)
 	modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
 
 	filesMatching("fabric.mod.json") {

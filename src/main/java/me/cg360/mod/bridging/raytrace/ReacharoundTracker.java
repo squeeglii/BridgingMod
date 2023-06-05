@@ -29,7 +29,7 @@ public class ReacharoundTracker {
             return null;
 
         Tuple<Vec3, Vec3> rayDetails = RayTraceHandler.getEntityParams(player);
-        Level world = player.level;
+        Level world = player.level();
 
         double range = RayTraceHandler.getEntityRange(player);
         Vec3 rayPos = rayDetails.getA();
@@ -70,7 +70,7 @@ public class ReacharoundTracker {
         BlockPos pos = hitResult.getBlockPos().below();
         BlockState state = world.getBlockState(pos);
 
-        if (player.position().y - pos.getY() > 1 && (world.isEmptyBlock(pos) || state.getMaterial().isReplaceable()))
+        if (player.position().y - pos.getY() > 1 && (world.isEmptyBlock(pos) || state.canBeReplaced()))
             return new Tuple<>(pos, Direction.DOWN);
 
         return null;
@@ -88,7 +88,7 @@ public class ReacharoundTracker {
         BlockPos pos = hitResult.getBlockPos().relative(dir);
         BlockState state = world.getBlockState(pos);
 
-        if ((world.isEmptyBlock(pos) || state.getMaterial().isReplaceable()))
+        if (world.isEmptyBlock(pos) || state.canBeReplaced())
             return new Tuple<>(pos, dir.getOpposite());
 
         return null;

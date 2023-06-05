@@ -24,7 +24,7 @@ public class RayTraceHandler {
      * @return the distance at which the player can place.
      */
     public static double getEntityRange(Player player) {
-        if(!player.getLevel().isClientSide) {
+        if(!player.level().isClientSide) {
             Minecraft cli = Minecraft.getInstance();
             MultiPlayerGameMode interact = cli.gameMode;
 
