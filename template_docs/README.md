@@ -1,7 +1,7 @@
 [![](./media/banner.png)](https://github.com/CloudG360/BridgingMod)
 
-[![Minecraft Version](https://img.shields.io/badge/Minecraft-v1.20.1-blue?style=flat-square)](https://www.minecraft.net/en-us)
-[![Fabric Loader Version](https://img.shields.io/badge/Fabric_Loader-v0.14.21-AA8554?style=flat-square)](https://fabricmc.net/use/installer/)
+[![Minecraft Version](https://img.shields.io/badge/Minecraft-v${minecraft_version}-blue?style=flat-square)](https://www.minecraft.net/en-us)
+[![Fabric Loader Version](https://img.shields.io/badge/Fabric_Loader-v${loader_version}-AA8554?style=flat-square)](https://fabricmc.net/use/installer/)
 [![Attribution-NonCommercial-ShareAlike 3.0 Unported](https://img.shields.io/badge/License-GNU_GPL_3.0-mint?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 
 [![Modrinth](https://img.shields.io/modrinth/dt/lO3s8hjs?logo=modrinth&style=flat-square)](https://modrinth.com/mod/bridging-mod)
