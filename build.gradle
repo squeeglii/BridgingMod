@@ -54,7 +54,13 @@ def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
 	if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-		it.options.release = targetJavaVersion
+		it.options.release.set(targetJavaVersion)
+	}
+
+	// Shows details related to the xlint "unchecked" and "derecation" warning notes.
+	if(project.properties["show_dev_warnings"] == "true") {
+		it.options.deprecation = true
+		it.options.compilerArgs << '-Xlint:unchecked'
 	}
 }
 
