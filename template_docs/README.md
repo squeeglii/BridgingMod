@@ -16,6 +16,10 @@ some tweaks to refine the experience. It's similar to Minecraft: Bedrock Edition
 placed in horizontally adjacent block gaps or vertically underneath blocks, even if there isn't a surface to place the
 blocks on.
 
+This mod's official project pages can be found below:
+
+- [Modrinth](https://modrinth.com/mod/bridging-mod) (Preferred)
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/bridging-mod)
 
 ## ⚙️ Differences To Quark
 
