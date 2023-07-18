@@ -16,12 +16,8 @@
 
     "environment": "*",
     "entrypoints": {
-        "main": [
-            "me.cg360.mod.bridging.BridgingMod"
-        ],
-        "client": [
-            "me.cg360.mod.bridging.BridgingMod"
-        ]
+        "main": [ "me.cg360.mod.bridging.BridgingMod::init" ],
+        "client": [ "me.cg360.mod.bridging.BridgingMod::init" ]
     },
     "mixins": [
         "${mod_id}.mixins.json"

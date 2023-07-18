@@ -40,35 +40,34 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("HEAD"), method = "startUseItem()V")
     public void onItemUse(CallbackInfo info) {
-        if(this.player != null) {
+        if(this.player == null) return;
 
-            for(InteractionHand hand : InteractionHand.values()) {
-                ItemStack itemStack = this.player.getItemInHand(hand);
-                Tuple<BlockPos, Direction> pair = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
+        for(InteractionHand hand : InteractionHand.values()) {
+            ItemStack itemStack = this.player.getItemInHand(hand);
+            Tuple<BlockPos, Direction> pair = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
 
-                if (pair != null) {
-                    BlockPos pos = pair.getA();
-                    Direction dir = pair.getB();
+            if (pair == null) continue;
 
-                    if (!this.player.mayUseItemAt(pos, dir, itemStack)) return;
-                    if(this.gameMode == null) return;
+            BlockPos pos = pair.getA();
+            Direction dir = pair.getB();
 
-                    BlockHitResult blockHitResult = new BlockHitResult(new Vec3(0, 1F, 0).add(Vec3.atCenterOf(pos)), dir, pos, false);
+            if (!this.player.mayUseItemAt(pos, dir, itemStack)) return;
+            if(this.gameMode == null) return;
 
-                    int i = itemStack.getCount();
-                    InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
+            BlockHitResult blockHitResult = new BlockHitResult(new Vec3(0, 1F, 0).add(Vec3.atCenterOf(pos)), dir, pos, false);
 
-                    if (blockPlaceResult.consumesAction()) {
-                        if (blockPlaceResult.shouldSwing()) {
-                            this.player.swing(hand);
-                            if (!itemStack.isEmpty() && (itemStack.getCount() != i || this.gameMode.hasInfiniteItems())) {
-                                Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
-                            }
-                        }
+            int i = itemStack.getCount();
+            InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
 
-                        return;
+            if (blockPlaceResult.consumesAction()) {
+                if (blockPlaceResult.shouldSwing()) {
+                    this.player.swing(hand);
+                    if (!itemStack.isEmpty() && (itemStack.getCount() != i || this.gameMode.hasInfiniteItems())) {
+                        Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
                     }
                 }
+
+                return;
             }
         }
     }
