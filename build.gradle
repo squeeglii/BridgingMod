@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.2-SNAPSHOT'
+	id 'fabric-loom' version '1.2.7'
 	id 'maven-publish'
 }
 
@@ -9,15 +9,16 @@ String targetVersion = project.properties["mod_version"] == null || project.prop
 project.setVersion(project.properties["minecraft_version"] + targetVersion)
 
 loom {
-	accessWidenerPath = file(
-			"src/main/resources/" +
-			"${project.properties["archives_base_name"].toString().toLowerCase()}" +
-			".accesswidener"
-	)
+	accessWidenerPath = file("src/main/resources/bridgingmod.accesswidener")
 
 	runs {
-		client { runDir "run/client"}
-		server { runDir "run/server" }
+		client {
+			runDir "run/client"
+		}
+
+		server {
+			runDir "run/server"
+		}
 	}
 }
 
