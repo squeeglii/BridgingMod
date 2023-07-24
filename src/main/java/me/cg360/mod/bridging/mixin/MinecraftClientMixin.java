@@ -1,5 +1,7 @@
 package me.cg360.mod.bridging.mixin;
 
+import com.mojang.logging.LogUtils;
+import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -12,8 +14,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,23 +29,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MinecraftClientMixin {
 
     @Shadow @Nullable public MultiPlayerGameMode gameMode;
-
     @Shadow @Nullable public LocalPlayer player;
+    @Shadow @Nullable public HitResult hitResult;
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
         ReacharoundTracker.currentTarget = null;
 
-        Player player = Minecraft.getInstance().player;
-        if(player != null)
-            ReacharoundTracker.currentTarget = ReacharoundTracker.getPlayerReacharoundTarget(player);
+        if(this.player == null) return;
 
+        // If there's a valid block to build on in view & range, do not calculate reach-around.
+        if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) return;
+
+        ReacharoundTracker.currentTarget = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
     }
 
 
     @Inject(at = @At("HEAD"), method = "startUseItem()V")
     public void onItemUse(CallbackInfo info) {
-        if(this.player == null) return;
+        if(this.player == null)
+            return;
+
+        if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS)
+            return;
 
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);

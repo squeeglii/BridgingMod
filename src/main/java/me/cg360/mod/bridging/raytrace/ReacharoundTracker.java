@@ -1,11 +1,10 @@
 package me.cg360.mod.bridging.raytrace;
 
+import me.cg360.mod.bridging.util.GameSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,13 +24,13 @@ public class ReacharoundTracker {
     public static Tuple<BlockPos, Direction> getPlayerReacharoundTarget(Player player) {
 
         // Check if either stack can be placed, else don't show the guide.
-        if(!(isSupportedStack(player.getMainHandItem()) || isSupportedStack(player.getOffhandItem())))
+        if(!GameSupport.isHoldingPlaceable(player))
             return null;
 
         Tuple<Vec3, Vec3> rayDetails = RayTraceHandler.getEntityParams(player);
         Level world = player.level();
 
-        double range = RayTraceHandler.getEntityRange(player);
+        double range = GameSupport.getReach();
         Vec3 rayPos = rayDetails.getA();
         Vec3 ray = rayDetails.getB().scale(range);
 
@@ -92,11 +91,6 @@ public class ReacharoundTracker {
             return new Tuple<>(pos, dir.getOpposite());
 
         return null;
-    }
-
-    private static boolean isSupportedStack(ItemStack stack) {
-        if(stack == null) return false;
-        return stack.getItem() instanceof BlockItem;
     }
 
     public static boolean isInVerticalOrientation() {

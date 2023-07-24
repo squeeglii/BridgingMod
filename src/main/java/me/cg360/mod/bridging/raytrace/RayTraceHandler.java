@@ -1,7 +1,5 @@
 package me.cg360.mod.bridging.raytrace;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
@@ -16,23 +14,6 @@ public class RayTraceHandler {
     public static HitResult rayTrace(Entity entity, Level world, Vec3 startPos, Vec3 endPos, ClipContext.Block blockMode, ClipContext.Fluid fluidMode) {
         ClipContext context = new ClipContext(startPos, endPos, blockMode, fluidMode, entity);
         return world.clip(context);
-    }
-
-    /**
-     * Gets the maximum place distance for a given player.
-     * @param player the player to check
-     * @return the distance at which the player can place.
-     */
-    public static double getEntityRange(Player player) {
-        if(!player.level().isClientSide) {
-            Minecraft cli = Minecraft.getInstance();
-            MultiPlayerGameMode interact = cli.gameMode;
-
-            if (interact != null)
-                return interact.getPickRange();
-        }
-
-        return 4.5d;
     }
 
     /**
