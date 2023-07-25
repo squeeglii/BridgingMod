@@ -1,8 +1,5 @@
 package me.cg360.mod.bridging.mixin;
 
-import com.mojang.logging.LogUtils;
-import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
-import me.cg360.mod.bridging.raytrace.PathTraceHandler;
 import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -12,14 +9,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,16 +29,7 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
-        ReacharoundTracker.currentTarget = null;
-        PathTraceHandler.lastTarget = null;
-
-        if(this.player == null) return;
-
-        // If there's a valid block to build on in view & range, do not calculate reach-around.
-        if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) return;
-
-        ReacharoundTracker.currentTarget = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
-        PathTraceHandler.getClosestAssistTarget(this.player);
+        ReacharoundTracker.lastTickTarget = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
     }
 
 
@@ -58,7 +43,8 @@ public abstract class MinecraftClientMixin {
 
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);
-            Tuple<BlockPos, Direction> pair = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
+
+            Tuple<BlockPos, Direction> pair = ReacharoundTracker.lastTickTarget;
 
             if (pair == null) continue;
 
@@ -68,21 +54,24 @@ public abstract class MinecraftClientMixin {
             if (!this.player.mayUseItemAt(pos, dir, itemStack)) return;
             if(this.gameMode == null) return;
 
-            BlockHitResult blockHitResult = new BlockHitResult(new Vec3(0, 1F, 0).add(Vec3.atCenterOf(pos)), dir, pos, false);
+            Vec3 startPos = Vec3.atCenterOf(pos);
 
-            int i = itemStack.getCount();
+            BlockHitResult blockHitResult = new BlockHitResult(startPos, dir, pos, false);
+
+            int originalStackSize = itemStack.getCount();
             InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
 
-            if (blockPlaceResult.consumesAction()) {
-                if (blockPlaceResult.shouldSwing()) {
-                    this.player.swing(hand);
-                    if (!itemStack.isEmpty() && (itemStack.getCount() != i || this.gameMode.hasInfiniteItems())) {
-                        Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
-                    }
-                }
+            if (!blockPlaceResult.consumesAction()) continue;
+            if (!blockPlaceResult.shouldSwing()) return;
 
-                return;
+            this.player.swing(hand);
+            boolean stackSizeChanged = itemStack.getCount() != originalStackSize || this.gameMode.hasInfiniteItems();
+
+            if (stackSizeChanged && !itemStack.isEmpty()) {
+                Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
             }
+
+            return;
         }
     }
 }

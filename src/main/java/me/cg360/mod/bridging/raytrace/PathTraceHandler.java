@@ -14,12 +14,11 @@ import java.util.*;
 
 public class PathTraceHandler {
 
-    public static BlockPos lastTarget = null;
-
     private static final float MIN_DISTANCE = 1f;
-    private static final double DIRECTION_SIMILARITY_THRESHOLD = 0.25d;
+    private static final double DIRECTION_SIMILARITY_THRESHOLD = 0d;
 
-    public static Tuple<PlacementAlignment, BlockPos> getClosestAssistTarget(Player player) {
+
+    public static Tuple<BlockPos, Direction> getClosestAssistTarget(Player player) {
         ClientLevel level = Minecraft.getInstance().level;
 
         if(level == null)
@@ -30,7 +29,7 @@ public class PathTraceHandler {
 
         List<Direction> validSides = PathTraceHandler.getValidAssistSides(viewDirection);
 
-        PlacementAlignment alignmentIndicator = null;
+        Direction validDirection = null;
         BlockPos validPos = null;
 
         for(BlockPos pos: path) {
@@ -38,22 +37,28 @@ public class PathTraceHandler {
             if(!level.getBlockState(pos).canBeReplaced())
                 continue;
 
-            Optional<PlacementAlignment> mostAligned = validSides.stream()
-                    .map(dir -> PathTraceHandler.getAlignment(pos, dir))
-                    .filter(Objects::nonNull)
-                    .findFirst();
+            Vec3 collideMin = Vec3.atLowerCornerOf(pos);
+            Vec3 collideMax = Vec3.atLowerCornerWithOffset(pos, 1, 1, 1);
 
-            if(mostAligned.isEmpty())
+            if(player.getBoundingBox().intersects(collideMin, collideMax))
                 continue;
 
-            alignmentIndicator = mostAligned.get();
+            Optional<Direction> firstValidDirection = validSides.stream()
+                    .filter(dir -> PathTraceHandler.isValidDirection(pos, dir))
+                    .findFirst();
+
+            if(firstValidDirection.isEmpty())
+                continue;
+
+            validDirection = firstValidDirection.get();
             validPos = pos;
             break;
         }
 
-        lastTarget = validPos;
+        if(validDirection == null || validPos == null)
+            return null;
 
-        return new Tuple<>(alignmentIndicator, validPos);
+        return new Tuple<>(validPos, validDirection);
     }
 
     private static List<BlockPos> getViewBlockPath(Player player) {
@@ -90,21 +95,15 @@ public class PathTraceHandler {
         return validSides;
     }
 
-    private static PlacementAlignment getAlignment(BlockPos block, Direction checkSide) {
+    private static boolean isValidDirection(BlockPos block, Direction checkSide) {
         ClientLevel level = Minecraft.getInstance().level;
 
         if(level == null)
-            return null;
+            return false;
 
         BlockPos checkBlockPos = block.offset(checkSide.getNormal());
 
-        if(level.isEmptyBlock(checkBlockPos))
-            return null;
-
-        if(checkSide == Direction.DOWN) return PlacementAlignment.UP;
-        if(checkSide == Direction.UP) return PlacementAlignment.DOWN;
-
-        return PlacementAlignment.HORIZONTAL;
+        return !level.isEmptyBlock(checkBlockPos);
     }
 
 }

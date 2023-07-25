@@ -4,11 +4,13 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
+import me.cg360.mod.bridging.raytrace.PlacementAlignment;
 import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,9 +33,12 @@ public class CrosshairRenderingMixin {
     @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V",
             at = @At(value = "TAIL"))
     public void renderPlacementAssistMarker(GuiGraphics gui, CallbackInfo ci) {
-        if(ReacharoundTracker.currentTarget == null) return;
+        if(ReacharoundTracker.lastTickTarget == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
+
+        Direction direction = ReacharoundTracker.lastTickTarget.getB();
+        PlacementAlignment alignment = PlacementAlignment.from(direction);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -48,9 +53,7 @@ public class CrosshairRenderingMixin {
         int w = this.screenWidth;
         int h = this.screenHeight;
 
-        int textureOffset = ReacharoundTracker.isInVerticalOrientation()
-                ? 0
-                : 32;
+        if(alignment == null) return;
 
         int x = (w - ICON_SIZE) / 2;
         int y = ((h - ICON_SIZE) / 2);
@@ -60,7 +63,7 @@ public class CrosshairRenderingMixin {
 
         gui.blit(
                 BridgingMod.PLACEMENT_ICONS_TEXTURE, x, y,
-                textureOffset, 0,
+                alignment.getTextureOffset(), 0,
                 ICON_SIZE, ICON_SIZE
         );
 

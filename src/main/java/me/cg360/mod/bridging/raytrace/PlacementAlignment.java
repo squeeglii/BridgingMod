@@ -1,7 +1,32 @@
 package me.cg360.mod.bridging.raytrace;
 
+import net.minecraft.core.Direction;
+
 public enum PlacementAlignment {
 
-    UP, DOWN, HORIZONTAL
+    UP(64),
+    DOWN(0),
+    HORIZONTAL(32);
+
+
+    private final int textureOffset;
+
+    PlacementAlignment(int textureOffset) {
+        this.textureOffset = textureOffset;
+    }
+
+    public int getTextureOffset() {
+        return this.textureOffset;
+    }
+
+    public static PlacementAlignment from(Direction direction) {
+        if(direction == null) return null;
+
+        return switch (direction) {
+            case UP -> DOWN;
+            case DOWN -> UP;
+            default -> HORIZONTAL;
+        };
+    }
 
 }

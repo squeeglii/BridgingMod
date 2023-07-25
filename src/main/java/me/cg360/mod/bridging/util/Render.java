@@ -34,18 +34,18 @@ public class Render {
         for(BlockPos pos: positions)
             Render.cubeTrace(poseStack, vertexConsumer, camera, pos);
 
-        Render.terminationTrace(poseStack, vertexConsumer, camera, lastPos);
+        Render.cubeTermination(poseStack, vertexConsumer, camera, lastPos);
     }
 
     public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
-        Render.cubeOutline(poseStack, vertices, camera, pos, 0f, 0.6f, 1f, 0.5f);
+        Render.cubeOutline(poseStack, vertices, camera, pos, 0f, 0.6f, 1f, 0.15f);
     }
 
     public static void cubeTrace(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
         Render.cubeOutline(poseStack, vertices, camera, pos, 0.2f, 0.2f, 0.2f, 0.1f);
     }
 
-    public static void terminationTrace(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
+    public static void cubeTermination(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
         Render.cubeOutline(poseStack, vertices, camera, pos, 1f, 0f, 0f, 0.5f);
     }
 
