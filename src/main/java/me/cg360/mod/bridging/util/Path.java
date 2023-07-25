@@ -4,11 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Path {
 
     public static final double NEAR_ZERO = 0.01D;
+    public static final Vec3 CUBE_EXTENT = new Vec3(0.5f, 0.5f, 0.5f);
 
     public static List<BlockPos> calculateBresenhamVoxels(BlockPos startPos, BlockPos endPos) {
         List<BlockPos> points = new ArrayList<>();
@@ -48,7 +50,11 @@ public class Path {
                 point1 += 2 * dy;
                 point2 += 2 * dz;
 
-                points.add(BlockPos.containing(workingVec));
+                BlockPos newPoint = BlockPos.containing(workingVec);
+                List<BlockPos> lostPoints = calculateMissedPoints(points, newPoint, startPos, endPos);
+
+                points.addAll(lostPoints);
+                points.add(newPoint);
             }
 
             return points;
@@ -74,7 +80,12 @@ public class Path {
 
                 point1 += 2 * dx;
                 point2 += 2 * dz;
-                points.add(BlockPos.containing(workingVec));
+
+                BlockPos newPoint = BlockPos.containing(workingVec);
+                List<BlockPos> lostPoints = calculateMissedPoints(points, newPoint, startPos, endPos);
+
+                points.addAll(lostPoints);
+                points.add(newPoint);
             }
 
             return points;
@@ -99,10 +110,110 @@ public class Path {
 
             point1 += 2 * dy;
             point2 += 2 * dx;
-            points.add(BlockPos.containing(workingVec));
+
+            BlockPos newPoint = BlockPos.containing(workingVec);
+            List<BlockPos> lostPoints = calculateMissedPoints(points, newPoint, startPos, endPos);
+
+            points.addAll(lostPoints);
+            points.add(newPoint);
         }
 
         return points;
+    }
+
+
+    /**
+     * Calculates any blocks missed by a pass of Bresenham's algorithm, under the condition
+     * that two block positions provided are touching.
+     */
+    private static List<BlockPos> calculateMissedPoints(List<BlockPos> points, BlockPos newPoint, BlockPos lineStart, BlockPos lineEnd) {
+        if(points.size() == 0) return List.of();
+
+        BlockPos lastPoint = points.get(points.size() - 1);
+        BlockPos pointDelta = newPoint.subtract(lastPoint);
+        int diff = newPoint.distManhattan(lastPoint);
+
+        // This method requires blocks to be touching.
+        if(diff < 0 || diff > 3)
+            throw new IllegalArgumentException("The last point and the new point share no common boundaries");
+
+        // Blocks have a shared face or are even just the same,
+        // thus the line stays contained within the two.
+        if(diff == 1 || diff == 0) return List.of();
+
+        List<BlockPos> reviewPositions = new LinkedList<>();
+
+
+        // Blocks have a shared line, thus one of
+        // the pointDelta's components must be zero.
+        //
+        //    o
+        //       o  x     -- Trying to find the x's here.
+        //       x  o
+        if(diff == 2) {
+            BlockPos[] checkDirections = new BlockPos[] {
+                    new BlockPos(pointDelta.getX(), 0, 0),
+                    new BlockPos(0, pointDelta.getY(), 0),
+                    new BlockPos(0, 0, pointDelta.getZ())
+            };
+
+            for(BlockPos direction: checkDirections) {
+                if(direction.equals(BlockPos.ZERO)) continue;
+
+                BlockPos checkPos = lastPoint.offset(direction);
+                reviewPositions.add(checkPos);
+            }
+        }
+
+        // Blocks have a shared corner
+        // bit harder to show as this needs thinking in 3d but it's
+        // just a few more positions than diff == 2
+        if(diff == 3) {
+            BlockPos[] checkDirections = new BlockPos[] {
+                    new BlockPos(pointDelta.getX(), 0, 0),
+                    new BlockPos(0, pointDelta.getY(), 0),
+                    new BlockPos(0, 0, pointDelta.getZ()),
+
+                    new BlockPos(pointDelta.getX(), pointDelta.getY(), 0),
+                    new BlockPos(pointDelta.getX(), 0, pointDelta.getZ()),
+                    new BlockPos(0, pointDelta.getY(), pointDelta.getZ()),
+            };
+
+            for(BlockPos direction: checkDirections) {
+                if(direction.equals(BlockPos.ZERO)) continue;
+
+                BlockPos checkPos = lastPoint.offset(direction);
+                reviewPositions.add(checkPos);
+            }
+        }
+
+        // collision detection from -> https://3dkingdoms.com/weekly/weekly.php?a=21
+        // retrofitted for the box checks
+
+
+        return reviewPositions.stream()
+                .filter(pos -> {
+                    Vec3 boxSpaceTransform = Vec3.atLowerCornerOf(pos);
+                    Vec3 lineStartD = Vec3.atLowerCornerOf(lineStart).subtract(boxSpaceTransform);
+                    Vec3 lineEndD = Vec3.atLowerCornerOf(lineEnd).subtract(boxSpaceTransform);
+                    Vec3 lineMid = lineStartD.add(lineEndD).scale(0.5f);
+                    Vec3 line = lineStartD.subtract(lineMid);
+                    Vec3 lineExt = new Vec3(Math.abs(line.x), Math.abs(line.y), Math.abs(line.z));
+
+                    if (Math.abs( lineMid.x ) > CUBE_EXTENT.x + lineExt.x) return false;
+                    if (Math.abs( lineMid.y ) > CUBE_EXTENT.y + lineExt.y) return false;
+                    if (Math.abs( lineMid.z ) > CUBE_EXTENT.z + lineExt.z) return false;
+
+                    // Crossproducts of line and each axis
+                    if (Math.abs( lineMid.y * line.z - lineMid.z * line.y) > (CUBE_EXTENT.y * lineExt.z + CUBE_EXTENT.z * lineExt.y) ) return false;
+                    if (Math.abs( lineMid.x * line.z - lineMid.z * line.x) > (CUBE_EXTENT.x * lineExt.z + CUBE_EXTENT.z * lineExt.x) ) return false;
+                    if (Math.abs( lineMid.x * line.y - lineMid.y * line.x) > (CUBE_EXTENT.x * lineExt.y + CUBE_EXTENT.y * lineExt.x) ) return false;
+
+                    // No separating axis, the line intersects
+
+                    return true;
+                })
+                .toList();
     }
 
 }

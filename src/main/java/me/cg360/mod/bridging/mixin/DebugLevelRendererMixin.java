@@ -29,7 +29,7 @@ public abstract class DebugLevelRendererMixin {
         VertexConsumer vertices = this.renderBuffers.bufferSource().getBuffer(RenderType.lines());
 
         if(this.minecraft.options.renderDebugCharts)
-            Render.blocksInViewPath(poseStack, vertices, camera, partialTick);
+            Render.blocksInViewPath(poseStack, vertices, camera);
 
         if(BridgingStateTracker.lastTickTarget != null)
             Render.cubeHighlight(poseStack, vertices, camera, BridgingStateTracker.lastTickTarget.getA());

@@ -16,7 +16,7 @@ import java.util.*;
 public class PathTraversalHandler {
 
     private static final float MIN_DISTANCE = 1f;
-    private static final double DIRECTION_SIMILARITY_THRESHOLD = 0d;
+    private static final double DIRECTION_SIMILARITY_THRESHOLD = -0.3d;
 
     /**
      * @param player the player whose view line should be used.
@@ -69,7 +69,7 @@ public class PathTraversalHandler {
      * Generates a list of blocks which follow the reach line of a given
      * player from a certain distance.
      */
-    private static List<BlockPos> getViewBlockPath(Player player) {
+    public static List<BlockPos> getViewBlockPath(Player player) {
         if(player == null)
             return new ArrayList<>();
 

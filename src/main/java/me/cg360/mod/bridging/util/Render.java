@@ -2,10 +2,12 @@ package me.cg360.mod.bridging.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import me.cg360.mod.bridging.raytrace.PathTraversalHandler;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -13,28 +15,19 @@ import java.util.List;
 
 public class Render {
 
-    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, Camera camera, float partialTicks) {
-        Entity viewEntity = camera.getEntity();
-        Vec3 viewDirection = viewEntity.getViewVector(partialTicks);
-        Vec3 camPos = camera.getPosition();
+    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, Camera camera) {
+        LocalPlayer player = Minecraft.getInstance().player;
 
-        Vec3 forward = viewDirection.normalize();
-        Vec3 unitAhead = camPos.add(forward.scale(2));
-        Vec3 endUnit = camPos.add(forward.scale(5));
+        if(player == null)
+            return;
 
-        BlockPos start = BlockPos.containing(unitAhead);
-        BlockPos end = BlockPos.containing(endUnit);
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player);
 
-        List<BlockPos> positions = Path.calculateBresenhamVoxels(start, end);
+        if(path.isEmpty())
+            return;
 
-        if(positions.isEmpty()) return;
-
-        //BlockPos lastPos = positions.remove(positions.size() - 1);
-
-        for(BlockPos pos: positions)
+        for(BlockPos pos: path)
             Render.cubeTrace(poseStack, vertexConsumer, camera, pos);
-
-        //Render.cubeTermination(poseStack, vertexConsumer, camera, lastPos);
     }
 
     public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
