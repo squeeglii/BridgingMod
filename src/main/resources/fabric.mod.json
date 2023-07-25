@@ -4,14 +4,14 @@
     "version": "${version}",
 
     "name": "Bridging Mod",
-    "description": "A Fabric implementation of Quark's bridging mechanics",
+    "description": "Adds bridging assist similar to Bedrock & Quark's building mechanics",
     "authors": [ "CG360" ],
     "contact": {
         "homepage": "https://github.com/CloudG360/BridgingMod",
         "sources": "https://github.com/CloudG360/BridgingMod"
     },
 
-    "license": "CC0-1.0",
+    "license": "MIT",
     "icon": "assets/${mod_id}/icon.png",
 
     "environment": "*",

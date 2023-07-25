@@ -2,7 +2,7 @@
 
 [![Minecraft Version](https://img.shields.io/badge/Minecraft-v1.20.1-blue?style=flat-square)](https://www.minecraft.net/en-us)
 [![Fabric Loader Version](https://img.shields.io/badge/Fabric_Loader-v0.14.21-AA8554?style=flat-square)](https://fabricmc.net/use/installer/)
-[![Attribution-NonCommercial-ShareAlike 3.0 Unported](https://img.shields.io/badge/License-GNU_GPL_3.0-mint?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
+[![MIT License](https://img.shields.io/badge/License-MIT-mint?style=flat-square)](https://github.com/CloudG360/BridgingMod/blob/latest/LICENSE.md)
 
 [![Modrinth](https://img.shields.io/modrinth/dt/lO3s8hjs?logo=modrinth&style=flat-square)](https://modrinth.com/mod/bridging-mod)
 [![Curseforge](https://cf.way2muchnoise.eu/short_bridging-mod.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/bridging-mod)
@@ -11,38 +11,27 @@
 
 # Project Overview
 
-This mod is a fabric/quilt port of [Quark's](https://github.com/VazkiiMods/Quark) "Reach-Around Placement" feature with
-some tweaks to refine the experience. It's similar to Minecraft: Bedrock Edition's bridging features where blocks can be
-placed in horizontally adjacent block gaps or vertically underneath blocks, even if there isn't a surface to place the
-blocks on.
+This mod is a Fabric/Quilt implementation of a bridging assist feature commonly referred to as "Reach-Around Placement".
+It's very similar to the functionality found in both Minecraft: Bedrock Edition, & the Quark mod, with the current
+versions source being written from scratch.
+
+The bridging assistance allows for placing blocks in gaps in-front, above, or below blocks even if the necessary surface
+isn't visible! To mark when the feature is available, an additional crosshair is shown to indicate the direction
+that a block can be placed in. When the F3 menu is visible, there's even an additional bounding box showing the exact
+position it's placing in.
 
 This mod's official project pages can be found below:
 
-- [Modrinth](https://modrinth.com/mod/bridging-mod) (Preferred)
+- [Modrinth](https://modrinth.com/mod/bridging-mod)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/bridging-mod)
-
-## ⚙️ Differences To Quark
-
-- Customizable crosshair icons to notify the player that bridging assistance is available.
-  - Located at `assets/bridgingmod/textures/gui/placement_icons.png`
-- More forgiving placement logic
-  - Can place when under 2 block ceilings
-  - Target areas are larger
 
 
 ## 📜 Credits
 
-- **Quark Mod**
-  - https://github.com/VazkiiMods/Quark
-  - Licensed under [Attribution-NonCommercial-ShareAlike 3.0 Unported](https://creativecommons.org/licenses/by-nc-sa/3.0/)
+Previous versions of the Bridging Mod (< 2.0.0) were based on the Quark implementation of "Reach-Around Placement". 
+You can find Quark's source here:
 
-
-- **Reach-Around Placement Contributors (From Quark)**
-  - [Vazkii](https://github.com/Vazkii)
-  - [yrsegal](https://github.com/yrsegal)
-  - [williewillus](https://github.com/williewillus)
-  - [heipiao233](https://github.com/heipiao233)
-  - [Alwinfy](https://github.com/Alwinfy)
+- [https://github.com/VazkiiMods/Quark](https://github.com/VazkiiMods/Quark)
 
 --- 
 
