@@ -2,6 +2,10 @@ package me.cg360.mod.bridging.raytrace;
 
 import net.minecraft.core.Direction;
 
+/**
+ * Used to determine the indicator that should be
+ * used when bridging assist is available.
+ */
 public enum PlacementAlignment {
 
     UP(64),

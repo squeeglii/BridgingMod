@@ -16,7 +16,7 @@ import java.util.*;
 public class PathTraversalHandler {
 
     private static final float MIN_DISTANCE = 1f;
-    private static final double DIRECTION_SIMILARITY_THRESHOLD = -0.3d;
+    private static final double DIRECTION_SIMILARITY_THRESHOLD = 0.1d;
 
     /**
      * @param player the player whose view line should be used.
@@ -29,24 +29,30 @@ public class PathTraversalHandler {
             return null;
 
         List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player);
-        Vec3 viewDirection = player.getViewVector(1f);
 
+        Vec3 viewDirection = player.getViewVector(1f);
         List<Direction> validSides = PathTraversalHandler.getValidAssistSides(viewDirection);
 
         Direction validDirection = null;
         BlockPos validPos = null;
 
+        // Check each position in-order between the camera and the end of reach
         for(BlockPos pos: path) {
 
+            // Invalidate any position that can't have blocks placed there normally.
             if(!level.getBlockState(pos).canBeReplaced())
                 continue;
 
             Vec3 collideMin = Vec3.atLowerCornerOf(pos);
             Vec3 collideMax = Vec3.atLowerCornerWithOffset(pos, 1, 1, 1);
 
+            // Invalidate any position that is within the player's bounding box.
             if(player.getBoundingBox().intersects(collideMin, collideMax))
                 continue;
 
+            // Test all the sides a given position could be built off and accept the
+            // first valid one. Validity includes them being placeable against, as well
+            // as facing a similar direction to the camera.
             Optional<Direction> firstValidDirection = validSides.stream()
                     .filter(dir -> PathTraversalHandler.isValidDirection(pos, dir))
                     .findFirst();
