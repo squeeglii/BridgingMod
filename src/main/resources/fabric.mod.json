@@ -16,8 +16,9 @@
 
     "environment": "*",
     "entrypoints": {
-        "main": [ "me.cg360.mod.bridging.BridgingMod::init" ],
-        "client": [ "me.cg360.mod.bridging.BridgingMod::init" ]
+        "main": [ "me.cg360.mod.bridging.BridgingModCommon::init" ],
+        "client": [ "me.cg360.mod.bridging.BridgingMod::init" ],
+        "modmenu": [ "me.cg360.mod.bridging.compat.ModMenuIntegration" ]
     },
     "mixins": [
         "${mod_id}.mixins.json"
@@ -29,6 +30,11 @@
         "fabricloader": ">=${loader_version}",
         "fabric": "*",
         "minecraft": "${minecraft_version_long}",
-        "java": ">=17"
+        "java": ">=17",
+        "cloth-config": ">=${clothconfig_version}"
+    },
+
+    "recommends": {
+        "modmenu": ">=${modmenu_version}"
     }
 }

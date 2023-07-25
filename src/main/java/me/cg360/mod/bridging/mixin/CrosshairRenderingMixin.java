@@ -37,6 +37,8 @@ public class CrosshairRenderingMixin {
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
 
+        if(!BridgingMod.getConfig().shouldShowCrosshair()) return;
+
         Direction direction = BridgingStateTracker.lastTickTarget.getB();
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 

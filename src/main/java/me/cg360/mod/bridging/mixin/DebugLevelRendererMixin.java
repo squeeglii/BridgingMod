@@ -2,6 +2,7 @@ package me.cg360.mod.bridging.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.Render;
 import net.minecraft.client.Camera;
@@ -28,10 +29,10 @@ public abstract class DebugLevelRendererMixin {
 
         VertexConsumer vertices = this.renderBuffers.bufferSource().getBuffer(RenderType.lines());
 
-        if(this.minecraft.options.renderDebugCharts)
+        if(BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, camera);
 
-        if(BridgingStateTracker.lastTickTarget != null)
+        if(BridgingStateTracker.lastTickTarget != null && BridgingMod.getConfig().shouldShowDebugHighlight())
             Render.cubeHighlight(poseStack, vertices, camera, BridgingStateTracker.lastTickTarget.getA());
     }
 }

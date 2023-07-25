@@ -2,6 +2,8 @@
 
 [![Minecraft Version](https://img.shields.io/badge/Minecraft-v1.20.1-blue?style=flat-square)](https://www.minecraft.net/en-us)
 [![Fabric Loader Version](https://img.shields.io/badge/Fabric_Loader-v0.14.21-AA8554?style=flat-square)](https://fabricmc.net/use/installer/)
+[![Cloth Config Version](https://img.shields.io/badge/Cloth_Config-v11.0.99-pink?style=flat-square)](https://modrinth.com/mod/cloth-config)
+[![Mod Menu Version](https://img.shields.io/badge/Mod_Menu-v7.1.0-indigo?style=flat-square)](https://modrinth.com/mod/modmenu)
 [![MIT License](https://img.shields.io/badge/License-MIT-mint?style=flat-square)](https://github.com/CloudG360/BridgingMod/blob/latest/LICENSE.md)
 
 [![Modrinth](https://img.shields.io/modrinth/dt/lO3s8hjs?logo=modrinth&style=flat-square)](https://modrinth.com/mod/bridging-mod)

@@ -1,0 +1,10 @@
+{
+    "bridgingmod.config.failed_integration.title": "Config UI Disabled!",
+    "bridgingmod.config.failed_integration.description": "The mod's config is disabled in snapshots",
+
+    "text.autoconfig.bridgingmod.title": "Bridging Mod",
+    "text.autoconfig.bridgingmod.option.enableBridgingAssist": "Enable Bridge-Assist",
+    "text.autoconfig.bridgingmod.option.showCrosshair": "Show Bridge-Assist Crosshair",
+    "text.autoconfig.bridgingmod.option.showDebugHighlight": "Highlight Bridge-Assist Target In F3",
+    "text.autoconfig.bridgingmod.option.showDebugTrace": "Highlight Bridge-Assist Internals In F3"
+}

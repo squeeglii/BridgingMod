@@ -1,5 +1,6 @@
 package me.cg360.mod.bridging.mixin;
 
+import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -29,14 +30,19 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
+        if(!BridgingMod.getConfig().isBridgingEnabled()) {
+            BridgingStateTracker.lastTickTarget = null;
+            return;
+        }
+
         BridgingStateTracker.lastTickTarget = BridgingStateTracker.getBridgeAssistTargetFor(this.player);
     }
 
 
     @Inject(at = @At("HEAD"), method = "startUseItem()V")
     public void onItemUse(CallbackInfo info) {
-        if(this.player == null)
-            return;
+        if(!BridgingMod.getConfig().isBridgingEnabled()) return;
+        if(this.player == null) return;
 
         if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS)
             return;
