@@ -2,6 +2,7 @@ package me.cg360.mod.bridging.mixin;
 
 import com.mojang.logging.LogUtils;
 import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
+import me.cg360.mod.bridging.raytrace.PathTraceHandler;
 import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -35,6 +36,7 @@ public abstract class MinecraftClientMixin {
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
         ReacharoundTracker.currentTarget = null;
+        PathTraceHandler.lastTarget = null;
 
         if(this.player == null) return;
 
@@ -42,6 +44,7 @@ public abstract class MinecraftClientMixin {
         if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) return;
 
         ReacharoundTracker.currentTarget = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
+        PathTraceHandler.getClosestAssistTarget(this.player);
     }
 
 

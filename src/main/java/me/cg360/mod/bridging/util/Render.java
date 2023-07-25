@@ -19,8 +19,8 @@ public class Render {
         Vec3 camPos = camera.getPosition();
 
         Vec3 forward = viewDirection.normalize();
-        Vec3 unitAhead = camPos.add(forward.multiply(2, 2, 2));
-        Vec3 endUnit = camPos.add(forward.multiply(5, 5, 5));
+        Vec3 unitAhead = camPos.add(forward.scale(2));
+        Vec3 endUnit = camPos.add(forward.scale(5));
 
         BlockPos start = BlockPos.containing(unitAhead);
         BlockPos end = BlockPos.containing(endUnit);
@@ -37,6 +37,9 @@ public class Render {
         Render.terminationTrace(poseStack, vertexConsumer, camera, lastPos);
     }
 
+    public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
+        Render.cubeOutline(poseStack, vertices, camera, pos, 0f, 0.6f, 1f, 0.5f);
+    }
 
     public static void cubeTrace(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
         Render.cubeOutline(poseStack, vertices, camera, pos, 0.2f, 0.2f, 0.2f, 0.1f);
