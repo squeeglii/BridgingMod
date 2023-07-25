@@ -10,7 +10,7 @@ public class Path {
 
     public static final double NEAR_ZERO = 0.01D;
 
-    public static List<BlockPos> calcBresenhamSquares(BlockPos startPos, BlockPos endPos) {
+    public static List<BlockPos> calculateBresenhamVoxels(BlockPos startPos, BlockPos endPos) {
         List<BlockPos> points = new ArrayList<>();
         points.add(startPos);
 
@@ -20,33 +20,33 @@ public class Path {
         int dy = Math.abs(delta.getY());
         int dz = Math.abs(delta.getZ());
 
-        int xs = delta.getX() > 0 ? 1 : -1;
-        int ys = delta.getY() > 0 ? 1 : -1;
-        int zs = delta.getZ() > 0 ? 1 : -1;
+        int xStep = delta.getX() > 0 ? 1 : -1;
+        int yStep = delta.getY() > 0 ? 1 : -1;
+        int zStep = delta.getZ() > 0 ? 1 : -1;
 
         Vec3 workingVec = new Vec3(startPos.getX(), startPos.getY(), startPos.getZ());
         Vec3 targetVec = new Vec3(endPos.getX(), endPos.getY(), endPos.getZ());
 
         // X-axis
         if (dx >= dy && dx >= dz) {
-            int p1 = 2 * dy - dx;
-            int p2 = 2 * dz - dx;
+            int point1 = 2 * dy - dx;
+            int point2 = 2 * dz - dx;
 
             while (Math.abs(workingVec.x() - targetVec.x()) > NEAR_ZERO) {
-                workingVec = workingVec.add(xs, 0, 0);
+                workingVec = workingVec.add(xStep, 0, 0);
 
-                if (p1 >= 0) {
-                    workingVec = workingVec.add(0, ys, 0);
-                    p1 -= 2 * dx;
+                if (point1 >= 0) {
+                    workingVec = workingVec.add(0, yStep, 0);
+                    point1 -= 2 * dx;
                 }
 
-                if (p2 >= 0) {
-                    workingVec = workingVec.add(0, 0, zs);
-                    p2 -= 2 * dx;
+                if (point2 >= 0) {
+                    workingVec = workingVec.add(0, 0, zStep);
+                    point2 -= 2 * dx;
                 }
 
-                p1 += 2 * dy;
-                p2 += 2 * dz;
+                point1 += 2 * dy;
+                point2 += 2 * dz;
 
                 points.add(BlockPos.containing(workingVec));
             }
@@ -56,24 +56,24 @@ public class Path {
 
         // Y-axis
         if (dy >= dx && dy >= dz) {
-            int p1 = 2 * dx - dy;
-            int p2 = 2 * dz - dy;
+            int point1 = 2 * dx - dy;
+            int point2 = 2 * dz - dy;
 
             while (Math.abs(workingVec.y() - targetVec.y()) > NEAR_ZERO) {
-                workingVec = workingVec.add(0, ys, 0);
+                workingVec = workingVec.add(0, yStep, 0);
 
-                if (p1 >= 0) {
-                    workingVec = workingVec.add(xs, 0, 0);
-                    p1 -= 2 * dy;
+                if (point1 >= 0) {
+                    workingVec = workingVec.add(xStep, 0, 0);
+                    point1 -= 2 * dy;
                 }
 
-                if (p2 >= 0) {
-                    workingVec = workingVec.add(0, 0, zs);
-                    p2 -= 2 * dy;
+                if (point2 >= 0) {
+                    workingVec = workingVec.add(0, 0, zStep);
+                    point2 -= 2 * dy;
                 }
 
-                p1 += 2 * dx;
-                p2 += 2 * dz;
+                point1 += 2 * dx;
+                point2 += 2 * dz;
                 points.add(BlockPos.containing(workingVec));
             }
 
@@ -81,24 +81,24 @@ public class Path {
         }
 
         // Z-axis
-        int p1 = 2 * dy - dz;
-        int p2 = 2 * dx - dz;
+        int point1 = 2 * dy - dz;
+        int point2 = 2 * dx - dz;
 
         while (Math.abs(workingVec.z() - targetVec.z()) > NEAR_ZERO) {
-            workingVec = workingVec.add(0, 0, zs);
+            workingVec = workingVec.add(0, 0, zStep);
 
-            if (p1 >= 0) {
-                workingVec = workingVec.add(0, ys, 0);
-                p1 -= 2 * dz;
+            if (point1 >= 0) {
+                workingVec = workingVec.add(0, yStep, 0);
+                point1 -= 2 * dz;
             }
 
-            if (p2 >= 0) {
-                workingVec = workingVec.add(xs, 0, 0);
-                p2 -= 2 * dz;
+            if (point2 >= 0) {
+                workingVec = workingVec.add(xStep, 0, 0);
+                point2 -= 2 * dz;
             }
 
-            p1 += 2 * dy;
-            p2 += 2 * dx;
+            point1 += 2 * dy;
+            point2 += 2 * dx;
             points.add(BlockPos.containing(workingVec));
         }
 

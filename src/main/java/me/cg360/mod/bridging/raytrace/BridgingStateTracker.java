@@ -8,7 +8,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.HitResult;
 
-public class ReacharoundTracker {
+public class BridgingStateTracker {
 
     public static Tuple<BlockPos, Direction> lastTickTarget = null;
 
@@ -27,7 +27,7 @@ public class ReacharoundTracker {
         if(!GameSupport.isHoldingPlaceable(player))
             return null;
 
-        return PathTraceHandler.getClosestAssistTarget(player);
+        return PathTraversalHandler.getClosestAssistTarget(player);
     }
 
 }

@@ -1,6 +1,6 @@
 package me.cg360.mod.bridging.mixin;
 
-import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
+import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
@@ -29,7 +29,7 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
-        ReacharoundTracker.lastTickTarget = ReacharoundTracker.getPlayerReacharoundTarget(this.player);
+        BridgingStateTracker.lastTickTarget = BridgingStateTracker.getPlayerReacharoundTarget(this.player);
     }
 
 
@@ -44,7 +44,7 @@ public abstract class MinecraftClientMixin {
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);
 
-            Tuple<BlockPos, Direction> pair = ReacharoundTracker.lastTickTarget;
+            Tuple<BlockPos, Direction> pair = BridgingStateTracker.lastTickTarget;
 
             if (pair == null) continue;
 

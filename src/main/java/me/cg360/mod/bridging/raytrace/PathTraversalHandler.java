@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
-public class PathTraceHandler {
+public class PathTraversalHandler {
 
     private static final float MIN_DISTANCE = 1f;
     private static final double DIRECTION_SIMILARITY_THRESHOLD = 0d;
@@ -24,10 +24,10 @@ public class PathTraceHandler {
         if(level == null)
             return null;
 
-        List<BlockPos> path = PathTraceHandler.getViewBlockPath(player);
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player);
         Vec3 viewDirection = player.getViewVector(1f);
 
-        List<Direction> validSides = PathTraceHandler.getValidAssistSides(viewDirection);
+        List<Direction> validSides = PathTraversalHandler.getValidAssistSides(viewDirection);
 
         Direction validDirection = null;
         BlockPos validPos = null;
@@ -44,7 +44,7 @@ public class PathTraceHandler {
                 continue;
 
             Optional<Direction> firstValidDirection = validSides.stream()
-                    .filter(dir -> PathTraceHandler.isValidDirection(pos, dir))
+                    .filter(dir -> PathTraversalHandler.isValidDirection(pos, dir))
                     .findFirst();
 
             if(firstValidDirection.isEmpty())
@@ -75,7 +75,7 @@ public class PathTraceHandler {
         BlockPos startPos = BlockPos.containing(viewOrigin.add(nearVec));
         BlockPos endPos = BlockPos.containing(viewOrigin.add(farVec));
 
-        return Path.calcBresenhamSquares(startPos, endPos);
+        return Path.calculateBresenhamVoxels(startPos, endPos);
     }
 
     private static List<Direction> getValidAssistSides(Vec3 viewDirection) {

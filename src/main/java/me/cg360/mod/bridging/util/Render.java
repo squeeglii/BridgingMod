@@ -25,7 +25,7 @@ public class Render {
         BlockPos start = BlockPos.containing(unitAhead);
         BlockPos end = BlockPos.containing(endUnit);
 
-        List<BlockPos> positions = Path.calcBresenhamSquares(start, end);
+        List<BlockPos> positions = Path.calculateBresenhamVoxels(start, end);
 
         if(positions.isEmpty()) return;
 

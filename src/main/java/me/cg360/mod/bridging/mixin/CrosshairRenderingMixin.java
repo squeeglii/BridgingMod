@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.raytrace.PlacementAlignment;
-import me.cg360.mod.bridging.raytrace.ReacharoundTracker;
+import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -33,11 +33,11 @@ public class CrosshairRenderingMixin {
     @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V",
             at = @At(value = "TAIL"))
     public void renderPlacementAssistMarker(GuiGraphics gui, CallbackInfo ci) {
-        if(ReacharoundTracker.lastTickTarget == null) return;
+        if(BridgingStateTracker.lastTickTarget == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
 
-        Direction direction = ReacharoundTracker.lastTickTarget.getB();
+        Direction direction = BridgingStateTracker.lastTickTarget.getB();
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
