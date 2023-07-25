@@ -29,12 +29,12 @@ public class Render {
 
         if(positions.isEmpty()) return;
 
-        BlockPos lastPos = positions.remove(positions.size() - 1);
+        //BlockPos lastPos = positions.remove(positions.size() - 1);
 
         for(BlockPos pos: positions)
             Render.cubeTrace(poseStack, vertexConsumer, camera, pos);
 
-        Render.cubeTermination(poseStack, vertexConsumer, camera, lastPos);
+        //Render.cubeTermination(poseStack, vertexConsumer, camera, lastPos);
     }
 
     public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {

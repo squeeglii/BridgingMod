@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -119,6 +120,9 @@ public class PathTraversalHandler {
             return false;
 
         BlockPos checkBlockPos = block.offset(checkSide.getNormal());
+
+        if(level.isEmptyBlock(checkBlockPos)) return false;
+        if(level.getBlockState(checkBlockPos).getBlock() instanceof LiquidBlock) return false;
 
         return !level.isEmptyBlock(checkBlockPos);
     }
