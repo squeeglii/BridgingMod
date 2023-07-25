@@ -29,7 +29,7 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
-        BridgingStateTracker.lastTickTarget = BridgingStateTracker.getPlayerReacharoundTarget(this.player);
+        BridgingStateTracker.lastTickTarget = BridgingStateTracker.getBridgeAssistTargetFor(this.player);
     }
 
 

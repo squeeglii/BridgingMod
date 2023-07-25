@@ -13,7 +13,11 @@ public class BridgingStateTracker {
     public static Tuple<BlockPos, Direction> lastTickTarget = null;
 
 
-    public static Tuple<BlockPos, Direction> getPlayerReacharoundTarget(Player player) {
+    /**
+     * Generates a bridge assist target for a given player, under the condition
+     * that they can't already place a block under vanilla conditions.
+     */
+    public static Tuple<BlockPos, Direction> getBridgeAssistTargetFor(Player player) {
         if(player == null)
             return null;
 

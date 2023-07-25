@@ -9,7 +9,6 @@ public class GameSupport {
 
     public static final double MAXIMUM_PLACE_REACH = 4.5d;
 
-
     public static double getReach() {
         if(Minecraft.getInstance().gameMode == null)
             return MAXIMUM_PLACE_REACH;
@@ -18,12 +17,11 @@ public class GameSupport {
     }
 
     public static boolean isHoldingPlaceable(Player player) {
-        return GameSupport.isSupportedStack(player.getMainHandItem()) ||
-               GameSupport.isSupportedStack(player.getOffhandItem());
+        return GameSupport.isStackPlaceable(player.getMainHandItem()) ||
+               GameSupport.isStackPlaceable(player.getOffhandItem());
     }
 
-
-    public static boolean isSupportedStack(ItemStack stack) {
+    public static boolean isStackPlaceable(ItemStack stack) {
         if(stack == null) return false;
         return stack.getItem() instanceof BlockItem;
     }

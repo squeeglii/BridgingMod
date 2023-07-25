@@ -17,7 +17,10 @@ public class PathTraversalHandler {
     private static final float MIN_DISTANCE = 1f;
     private static final double DIRECTION_SIMILARITY_THRESHOLD = 0d;
 
-
+    /**
+     * @param player the player whose view line should be used.
+     * @return the closest block position in view that supports bridge assist.
+     */
     public static Tuple<BlockPos, Direction> getClosestAssistTarget(Player player) {
         ClientLevel level = Minecraft.getInstance().level;
 
@@ -61,6 +64,10 @@ public class PathTraversalHandler {
         return new Tuple<>(validPos, validDirection);
     }
 
+    /**
+     * Generates a list of blocks which follow the reach line of a given
+     * player from a certain distance.
+     */
     private static List<BlockPos> getViewBlockPath(Player player) {
         if(player == null)
             return new ArrayList<>();
@@ -78,6 +85,11 @@ public class PathTraversalHandler {
         return Path.calculateBresenhamVoxels(startPos, endPos);
     }
 
+    /**
+     * Gathers a list of sides that roughly align with the opposite direction
+     * that the view is facing, then returning their opposites indicating at
+     * what offset these sides can be found compared to a blockpos
+     */
     private static List<Direction> getValidAssistSides(Vec3 viewDirection) {
         LinkedList<Direction> validSides = new LinkedList<>();
 
@@ -95,6 +107,11 @@ public class PathTraversalHandler {
         return validSides;
     }
 
+    /**
+     * Determines if a block can be placed at the position "block",
+     * if building off of a surface in a given direction when in relation to the position
+     * surface|  <<< checkSide <<< |block
+     */
     private static boolean isValidDirection(BlockPos block, Direction checkSide) {
         ClientLevel level = Minecraft.getInstance().level;
 
