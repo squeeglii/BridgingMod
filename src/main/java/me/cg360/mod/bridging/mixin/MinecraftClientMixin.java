@@ -30,12 +30,7 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
-        if(!BridgingMod.getConfig().isBridgingEnabled()) {
-            BridgingStateTracker.lastTickTarget = null;
-            return;
-        }
-
-        BridgingStateTracker.lastTickTarget = BridgingStateTracker.getBridgeAssistTargetFor(this.player);
+        BridgingStateTracker.tick(this.player);
     }
 
 
@@ -50,7 +45,7 @@ public abstract class MinecraftClientMixin {
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);
 
-            Tuple<BlockPos, Direction> pair = BridgingStateTracker.lastTickTarget;
+            Tuple<BlockPos, Direction> pair = BridgingStateTracker.getLastTickTarget();
 
             if (pair == null) continue;
 

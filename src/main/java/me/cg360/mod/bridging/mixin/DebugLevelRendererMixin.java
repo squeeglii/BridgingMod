@@ -8,6 +8,9 @@ import me.cg360.mod.bridging.util.Render;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Tuple;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +35,9 @@ public abstract class DebugLevelRendererMixin {
         if(BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, camera);
 
-        if(BridgingStateTracker.lastTickTarget != null && BridgingMod.getConfig().shouldShowDebugHighlight())
-            Render.cubeHighlight(poseStack, vertices, camera, BridgingStateTracker.lastTickTarget.getA());
+        Tuple<BlockPos, Direction> lastTarget = BridgingStateTracker.getLastTickTarget();
+
+        if(lastTarget != null && BridgingMod.getConfig().shouldShowDebugHighlight())
+            Render.cubeHighlight(poseStack, vertices, camera, lastTarget.getA());
     }
 }

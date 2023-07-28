@@ -1,7 +1,9 @@
 package me.cg360.mod.bridging.raytrace;
 
+import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.util.GameSupport;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
@@ -10,7 +12,7 @@ import net.minecraft.world.phys.HitResult;
 
 public class BridgingStateTracker {
 
-    public static Tuple<BlockPos, Direction> lastTickTarget = null;
+    private static Tuple<BlockPos, Direction> lastTickTarget = null;
 
 
     /**
@@ -32,6 +34,20 @@ public class BridgingStateTracker {
             return null;
 
         return PathTraversalHandler.getClosestAssistTarget(player);
+    }
+
+    public static void tick(LocalPlayer player) {
+        if(!BridgingMod.getConfig().isBridgingEnabled()) {
+            lastTickTarget = null;
+            return;
+        }
+
+        lastTickTarget = BridgingStateTracker.getBridgeAssistTargetFor(player);
+    }
+
+
+    public static Tuple<BlockPos, Direction> getLastTickTarget() {
+        return BridgingStateTracker.lastTickTarget;
     }
 
 }

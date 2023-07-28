@@ -33,13 +33,13 @@ public class CrosshairRenderingMixin {
     @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V",
             at = @At(value = "TAIL"))
     public void renderPlacementAssistMarker(GuiGraphics gui, CallbackInfo ci) {
-        if(BridgingStateTracker.lastTickTarget == null) return;
+        if(BridgingStateTracker.getLastTickTarget() == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
 
         if(!BridgingMod.getConfig().shouldShowCrosshair()) return;
 
-        Direction direction = BridgingStateTracker.lastTickTarget.getB();
+        Direction direction = BridgingStateTracker.getLastTickTarget().getB();
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
