@@ -86,8 +86,8 @@ public class PathTraversalHandler {
         Vec3 nearVec = viewDirection.scale(MIN_DISTANCE);
         Vec3 farVec = viewDirection.scale(GameSupport.getReach());
 
-        BlockPos startPos = new BlockPos(viewOrigin.add(nearVec));
-        BlockPos endPos = new BlockPos(viewOrigin.add(farVec));
+        BlockPos startPos = BlockPos.containing(viewOrigin.add(nearVec));
+        BlockPos endPos = BlockPos.containing(viewOrigin.add(farVec));
 
         return Path.calculateBresenhamVoxels(startPos, endPos);
     }

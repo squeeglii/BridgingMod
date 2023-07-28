@@ -66,7 +66,7 @@ public class CrosshairRenderingMixin {
         y += BridgingCrosshairTweaks.yShift;
         y += this.minecraft.options.renderDebug ? 15 : 0;
 
-        ((Gui) (Object) this).blit(
+        GuiComponent.blit(
                 poseStack, x, y,
                 alignment.getTextureOffset(), 0,
                 ICON_SIZE, ICON_SIZE
