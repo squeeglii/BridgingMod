@@ -21,7 +21,7 @@ public class BridgingMod {
             config = AutoConfig.register(BridgingConfig.class, GsonConfigSerializer::new);
 
             // Block rendering of config if snapshot as that's the most likely thing to break.
-            configSuccessfullyInitialized = SharedConstants.getCurrentVersion().isStable();
+            configSuccessfullyInitialized = !SharedConstants.SNAPSHOT;
 
         } catch (Exception e) {
             LogUtils.getLogger().error("dsjlkhfdshjfhfjsdkhlfjhdslkjhfa");
