@@ -2,13 +2,15 @@ package me.cg360.mod.bridging.mixin;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.raytrace.PlacementAlignment;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
@@ -30,9 +32,9 @@ public class CrosshairRenderingMixin {
 
     @Shadow @Final private Minecraft minecraft;
 
-    @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V",
+    @Inject(method = "renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
             at = @At(value = "TAIL"))
-    public void renderPlacementAssistMarker(GuiGraphics gui, CallbackInfo ci) {
+    public void renderPlacementAssistMarker(PoseStack poseStack, CallbackInfo ci) {
         if(BridgingStateTracker.getLastTickTarget() == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
@@ -51,6 +53,7 @@ public class CrosshairRenderingMixin {
                 GlStateManager.SourceFactor.ONE,
                 GlStateManager.DestFactor.ZERO
         );
+        RenderSystem.setShaderTexture(0, BridgingMod.PLACEMENT_ICONS_TEXTURE);
 
         int w = this.screenWidth;
         int h = this.screenHeight;
@@ -63,14 +66,15 @@ public class CrosshairRenderingMixin {
         y += BridgingCrosshairTweaks.yShift;
         y += this.minecraft.options.renderDebug ? 15 : 0;
 
-        gui.blit(
-                BridgingMod.PLACEMENT_ICONS_TEXTURE, x, y,
+        ((Gui) (Object) this).blit(
+                poseStack, x, y,
                 alignment.getTextureOffset(), 0,
                 ICON_SIZE, ICON_SIZE
         );
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
     }

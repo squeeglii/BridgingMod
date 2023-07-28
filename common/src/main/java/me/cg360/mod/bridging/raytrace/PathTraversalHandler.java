@@ -40,11 +40,11 @@ public class PathTraversalHandler {
         for(BlockPos pos: path) {
 
             // Invalidate any position that can't have blocks placed there normally.
-            if(!level.getBlockState(pos).canBeReplaced())
+            if(!level.getBlockState(pos).getMaterial().isReplaceable())
                 continue;
 
             Vec3 collideMin = Vec3.atLowerCornerOf(pos);
-            Vec3 collideMax = Vec3.atLowerCornerWithOffset(pos, 1, 1, 1);
+            Vec3 collideMax = Vec3.atLowerCornerOf(pos).add(1, 1, 1);
 
             // Invalidate any position that is within the player's bounding box.
             if(player.getBoundingBox().intersects(collideMin, collideMax))
@@ -86,8 +86,8 @@ public class PathTraversalHandler {
         Vec3 nearVec = viewDirection.scale(MIN_DISTANCE);
         Vec3 farVec = viewDirection.scale(GameSupport.getReach());
 
-        BlockPos startPos = BlockPos.containing(viewOrigin.add(nearVec));
-        BlockPos endPos = BlockPos.containing(viewOrigin.add(farVec));
+        BlockPos startPos = new BlockPos(viewOrigin.add(nearVec));
+        BlockPos endPos = new BlockPos(viewOrigin.add(farVec));
 
         return Path.calculateBresenhamVoxels(startPos, endPos);
     }

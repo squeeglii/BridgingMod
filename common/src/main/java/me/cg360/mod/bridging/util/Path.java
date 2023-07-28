@@ -50,7 +50,7 @@ public class Path {
                 point1 += 2 * dy;
                 point2 += 2 * dz;
 
-                BlockPos newPoint = BlockPos.containing(workingVec);
+                BlockPos newPoint = new BlockPos(workingVec);
                 List<BlockPos> lostPoints = calculateMissedPoints(points, newPoint, startPos, endPos);
 
                 points.addAll(lostPoints);
@@ -81,7 +81,7 @@ public class Path {
                 point1 += 2 * dx;
                 point2 += 2 * dz;
 
-                BlockPos newPoint = BlockPos.containing(workingVec);
+                BlockPos newPoint = new BlockPos(workingVec);
                 List<BlockPos> lostPoints = calculateMissedPoints(points, newPoint, startPos, endPos);
 
                 points.addAll(lostPoints);
@@ -111,7 +111,7 @@ public class Path {
             point1 += 2 * dy;
             point2 += 2 * dx;
 
-            BlockPos newPoint = BlockPos.containing(workingVec);
+            BlockPos newPoint = new BlockPos(workingVec);
             List<BlockPos> lostPoints = calculateMissedPoints(points, newPoint, startPos, endPos);
 
             points.addAll(lostPoints);
