@@ -18,7 +18,8 @@
     "entrypoints": {
         "main": [ "me.cg360.mod.bridging.BridgingModCommon::init" ],
         "client": [ "me.cg360.mod.bridging.BridgingMod::init" ],
-        "modmenu": [ "me.cg360.mod.bridging.compat.ModMenuIntegration" ]
+        "modmenu": [ "me.cg360.mod.bridging.compat.ModMenuIntegration" ],
+        "dynamiccrosshair": [ "me.cg360.mod.bridging.compat.DynamicCrosshairCompat" ]
     },
     "mixins": [
         "${mod_id}.mixins.json"

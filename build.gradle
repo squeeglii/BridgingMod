@@ -32,6 +32,13 @@ repositories {
 	// Mod Deps
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 dependencies {
@@ -52,6 +59,8 @@ dependencies {
 	}
 
 	modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
+
+	modCompileOnly("maven.modrinth:dynamiccrosshair:${project.dynamiccrosshair_version}")
 }
 
 processResources {
