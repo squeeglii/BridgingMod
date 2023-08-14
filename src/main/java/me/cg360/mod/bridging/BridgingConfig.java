@@ -7,6 +7,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 public class BridgingConfig implements ConfigData {
 
     private boolean enableBridgingAssist = true;
+    private boolean enableSlabAssist = true;
 
     private boolean showCrosshair = true;
 
@@ -16,6 +17,10 @@ public class BridgingConfig implements ConfigData {
 
     public boolean isBridgingEnabled() {
         return this.enableBridgingAssist;
+    }
+
+    public boolean isSlabAssistEnabled() {
+        return this.enableSlabAssist;
     }
 
     public boolean shouldShowDebugHighlight() {

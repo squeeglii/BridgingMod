@@ -4,7 +4,8 @@
 
     "text.autoconfig.bridgingmod.title": "Bridging Mod",
     "text.autoconfig.bridgingmod.option.enableBridgingAssist": "Enable Bridge-Assist",
-    "text.autoconfig.bridgingmod.option.showCrosshair": "Show Bridge-Assist Crosshair",
-    "text.autoconfig.bridgingmod.option.showDebugHighlight": "Highlight Bridge-Assist Target In F3",
-    "text.autoconfig.bridgingmod.option.showDebugTrace": "Highlight Bridge-Assist Internals In F3"
+    "text.autoconfig.bridgingmod.option.enableSlabAssist": "Align slabs placed with Bridge-Assist",
+    "text.autoconfig.bridgingmod.option.showCrosshair": "Show Bridge-Assist crosshair",
+    "text.autoconfig.bridgingmod.option.showDebugHighlight": "Highlight Bridge-Assist target in F3",
+    "text.autoconfig.bridgingmod.option.showDebugTrace": "Highlight Bridge-Assist internals in F3"
 }

@@ -1,5 +1,6 @@
 package me.cg360.mod.bridging.mixin;
 
+import com.mojang.logging.LogUtils;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
@@ -7,10 +8,12 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -55,9 +58,13 @@ public abstract class MinecraftClientMixin {
             if (!this.player.mayUseItemAt(pos, dir, itemStack)) return;
             if(this.gameMode == null) return;
 
-            Vec3 startPos = Vec3.atCenterOf(pos);
+            double deltaY = this.player.getY() - 0.01d - Vec3.atCenterOf(pos).y();
+            double clamped = Mth.clamp(deltaY, -0.5d, 0.5d);
 
-            BlockHitResult blockHitResult = new BlockHitResult(startPos, dir, pos, false);
+            Vec3 startPos = BridgingMod.getConfig().isSlabAssistEnabled()
+                    ? Vec3.atCenterOf(pos).add(0, clamped, 0)
+                    : Vec3.atCenterOf(pos);
+            BlockHitResult blockHitResult = new BlockHitResult(startPos, dir, pos, true);
 
             int originalStackSize = itemStack.getCount();
             InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
