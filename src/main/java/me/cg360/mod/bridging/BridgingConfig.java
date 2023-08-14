@@ -34,4 +34,8 @@ public class BridgingConfig implements ConfigData {
     public boolean shouldShowCrosshair() {
         return this.showCrosshair;
     }
+
+    public void toggleBridgingEnabled() {
+        this.enableBridgingAssist = !this.isBridgingEnabled();
+    }
 }

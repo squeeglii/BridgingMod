@@ -2,6 +2,9 @@
     "bridgingmod.config.failed_integration.title": "Config UI Disabled!",
     "bridgingmod.config.failed_integration.description": "The mod's config is disabled in snapshots",
 
+    "key.categories.bridgingmod": "Bridging Mod",
+    "key.bridgingmod.toggle_bridging": "Toggle Bridging",
+
     "text.autoconfig.bridgingmod.title": "Bridging Mod",
     "text.autoconfig.bridgingmod.option.enableBridgingAssist": "Enable Bridge-Assist",
     "text.autoconfig.bridgingmod.option.enableSlabAssist": "Align slabs placed with Bridge-Assist",

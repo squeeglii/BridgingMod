@@ -1,6 +1,6 @@
 package me.cg360.mod.bridging.mixin;
 
-import com.mojang.logging.LogUtils;
+import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
@@ -13,7 +13,6 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -33,6 +32,10 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
+        if(BridgingKeyMappings.TOGGLE_BRIDGING.consumeClick()) {
+            BridgingMod.getConfig().toggleBridgingEnabled();
+        }
+
         BridgingStateTracker.tick(this.player);
     }
 
