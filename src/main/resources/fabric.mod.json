@@ -30,7 +30,7 @@
     "depends": {
         "fabricloader": ">=${loader_version}",
         "fabric": "*",
-        "minecraft": "${minecraft_version_long}",
+        "minecraft": ">=${minecraft_version_long}",
         "java": ">=17",
         "cloth-config": ">=${clothconfig_version}"
     },
