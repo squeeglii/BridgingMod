@@ -1,6 +1,6 @@
 package me.cg360.mod.bridging;
 
-import me.cg360.mod.bridging.compat.DynamicCrosshairCompat;
+import me.cg360.mod.bridging.compat.forge.DynamicCrosshairCompat;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;

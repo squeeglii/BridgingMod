@@ -33,7 +33,7 @@
     "accessWidener": "bridgingmod.accesswidener",
 
     "depends": {
-        "fabricloader": ">=${loader_version}",
+        "fabricloader": ">=${fabric_loader_version}",
         "fabric": "*",
         "minecraft": "${supported_minecraft_versions_fabric}",
         "java": ">=17",
