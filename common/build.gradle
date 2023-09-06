@@ -1,0 +1,12 @@
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/bridgingmod.accesswidener")
+}
+
+dependencies {
+    // Don't remove - used for @Environment annotations and nothing else.
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+}

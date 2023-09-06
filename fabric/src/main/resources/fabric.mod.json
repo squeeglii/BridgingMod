@@ -12,7 +12,7 @@
     },
 
     "license": "MIT",
-    "icon": "assets/${mod_id}/icon.png",
+    "icon": "assets/bridgingmod/icon.png",
 
     "environment": "*",
     "entrypoints": {
@@ -22,15 +22,15 @@
         "dynamiccrosshair": [ "me.cg360.mod.bridging.compat.DynamicCrosshairCompat" ]
     },
     "mixins": [
-        "${mod_id}.mixins.json"
+        "bridgingmod-common.mixins.json"
     ],
 
-    "accessWidener": "${mod_id}.accesswidener",
+    "accessWidener": "bridgingmod.accesswidener",
 
     "depends": {
         "fabricloader": ">=${loader_version}",
         "fabric": "*",
-        "minecraft": ">=${minecraft_version_long}",
+        "minecraft": "${supported_minecraft_versions_fabric}",
         "java": ">=17",
         "cloth-config": ">=${clothconfig_version}"
     },

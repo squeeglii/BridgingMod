@@ -1,114 +1,98 @@
 plugins {
-	id 'fabric-loom' version '1.2.7'
-	id 'maven-publish'
+	id "architectury-plugin" version "3.4-SNAPSHOT"
+	id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
 }
 
-String targetVersion = project.properties["mod_version"] == null || project.properties["mod_version"].toString().length() == 0
-		? "-indev"
-		:"-v" + project.properties["mod_version"].toString()
-project.setVersion(project.properties["minecraft_version"] + targetVersion)
+String targetVersion = rootProject.properties["mod_version"] == null ||
+		rootProject.properties["mod_version"].toString().length() == 0
+		   ? "-indev"
+		   :"-v" + rootProject.properties["mod_version"].toString()
 
-loom {
-	accessWidenerPath = file("src/main/resources/bridgingmod.accesswidener")
 
-	runs {
-		client {
-			runDir "run/client"
-		}
-
-		server {
-			runDir "run/server"
-		}
-	}
+architectury {
+	minecraft = rootProject.minecraft_version
 }
 
-repositories {
-	// Mappings
-	maven {
-		name = 'ParchmentMC'
-		url = "https://maven.parchmentmc.org/"
+subprojects {
+	apply plugin: "dev.architectury.loom"
+
+	loom {
+		silentMojangMappingsLicense()
 	}
 
-	// Mod Deps
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.terraformersmc.com/releases/" }
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-		content {
-			includeGroup "maven.modrinth"
+	dependencies {
+		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+
+		mappings loom.layered() {
+			officialMojangMappings()
+
+			if(project.parchment_version != "")
+				parchment("org.parchmentmc.data:${project.parchment_version}@zip")
 		}
 	}
 }
 
-dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered() {
-		officialMojangMappings()
+allprojects {
+	apply plugin: "java"
+	apply plugin: "architectury-plugin"
+	apply plugin: "maven-publish"
 
-		if(project.parchment_version != "")
-			parchment("org.parchmentmc.data:${project.parchment_version}@zip")
+	archivesBaseName = rootProject.archives_base_name
+	version = project.properties["minecraft_version"] + targetVersion
+	group = rootProject.maven_group
+
+	repositories {
+		maven {
+			name = 'ParchmentMC'
+			url = "https://maven.parchmentmc.org/"
+		}
+
+		// Mod Deps
+		maven { url "https://maven.shedaniel.me/" }
+		maven { url "https://maven.terraformersmc.com/releases/" }
+		maven {
+			name = "Modrinth"
+			url = "https://api.modrinth.com/maven"
+			content {
+				includeGroup "maven.modrinth"
+			}
+		}
 	}
 
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = "UTF-8"
+		options.release.set(17)
 
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
+		// Shows details related to the xlint "unchecked" and "derecation" warning notes.
+		if (project.properties["show_dev_warnings"] == "true") {
+			it.options.deprecation = true
+			it.options.compilerArgs << '-Xlint:unchecked'
+		}
 	}
 
-	modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
+	processResources {
+		inputs.property "version", project.version
+		filteringCharset "UTF-8"
 
-	modCompileOnly("maven.modrinth:dynamiccrosshair:${project.dynamiccrosshair_version}")
-}
+		HashMap modifiedSrc = new HashMap<>(project.properties)
+		modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
 
-processResources {
-	inputs.property "version", project.version
-	filteringCharset "UTF-8"
-
-	HashMap modifiedSrc = new HashMap<>(project.properties)
-	modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
-
-	filesMatching("fabric.mod.json") {
-		expand modifiedSrc
-	}
-}
-
-def targetJavaVersion = 17
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-		it.options.release.set(targetJavaVersion)
+		filesMatching("fabric.mod.json") {
+			expand modifiedSrc
+		}
 	}
 
-	// Shows details related to the xlint "unchecked" and "derecation" warning notes.
-	if(project.properties["show_dev_warnings"] == "true") {
-		it.options.deprecation = true
-		it.options.compilerArgs << '-Xlint:unchecked'
-	}
-}
-
-java {
-	def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-	if (JavaVersion.current() < javaVersion) {
-		toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+	java {
+		withSourcesJar()
 	}
 
-	archivesBaseName = project.archives_base_name
-
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-}
-
-jar {
-	from("LICENSE.md") {
-		rename { "${it}_${project.archivesBaseName}"}
+	jar {
+		from("LICENSE.md") {
+			rename { "${it}_${project.archivesBaseName}"}
+		}
 	}
 }
-
 
 tasks.register('updateDocTemplates', Copy) {
 	group = "mod-utils"

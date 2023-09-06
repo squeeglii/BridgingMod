@@ -1,9 +1,23 @@
 pluginManagement {
     repositories {
         maven {
+            name = 'Architectury'
+            url = "https://maven.architectury.dev/"
+        }
+        maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Forge'
+            url = "https://maven.neoforged.net/releases"
         }
         gradlePluginPortal()
     }
 }
+
+include("common")
+include("fabric")
+include("forge")
+
+rootProject.name = "BridgingMod"
