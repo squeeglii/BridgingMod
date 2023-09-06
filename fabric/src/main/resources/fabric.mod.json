@@ -16,10 +16,15 @@
 
     "environment": "*",
     "entrypoints": {
-        "main": [ "me.cg360.mod.bridging.BridgingModCommon::init" ],
-        "client": [ "me.cg360.mod.bridging.BridgingMod::init" ],
-        "modmenu": [ "me.cg360.mod.bridging.compat.ModMenuIntegration" ],
-        "dynamiccrosshair": [ "me.cg360.mod.bridging.compat.DynamicCrosshairCompat" ]
+        "client": [
+            "me.cg360.mod.bridging.BridgingModFabric::init"
+        ],
+        "modmenu": [
+            "me.cg360.mod.bridging.compat.fabric.ModMenuIntegration"
+        ],
+        "dynamiccrosshair": [
+            "me.cg360.mod.bridging.compat.fabric.DynamicCrosshairCompat"
+        ]
     },
     "mixins": [
         "bridgingmod-common.mixins.json"

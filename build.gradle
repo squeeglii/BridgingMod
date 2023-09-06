@@ -65,7 +65,7 @@ allprojects {
 		options.release.set(17)
 
 		// Shows details related to the xlint "unchecked" and "derecation" warning notes.
-		if (project.properties["show_dev_warnings"] == "true") {
+		if (rootProject.properties["show_dev_warnings"] == "true") {
 			it.options.deprecation = true
 			it.options.compilerArgs << '-Xlint:unchecked'
 		}
@@ -79,6 +79,10 @@ allprojects {
 		modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
 
 		filesMatching("fabric.mod.json") {
+			expand modifiedSrc
+		}
+
+		filesMatching("META-INF/mods.toml") {
 			expand modifiedSrc
 		}
 	}

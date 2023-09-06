@@ -1,11 +1,11 @@
 package me.cg360.mod.bridging;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class BridgingKeyMappings {
 
@@ -21,9 +21,9 @@ public class BridgingKeyMappings {
         return k;
     }
 
-    public static void registerAll() {
+    public static void forEachKeybindingDo(Consumer<KeyMapping> keyMappingConsumer) {
         for(KeyMapping mapping: BridgingKeyMappings.KEY_MAPPINGS) {
-            KeyBindingHelper.registerKeyBinding(mapping);
+            keyMappingConsumer.accept(mapping);
         }
     }
 }

@@ -34,21 +34,15 @@ repositories {
 }
 
 dependencies {
-
     forge rootProject.use_neoforge
             ? "net.neoforged:forge:${rootProject.forge_version}"
             : "net.minecraftforge:forge:${rootProject.forge_version}";
 
+    modApi("me.shedaniel.cloth:cloth-config-forge:${project.clothconfig_version}")
+    modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_forge}")
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
 }
 
 shadowJar {
@@ -60,7 +54,7 @@ shadowJar {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier.set(null)
 }

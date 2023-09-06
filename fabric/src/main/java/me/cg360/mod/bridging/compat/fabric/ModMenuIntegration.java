@@ -1,4 +1,4 @@
-package me.cg360.mod.bridging.compat;
+package me.cg360.mod.bridging.compat.fabric;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

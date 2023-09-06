@@ -9,4 +9,6 @@ loom {
 dependencies {
     // Don't remove - used for @Environment annotations and nothing else.
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+    modImplementation("me.shedaniel.cloth:cloth-config:${rootProject.clothconfig_version}")
 }
