@@ -27,8 +27,17 @@ configurations {
     developmentForge.extendsFrom common
 }
 
+repositories {
+    maven {
+        url "https://maven.neoforged.net/releases/"
+    }
+}
+
 dependencies {
-    forge "net.neoforged:forge:${rootProject.forge_version}"
+
+    forge rootProject.use_neoforge
+            ? "net.neoforged:forge:${rootProject.forge_version}"
+            : "net.minecraftforge:forge:${rootProject.forge_version}";
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
@@ -47,17 +56,17 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [ project.configurations.shadowCommon ]
-    classifier "dev-shadow"
+    archiveClassifier.set("dev-shadow")
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier.set(null)
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier.set("dev")
 }
 
 sourcesJar {
