@@ -78,12 +78,23 @@ allprojects {
 	}
 }
 
+
+static def formatAsBadgeSafe(var val) {
+	if(!(val instanceof String))
+		return val
+
+	// Badges break if hyphens are present.
+	return ((String) val).replaceAll("[- /]", "_")
+}
+
 tasks.register('updateDocTemplates', Copy) {
 	group = "mod-utils"
 	description = "Takes documents from a folder, expands any template variables, and then copies them to the root."
 	doNotTrackState("Stops gradle from screaming - It doesn't let files get copied to the root if tracking state.")
 
-	HashMap modifiedSrc = new HashMap<>(project.properties)
+	Map filteredSrc = rootProject.properties.collectEntries {
+		k, v -> [(k): formatAsBadgeSafe(v) ]
+	}
 
 	from "/template_docs"
 
@@ -91,7 +102,7 @@ tasks.register('updateDocTemplates', Copy) {
 	include "**"
 	exclude "media/**"
 
-	expand modifiedSrc
+	expand filteredSrc
 }
 
 def cleanAll = tasks.register('cleanAll') {
