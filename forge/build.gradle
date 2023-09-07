@@ -14,16 +14,16 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-        mixinConfig "bridgingmod-common.mixins.json"
-        mixinConfig "bridginmod.mixins.json"
+        mixinConfig "bridgingmod.mixins.json"
     }
 }
+
 
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
+    compileOnly.extendsFrom common
+    runtimeOnly.extendsFrom common
     developmentForge.extendsFrom common
 }
 
@@ -34,15 +34,36 @@ repositories {
 }
 
 dependencies {
-    forge rootProject.use_neoforge
-            ? "net.neoforged:forge:${rootProject.forge_version}"
-            : "net.minecraftforge:forge:${rootProject.forge_version}";
+    String neoForge = rootProject.use_neoforge;
+    String forgeString
+
+    if(neoForge == "true") {
+        forgeString = "net.neoforged:forge:${rootProject.forge_version}"
+    } else {
+        forgeString = "net.minecraftforge:forge:${rootProject.forge_version}"
+    }
+
+    System.out.println("%s, %s".formatted(neoForge, forgeString))
+
+    forge forgeString
 
     modApi("me.shedaniel.cloth:cloth-config-forge:${project.clothconfig_version}")
     modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_forge}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+
+    HashMap modifiedSrc = new HashMap<>(project.properties)
+    modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
+
+    filesMatching("META-INF/mods.toml") {
+        expand modifiedSrc
+    }
 }
 
 shadowJar {

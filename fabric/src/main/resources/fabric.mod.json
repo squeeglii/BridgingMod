@@ -27,10 +27,8 @@
         ]
     },
     "mixins": [
-        "bridgingmod-common.mixins.json"
+        "bridgingmod.mixins.json"
     ],
-
-    "accessWidener": "bridgingmod.accesswidener",
 
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
