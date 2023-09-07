@@ -1,5 +1,7 @@
-package me.cg360.mod.bridging;
+package me.cg360.mod.bridging.entrypoint.forge;
 
+import me.cg360.mod.bridging.BridgingKeyMappings;
+import me.cg360.mod.bridging.BridgingMod;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

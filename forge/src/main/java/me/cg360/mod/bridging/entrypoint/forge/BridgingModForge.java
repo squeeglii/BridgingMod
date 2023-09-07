@@ -1,5 +1,6 @@
-package me.cg360.mod.bridging;
+package me.cg360.mod.bridging.entrypoint.forge;
 
+import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.forge.DynamicCrosshairCompat;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;

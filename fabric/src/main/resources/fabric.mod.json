@@ -17,7 +17,7 @@
     "environment": "*",
     "entrypoints": {
         "client": [
-            "me.cg360.mod.bridging.BridgingModFabric::init"
+            "me.cg360.mod.bridging.entrypoint.fabric.BridgingModFabric::init"
         ],
         "modmenu": [
             "me.cg360.mod.bridging.compat.fabric.ModMenuIntegration"
