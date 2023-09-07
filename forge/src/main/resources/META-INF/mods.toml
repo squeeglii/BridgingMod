@@ -29,7 +29,7 @@ side = "CLIENT"
 
 [[dependencies.bridgingmod]]
 modId = "cloth_config"
-mandatory = false
+mandatory = true
 versionRange = "[${clothconfig_version},)"
 ordering = "NONE"
 side = "CLIENT"

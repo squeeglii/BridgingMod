@@ -1,9 +1,8 @@
 package me.cg360.mod.bridging;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.Supplier;
 
 public class BridgingMod {
 
@@ -12,11 +11,11 @@ public class BridgingMod {
     public static final ResourceLocation PLACEMENT_ICONS_TEXTURE = ResourceLocation.tryBuild(MOD_ID, "textures/gui/placement_icons.png");
 
     private static boolean configSuccessfullyInitialized = true;
-    private static ConfigHolder<BridgingConfig> config = null;
+    private static Supplier<BridgingConfig> configSource = null;
 
 
-    public static void init() {
-        config = AutoConfig.register(BridgingConfig.class, GsonConfigSerializer::new);
+    public static void init(Supplier<BridgingConfig> bridgingConfigProvider) {
+        configSource = bridgingConfigProvider;
     }
 
 
@@ -25,6 +24,6 @@ public class BridgingMod {
     }
 
     public static BridgingConfig getConfig() {
-        return config == null ? new BridgingConfig() : config.get();
+        return configSource == null ? new BridgingConfig() : configSource.get();
     }
 }
