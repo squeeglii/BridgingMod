@@ -12,7 +12,7 @@
     },
 
     "license": "MIT",
-    "icon": "assets/bridgingmod/icon.png",
+    "icon": "icon.png",
 
     "environment": "*",
     "entrypoints": {

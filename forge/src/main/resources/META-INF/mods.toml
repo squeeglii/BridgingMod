@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "Bridging Mod"
 authors = "CG360"
 description = "Adds bridging assist similar to Bedrock & Quark's building mechanics."
-logoFile = "assets/bridgingmod/icon.png"
+logoFile = "icon.png"
 displayURL = "https://github.com/CloudG360/BridgingMod"
 displayTest = "IGNORE_ALL_VERSION"
 
