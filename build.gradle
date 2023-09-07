@@ -3,10 +3,12 @@ plugins {
 	id "dev.architectury.loom" version "1.3-SNAPSHOT" apply false
 }
 
-String targetVersion = rootProject.properties["mod_version"] == null ||
-		rootProject.properties["mod_version"].toString().length() == 0
-		   ? "-indev"
-		   :"-v" + rootProject.properties["mod_version"].toString()
+boolean isModVersionDefined = project.properties["mod_version"] == null ||
+		project.properties["mod_version"].toString().length() == 0;
+
+String modVer = isModVersionDefined
+		? "indev"
+		: project.properties["mod_version"].toString()
 
 
 architectury {
@@ -38,8 +40,8 @@ allprojects {
 	apply plugin: "maven-publish"
 
 	base.archivesName = rootProject.archives_base_name
-	version = project.properties["minecraft_version"] + targetVersion
 	group = rootProject.maven_group
+	version = "%s+%s.%s".formatted(modVer, project.properties["minecraft_version"], project.name)
 
 	repositories {
 		maven {
@@ -90,4 +92,38 @@ tasks.register('updateDocTemplates', Copy) {
 	exclude "media/**"
 
 	expand modifiedSrc
+}
+
+def cleanAll = tasks.register('cleanAll') {
+	group = "modgradle"
+	description = "Runs a clean operation on every project"
+	dependsOn allprojects.collect({ it.tasks.named('clean') })
+}
+
+def collectJars = tasks.register('collectJars', Copy) {
+	group = "modgradle"
+	description = "Used to gather all the jars that can be published"
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+	dependsOn subprojects.collect({
+		def discovered = it.tasks.findAll {
+			it.name == "remapSourcesJar" || it.name == "remapJar"
+		}
+
+		return discovered == null
+				? []
+				: discovered;
+	})
+
+	def jarHolderDirs = []
+
+	subprojects.each {
+		File target = new File(it.buildDir, "libs")
+		jarHolderDirs.add(target)
+	}
+
+
+	from jarHolderDirs
+	include("*-release.jar")
+	rename { String name -> name.substring(0, name.length() - 12) + ".jar" }
+	into "$buildDir/for-publishing"
 }
