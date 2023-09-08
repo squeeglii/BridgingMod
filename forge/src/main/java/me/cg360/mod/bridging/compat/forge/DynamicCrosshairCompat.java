@@ -28,7 +28,7 @@ public class DynamicCrosshairCompat implements DynamicCrosshairApi {
 	}
 
 	@Override
-	public Crosshair computeFromItem(CrosshairContext context) {
+	public Crosshair checkUsableItem(CrosshairContext context) {
 		if (BridgingStateTracker.getLastTickTarget() != null) {
 			return Crosshair.HOLDING_BLOCK;
 		}

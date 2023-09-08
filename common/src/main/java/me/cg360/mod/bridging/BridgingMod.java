@@ -8,7 +8,7 @@ public class BridgingMod {
 
     public static final String MOD_ID = "bridgingmod";
 
-    public static final ResourceLocation PLACEMENT_ICONS_TEXTURE = ResourceLocation.tryBuild(MOD_ID, "textures/gui/placement_icons.png");
+    public static final ResourceLocation PLACEMENT_ICONS_TEXTURE = new ResourceLocation(MOD_ID, "textures/gui/placement_icons.png");
 
     private static boolean configSuccessfullyInitialized = true;
     private static Supplier<BridgingConfig> configSource = null;

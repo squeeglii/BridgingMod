@@ -6,7 +6,7 @@ import me.cg360.mod.bridging.BridgingConfig;
 import me.cg360.mod.bridging.BridgingMod;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.gui.screens.AlertScreen;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class ModMenuIntegration implements ModMenuApi {
 
@@ -16,8 +16,8 @@ public class ModMenuIntegration implements ModMenuApi {
                 ? screen -> AutoConfig.getConfigScreen(BridgingConfig.class, screen).get()
                 : screen -> new AlertScreen(
                         screen::onClose,
-                        Component.translatable("bridgingmod.config.failed_integration.title"),
-                        Component.translatable("bridgingmod.config.failed_integration.description")
+                        new TranslatableComponent("bridgingmod.config.failed_integration.title"),
+                        new TranslatableComponent("bridgingmod.config.failed_integration.description")
         );
     }
 

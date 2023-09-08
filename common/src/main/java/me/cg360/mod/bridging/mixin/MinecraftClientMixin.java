@@ -4,6 +4,7 @@ import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -29,6 +30,8 @@ public abstract class MinecraftClientMixin {
     @Shadow @Nullable public MultiPlayerGameMode gameMode;
     @Shadow @Nullable public LocalPlayer player;
     @Shadow @Nullable public HitResult hitResult;
+
+    @Shadow @Nullable public ClientLevel level;
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
@@ -70,7 +73,7 @@ public abstract class MinecraftClientMixin {
             BlockHitResult blockHitResult = new BlockHitResult(startPos, dir, pos, true);
 
             int originalStackSize = itemStack.getCount();
-            InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
+            InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, this.level, hand, blockHitResult);
 
             if (!blockPlaceResult.consumesAction()) continue;
             if (!blockPlaceResult.shouldSwing()) return;

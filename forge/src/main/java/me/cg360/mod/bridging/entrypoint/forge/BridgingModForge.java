@@ -6,10 +6,8 @@ import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.forge.DynamicCrosshairCompat;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import net.minecraft.client.gui.screens.AlertScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -24,26 +22,23 @@ public class BridgingModForge {
 
     public BridgingModForge() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerBindings);
     }
 
 
     public void init(FMLClientSetupEvent event) {
         BridgingMod.init(AutoConfig.register(BridgingConfig.class, GsonConfigSerializer::new));
 
+        BridgingKeyMappings.forEachKeybindingDo(ClientRegistry::registerKeyBinding);
+
         if(BridgingMod.isConfigSuccessfullyInitialized())
-            ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
-                    new ConfigScreenHandler.ConfigScreenFactory((client, parent) ->
+            ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () ->
+                    new ConfigGuiHandler.ConfigGuiFactory((client, parent) ->
                             AutoConfig.getConfigScreen(BridgingConfig.class, parent).get()
             ));
 
-        if(ModList.get().isLoaded(DYNAMIC_CROSSHAIR_MOD))
+        if(ModList.get().isLoaded(DYNAMIC_CROSSHAIR_MOD)) {
             InterModComms.sendTo(DYNAMIC_CROSSHAIR_MOD, "register_api", DynamicCrosshairCompat::new);
-    }
-
-
-    public void registerBindings(RegisterKeyMappingsEvent event) {
-        BridgingKeyMappings.forEachKeybindingDo(event::register);
+        }
     }
 
 }
