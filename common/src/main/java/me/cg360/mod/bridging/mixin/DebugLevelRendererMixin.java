@@ -28,7 +28,7 @@ public abstract class DebugLevelRendererMixin {
     @Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V",
             at = @At("RETURN"))
     public void renderTracedViewPath(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-        if(!this.minecraft.options.renderDebug) return;
+        if(!this.minecraft.getDebugOverlay().showDebugScreen()) return;
 
         VertexConsumer vertices = this.renderBuffers.bufferSource().getBuffer(RenderType.lines());
 

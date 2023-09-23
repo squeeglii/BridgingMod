@@ -9,6 +9,7 @@ import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
@@ -29,6 +30,8 @@ public class CrosshairRenderingMixin {
     @Shadow private int screenWidth;
 
     @Shadow @Final private Minecraft minecraft;
+
+    @Shadow @Final private DebugScreenOverlay debugOverlay;
 
     @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V",
             at = @At(value = "TAIL"))
@@ -61,7 +64,7 @@ public class CrosshairRenderingMixin {
         int y = ((h - ICON_SIZE) / 2);
 
         y += BridgingCrosshairTweaks.yShift;
-        y += this.minecraft.options.renderDebug ? 15 : 0;
+        y += this.debugOverlay.showDebugScreen() ? 15 : 0;
 
         gui.blit(
                 BridgingMod.PLACEMENT_ICONS_TEXTURE, x, y,
