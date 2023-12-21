@@ -1,5 +1,6 @@
 package me.cg360.mod.bridging.raytrace;
 
+import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Path;
 import net.minecraft.client.Minecraft;
@@ -8,7 +9,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
@@ -40,7 +44,7 @@ public class PathTraversalHandler {
         for(BlockPos pos: path) {
 
             // Invalidate any position that can't have blocks placed there normally.
-            if(!level.getBlockState(pos).canBeReplaced())
+            if(!PathTraversalHandler.isBridgingPlacementAllowedAt(pos))
                 continue;
 
             Vec3 collideMin = Vec3.atLowerCornerOf(pos);
@@ -54,7 +58,7 @@ public class PathTraversalHandler {
             // first valid one. Validity includes them being placeable against, as well
             // as facing a similar direction to the camera.
             Optional<Direction> firstValidDirection = validSides.stream()
-                    .filter(dir -> PathTraversalHandler.isValidDirection(pos, dir))
+                    .filter(dir -> PathTraversalHandler.canSideBeBuiltOffOf(pos, dir))
                     .findFirst();
 
             if(firstValidDirection.isEmpty())
@@ -115,22 +119,39 @@ public class PathTraversalHandler {
     }
 
     /**
-     * Determines if a block can be placed at the position "block",
+     * Determines if a block can be placed at the position "placementTarget",
      * if building off of a surface in a given direction when in relation to the position
      * surface|  <<< checkSide <<< |block
      */
-    private static boolean isValidDirection(BlockPos block, Direction checkSide) {
+    private static boolean canSideBeBuiltOffOf(BlockPos placementTarget, Direction checkSide) {
         ClientLevel level = Minecraft.getInstance().level;
 
         if(level == null)
             return false;
 
-        BlockPos checkBlockPos = block.offset(checkSide.getNormal());
+        BlockPos blockPlacingOffOf = placementTarget.offset(checkSide.getNormal());
 
-        if(level.isEmptyBlock(checkBlockPos)) return false;
-        if(level.getBlockState(checkBlockPos).getBlock() instanceof LiquidBlock) return false;
+        // Can't place off of air or liquids.
+        if(level.isEmptyBlock(blockPlacingOffOf)) return false;
+        if(level.getBlockState(blockPlacingOffOf).getBlock() instanceof LiquidBlock) return false;
 
-        return !level.isEmptyBlock(checkBlockPos);
+        // Can't place off of plants - this was never intended but was a thing
+        // in 2.0 to 2.1.
+        // Add as a config option if it's that much in demand.
+        return !level.getBlockState(blockPlacingOffOf).canBeReplaced();
+    }
+
+    private static boolean isBridgingPlacementAllowedAt(BlockPos placementTarget) {
+        ClientLevel level = Minecraft.getInstance().level;
+
+        if(level == null)
+            return false;
+
+        BlockState target = level.getBlockState(placementTarget);
+
+        return BridgingMod.getConfig().isNonSolidReplaceEnabled()
+                ? target.canBeReplaced() // Plants can be replaced ! Crush em all !!1!
+                : target.isAir(); // Plants (non-solids) can't be replaced - only allow self-declared 'air'
     }
 
 }
