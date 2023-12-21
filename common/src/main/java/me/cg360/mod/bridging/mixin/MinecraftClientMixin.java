@@ -48,6 +48,11 @@ public abstract class MinecraftClientMixin {
         if(!BridgingMod.getConfig().isBridgingEnabled()) return;
         if(this.player == null) return;
 
+        boolean passesCrouchTest = !BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() || this.player.isCrouching();
+
+        if(!passesCrouchTest)
+            return;
+
         if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS)
             return;
 

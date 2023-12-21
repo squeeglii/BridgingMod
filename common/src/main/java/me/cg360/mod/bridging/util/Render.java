@@ -31,18 +31,18 @@ public class Render {
     }
 
     public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
-        Render.cubeOutline(poseStack, vertices, camera, pos, 0f, 0.6f, 1f, 0.15f);
+        Render.cubeOutline(poseStack, vertices, camera, pos, 0x260099FF);
     }
 
     public static void cubeTrace(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
-        Render.cubeOutline(poseStack, vertices, camera, pos, 0.2f, 0.2f, 0.2f, 0.1f);
+        Render.cubeOutline(poseStack, vertices, camera, pos, 0x16333333);
     }
 
     public static void cubeTermination(PoseStack poseStack, VertexConsumer vertices, Camera camera, BlockPos pos) {
-        Render.cubeOutline(poseStack, vertices, camera, pos, 1f, 0f, 0f, 0.5f);
+        Render.cubeOutline(poseStack, vertices, camera, pos, 0x7FFF0000);
     }
 
-    public static void cubeOutline(PoseStack poseStack, VertexConsumer consumer, Camera camera, BlockPos pos, float red, float green, float blue, float alpha) {
+    public static void cubeOutline(PoseStack poseStack, VertexConsumer consumer, Camera camera, BlockPos pos, int argbColor) {
         PoseStack.Pose pose = poseStack.last();
         Vec3 camPos = camera.getPosition();
 
@@ -57,12 +57,12 @@ public class Render {
             float length = Mth.sqrt(dx * dx + dy * dy + dz * dz);
 
             consumer.vertex(pose.pose(), (float)(startX + x), (float)(startY + y), (float)(startZ + z))
-                    .color(red, green, blue, alpha)
+                    .color(argbColor)
                     .normal(pose.normal(), dx /= length, dy /= length, dz /= length)
                     .endVertex();
 
             consumer.vertex(pose.pose(), (float)(endX + x), (float)(endY + y), (float)(endZ + z))
-                    .color(red, green, blue, alpha)
+                    .color(argbColor)
                     .normal(pose.normal(), dx, dy, dz)
                     .endVertex();
         });

@@ -6,9 +6,19 @@
     "key.bridgingmod.toggle_bridging": "Toggle Bridging",
 
     "text.autoconfig.bridgingmod.title": "Bridging Mod",
+    "text.autoconfig.bridgingmod.category.feature": "Features",
+    "text.autoconfig.bridgingmod.category.vfx": "Visuals",
+    "text.autoconfig.bridgingmod.category.debug": "Debug",
+
     "text.autoconfig.bridgingmod.option.enableBridgingAssist": "Enable Bridge-Assist",
+    "text.autoconfig.bridgingmod.option.onlyBridgeWhenCrouched": "Only use bridge-assist while crouching",
     "text.autoconfig.bridgingmod.option.enableSlabAssist": "Align slabs placed with Bridge-Assist",
+    "text.autoconfig.bridgingmod.option.enableNonSolidReplace": "Replace Non-Solid Blocks",
+
     "text.autoconfig.bridgingmod.option.showCrosshair": "Show Bridge-Assist crosshair",
-    "text.autoconfig.bridgingmod.option.showDebugHighlight": "Highlight Bridge-Assist target in F3",
-    "text.autoconfig.bridgingmod.option.showDebugTrace": "Highlight Bridge-Assist internals in F3"
+    "text.autoconfig.bridgingmod.option.showOutline": "Show Bridge-Assist block outline",
+    "text.autoconfig.bridgingmod.option.outlineColour": "Colour for Bridge-Assist block outline",
+
+    "text.autoconfig.bridgingmod.option.showDebugHighlight": "Show Bridge-Assist block outline in F3",
+    "text.autoconfig.bridgingmod.option.showDebugTrace": "Show Bridge-Assist block trail in F3"
 }
