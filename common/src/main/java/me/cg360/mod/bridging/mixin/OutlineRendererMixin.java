@@ -29,8 +29,6 @@ public abstract class OutlineRendererMixin {
     @Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lcom/mojang/math/Matrix4f;)V",
             at = @At("RETURN"))
     public void renderTracedViewPath(PoseStack poseStack, float f, long l, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
-        if(!this.minecraft.options.renderDebug) return;
-
         VertexConsumer vertices = this.renderBuffers.bufferSource().getBuffer(RenderType.lines());
         LocalPlayer player = this.minecraft.player;
 
@@ -41,7 +39,7 @@ public abstract class OutlineRendererMixin {
         if(!isBridgingEnabled)
             return;
 
-        boolean isInDebugMenu = this.minecraft.getDebugOverlay().showDebugScreen();
+        boolean isInDebugMenu = this.minecraft.options.renderDebug;
         boolean shouldRenderOutline = (isInDebugMenu  && BridgingMod.getConfig().shouldShowOutlineInF3()) ||
                 (!isInDebugMenu && BridgingMod.getConfig().shouldShowOutline());
 
