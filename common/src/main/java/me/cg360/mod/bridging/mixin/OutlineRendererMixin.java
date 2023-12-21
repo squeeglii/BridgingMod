@@ -7,6 +7,7 @@ import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.Render;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
-public abstract class DebugLevelRendererMixin {
+public abstract class OutlineRendererMixin {
 
     @Shadow @Final private RenderBuffers renderBuffers;
     @Shadow @Final private Minecraft minecraft;
@@ -28,16 +29,32 @@ public abstract class DebugLevelRendererMixin {
     @Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V",
             at = @At("RETURN"))
     public void renderTracedViewPath(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-        if(!this.minecraft.getDebugOverlay().showDebugScreen()) return;
-
         VertexConsumer vertices = this.renderBuffers.bufferSource().getBuffer(RenderType.lines());
+        LocalPlayer player = this.minecraft.player;
 
-        if(BridgingMod.getConfig().shouldShowDebugTrace())
+        boolean isPlayerCrouching = player != null && player.isCrouching();
+        boolean isBridgingEnabled = BridgingMod.getConfig().isBridgingEnabled() &&
+                                    (!BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() || isPlayerCrouching);
+
+        if(!isBridgingEnabled)
+            return;
+
+        boolean isInDebugMenu = this.minecraft.getDebugOverlay().showDebugScreen();
+        boolean shouldRenderOutline = (isInDebugMenu  && BridgingMod.getConfig().shouldShowOutlineInF3()) ||
+                (!isInDebugMenu && BridgingMod.getConfig().shouldShowOutline());
+
+        if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, camera);
 
-        Tuple<BlockPos, Direction> lastTarget = BridgingStateTracker.getLastTickTarget();
+        if(shouldRenderOutline) {
+            Tuple<BlockPos, Direction> lastTarget = BridgingStateTracker.getLastTickTarget();
 
-        if(lastTarget != null && BridgingMod.getConfig().shouldShowDebugHighlight())
-            Render.cubeHighlight(poseStack, vertices, camera, lastTarget.getA());
+            if(lastTarget == null)
+                return;
+
+            int outlineColour = BridgingMod.getConfig().getOutlineColour();
+
+            Render.cubeOutline(poseStack, vertices, camera, lastTarget.getA(), outlineColour);
+        }
     }
 }
