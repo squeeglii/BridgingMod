@@ -6,7 +6,7 @@
   "mixins": [],
   "client": [
     "CrosshairRenderingMixin",
-    "DebugLevelRendererMixin",
+    "OutlineRendererMixin",
     "MinecraftClientMixin"
   ],
   "injectors": {
