@@ -16,6 +16,7 @@
     "text.autoconfig.bridgingmod.option.enableNonSolidReplace": "Replace Non-Solid Blocks",
     "text.autoconfig.bridgingmod.option.delayPostBridging": "Post-Bridging Delay",
     "text.autoconfig.bridgingmod.option.delayPostBridging.@Tooltip": "How many ticks before you can place again? 4 is vanilla. 3 makes bridging easier.",
+    "text.autoconfig.bridgingmod.option.supportedBridgeAxes": "Bridging Axis",
 
     "text.autoconfig.bridgingmod.option.showCrosshair": "Show Bridge-Assist crosshair",
     "text.autoconfig.bridgingmod.option.showOutline": "Show Bridge-Assist block outline",

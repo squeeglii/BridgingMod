@@ -129,6 +129,12 @@ public class PathTraversalHandler {
         if(level == null)
             return false;
 
+        // Should probably find a better place to do this but this makes the mod
+        // run the smoothest.
+        if(!BridgingMod.getConfig().getSupportedBridgeAxes().isDirectionEnabled(checkSide))
+            return false;
+
+
         BlockPos blockPlacingOffOf = placementTarget.offset(checkSide.getNormal());
 
         // Can't place off of air or liquids.
