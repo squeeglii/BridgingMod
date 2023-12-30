@@ -30,6 +30,8 @@ public abstract class MinecraftClientMixin {
     @Shadow @Nullable public LocalPlayer player;
     @Shadow @Nullable public HitResult hitResult;
 
+    @Shadow private int rightClickDelay;
+
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
         if(BridgingKeyMappings.TOGGLE_BRIDGING.consumeClick()) {
@@ -40,31 +42,34 @@ public abstract class MinecraftClientMixin {
     }
 
 
-    @Inject(at = @At("HEAD"), method = "startUseItem()V")
+    @Inject(at = @At("HEAD"), method = "startUseItem()V", cancellable = true)
     public void onItemUse(CallbackInfo info) {
         if(!BridgingMod.getConfig().isBridgingEnabled()) return;
         if(this.player == null) return;
+        if(this.gameMode == null) return;
+        if(this.player.isHandsBusy() || this.gameMode.isDestroying()) return;
 
-        boolean passesCrouchTest = !BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() || this.player.isCrouching();
+        // Should only bridge if all other options to interact are exhausted
+        if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) return;
+
+        boolean passesCrouchTest = !BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() ||
+                                    this.player.isCrouching();
 
         if(!passesCrouchTest)
             return;
 
-        if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS)
-            return;
+        Tuple<BlockPos, Direction> pair = BridgingStateTracker.getLastTickTarget();
+
+        if (pair == null) return;
 
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);
 
-            Tuple<BlockPos, Direction> pair = BridgingStateTracker.getLastTickTarget();
-
-            if (pair == null) continue;
-
             BlockPos pos = pair.getA();
             Direction dir = pair.getB();
 
-            if (!this.player.mayUseItemAt(pos, dir, itemStack)) return;
-            if(this.gameMode == null) return;
+            if (!this.player.mayUseItemAt(pos, dir, itemStack))
+                continue;
 
             double deltaY = this.player.getY() - 0.01d - Vec3.atCenterOf(pos).y();
             double clamped = Mth.clamp(deltaY, -0.5d, 0.5d);
@@ -78,6 +83,13 @@ public abstract class MinecraftClientMixin {
             InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
 
             if (!blockPlaceResult.consumesAction()) continue;
+
+            // if successful place occurred, cancel all future behaviour for
+            // item placement as this takes over instead. Stops off-hand
+            // shields from firing constantly.
+            this.rightClickDelay = Math.max(0, BridgingMod.getConfig().getDelayPostBridging());
+            info.cancel();
+
             if (!blockPlaceResult.shouldSwing()) return;
 
             this.player.swing(hand);
