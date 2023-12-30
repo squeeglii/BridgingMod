@@ -15,6 +15,10 @@ public class BridgingConfig implements ConfigData {
     private boolean enableSlabAssist = true;
     @ConfigEntry.Category("feature")
     private boolean enableNonSolidReplace = true;
+    @ConfigEntry.Category("feature")
+    @ConfigEntry.BoundedDiscrete(min = 0, max = 20)
+    @ConfigEntry.Gui.Tooltip()
+    private int delayPostBridging = 4; // 4 is vanilla - 3 allows for better forward bridging.
 
 
     @ConfigEntry.Category("vfx")
@@ -48,6 +52,9 @@ public class BridgingConfig implements ConfigData {
         return this.enableNonSolidReplace;
     }
 
+    public int getDelayPostBridging() {
+        return this.delayPostBridging;
+    }
 
     public boolean shouldShowCrosshair() {
         return this.showCrosshair;
