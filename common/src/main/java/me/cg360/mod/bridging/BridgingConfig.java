@@ -1,5 +1,6 @@
 package me.cg360.mod.bridging;
 
+import me.cg360.mod.bridging.util.PlacementAxisMode;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -11,6 +12,9 @@ public class BridgingConfig implements ConfigData {
     private boolean enableBridgingAssist = true;
     @ConfigEntry.Category("feature")
     private boolean onlyBridgeWhenCrouched = false;
+    @ConfigEntry.Category("feature")
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    private PlacementAxisMode supportedBridgeAxes = PlacementAxisMode.BOTH;
     @ConfigEntry.Category("feature")
     private boolean enableSlabAssist = true;
     @ConfigEntry.Category("feature")
@@ -55,6 +59,11 @@ public class BridgingConfig implements ConfigData {
     public int getDelayPostBridging() {
         return this.delayPostBridging;
     }
+
+    public PlacementAxisMode getSupportedBridgeAxes() {
+        return this.supportedBridgeAxes;
+    }
+
 
     public boolean shouldShowCrosshair() {
         return this.showCrosshair;
