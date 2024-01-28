@@ -1,6 +1,10 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "com.modrinth.minotaur"
+apply plugin: "net.darkhax.curseforgegradle"
+
+apply from: "$rootDir/publishing.gradle"
 
 architectury {
     platformSetupLoomIde()
@@ -54,18 +58,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
-processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
-
-    HashMap modifiedSrc = new HashMap<>(project.properties)
-    modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
-
-    filesMatching("META-INF/mods.toml") {
-        expand modifiedSrc
-    }
-}
-
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
@@ -94,4 +86,59 @@ components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
     }
+}
+
+modrinth {
+    String[] versions = getSupportedVersions(project.properties);
+
+    token = getModrinthToken(project)
+    projectId = "bridging-mod"
+    versionName = "Bridging Mod ${formattedBaseVersion} (Forge)"
+    versionNumber = project.version.toString()
+    versionType = project.properties["release_type"].toString()
+    uploadFile = remapJar
+    gameVersions = Arrays.asList(versions)
+    loaders = [ "forge" ]
+
+    changelog = new File(project.getRootDir(), "changelog.md").readLines().join("\n")
+
+    var shouldPublish = project.properties["debug_publishing"]
+    if(shouldPublish != null && shouldPublish.toString().equalsIgnoreCase("true"))
+        setDebugMode(true)
+
+    dependencies {
+        required.project "cloth-config"
+    }
+}
+
+tasks.register('curseforge', TaskPublishCurseForge) {
+    group = "publishing"
+    description = "Publishes project to CurseForge"
+
+    String mcVer = project.properties["minecraft_version"]
+    String projectVer = project.properties["mod_version"]
+    String projectId = project.properties["curseforge_project"]
+
+    if(projectVer == null || projectVer.isBlank())
+        throw new IllegalStateException("Project version should not be null when publishing.")
+
+    apiToken = getCurseToken(project)
+
+    var shouldPublish = project.properties["debug_publishing"]
+    if(shouldPublish != null && shouldPublish.toString().equalsIgnoreCase("true"))
+        debugMode = true
+
+    def mainFile = upload(projectId, remapJar)
+    mainFile.displayName = "[Forge %s] v%s Bridging Mod".formatted(mcVer, projectVer)
+    mainFile.addModLoader("forge")
+    mainFile.releaseType = project.properties["release_type"]
+
+    mainFile.changelogType = "markdown"
+    mainFile.changelog = new File(project.getRootDir(), "changelog.md")
+
+    for(String version: getSupportedVersions(project.properties))
+        mainFile.addGameVersion(version)
+
+    mainFile.addRequirement("cloth-config")
+
 }

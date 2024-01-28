@@ -1,5 +1,6 @@
 package me.cg360.mod.bridging.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
@@ -27,9 +28,13 @@ public abstract class OutlineRendererMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V",
-            at = @At("RETURN"))
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V",
+                    shift = At.Shift.BEFORE,
+                    ordinal = 0
+            ))
     public void renderTracedViewPath(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-        VertexConsumer vertices = this.renderBuffers.bufferSource().getBuffer(RenderType.lines());
         LocalPlayer player = this.minecraft.player;
 
         boolean isPlayerCrouching = player != null && player.isCrouching();
@@ -42,6 +47,10 @@ public abstract class OutlineRendererMixin {
         boolean isInDebugMenu = this.minecraft.options.renderDebug;
         boolean shouldRenderOutline = (isInDebugMenu  && BridgingMod.getConfig().shouldShowOutlineInF3()) ||
                 (!isInDebugMenu && BridgingMod.getConfig().shouldShowOutline());
+
+        MultiBufferSource.BufferSource bufferSource = this.renderBuffers.bufferSource();
+        VertexConsumer vertices = bufferSource.getBuffer(RenderType.lines());
+
 
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, camera);
@@ -56,5 +65,7 @@ public abstract class OutlineRendererMixin {
 
             Render.cubeOutline(poseStack, vertices, camera, lastTarget.getA(), outlineColour);
         }
+
+        //bufferSource.endBatch();
     }
 }

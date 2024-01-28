@@ -1,7 +1,16 @@
+import java.util.regex.Pattern
+
 plugins {
 	id "architectury-plugin" version "3.4-SNAPSHOT"
-	id "dev.architectury.loom" version "1.3-SNAPSHOT" apply false
+	id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
+
+	id "com.github.johnrengelman.shadow" version "7.1.2" apply false
+
+	id "com.modrinth.minotaur" version "2.+" apply false
+	id "net.darkhax.curseforgegradle" version "1.1.18" apply false
 }
+
+apply from: "$rootDir/publishing.gradle"
 
 boolean isModVersionDefined = project.properties["mod_version"] == null ||
 		project.properties["mod_version"].toString().length() == 0;
@@ -9,6 +18,8 @@ boolean isModVersionDefined = project.properties["mod_version"] == null ||
 String modVer = isModVersionDefined
 		? "indev"
 		: project.properties["mod_version"].toString()
+
+ext.formattedBaseVersion = "%s+%s".formatted(modVer, project.properties["minecraft_version"])
 
 
 architectury {
@@ -32,6 +43,27 @@ subprojects {
 				parchment("org.parchmentmc.data:${project.parchment_version}@zip")
 		}
 	}
+
+	processResources {
+		filteringCharset "UTF-8"
+
+		HashMap modifiedSrc = new HashMap<>(project.properties)
+		modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
+		modifiedSrc.put("version", formattedBaseVersion)
+
+		modifiedSrc.put("supported_minecraft_versions_fabric", getFabricVersionString(modifiedSrc))
+		modifiedSrc.put("supported_minecraft_versions_forge", getForgeVersionString(modifiedSrc))
+		modifiedSrc.put("supported_minecraft_versions_neoforge", getForgeVersionString(modifiedSrc))
+
+		filesMatching("META-INF/mods.toml") {
+			expand modifiedSrc
+		}
+
+		filesMatching("fabric.mod.json") {
+			expand modifiedSrc
+		}
+
+	}
 }
 
 allprojects {
@@ -41,7 +73,7 @@ allprojects {
 
 	base.archivesName = rootProject.archives_base_name
 	group = rootProject.maven_group
-	version = "%s+%s.%s".formatted(modVer, project.properties["minecraft_version"], project.name)
+	version = "%s.%s".formatted(formattedBaseVersion, project.name)
 
 	repositories {
 		maven {
@@ -137,4 +169,18 @@ def collectJars = tasks.register('collectJars', Copy) {
 	include("*-release.jar")
 	rename { String name -> name.substring(0, name.length() - 12) + ".jar" }
 	into "$buildDir/for-publishing"
+}
+
+tasks.register("publish-all") {
+	group = "modgradle"
+	description = "Publishes all subprojects on Modrinth & CurseForge"
+	dependsOn subprojects.collect({
+		def discoveredTasks = it.tasks.findAll {
+			it.name == "curseforge" || it.name == "modrinth"
+		}
+
+		return discoveredTasks == null
+				? []
+				: discoveredTasks;
+	})
 }
