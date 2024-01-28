@@ -1,6 +1,13 @@
+import java.util.regex.Pattern
+
 plugins {
 	id "architectury-plugin" version "3.4-SNAPSHOT"
 	id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
+
+	id "com.github.johnrengelman.shadow" version "7.1.2" apply false
+
+	id "com.modrinth.minotaur" version "2.+" apply false
+	id "net.darkhax.curseforgegradle" version "1.1.18" apply false
 }
 
 boolean isModVersionDefined = project.properties["mod_version"] == null ||
@@ -10,6 +17,7 @@ String modVer = isModVersionDefined
 		? "indev"
 		: project.properties["mod_version"].toString()
 
+String formattedBaseVersion = "%s+%s".formatted(modVer, project.properties["minecraft_version"])
 
 architectury {
 	minecraft = rootProject.minecraft_version
@@ -32,6 +40,27 @@ subprojects {
 				parchment("org.parchmentmc.data:${project.parchment_version}@zip")
 		}
 	}
+
+	processResources {
+		filteringCharset "UTF-8"
+
+		HashMap modifiedSrc = new HashMap<>(project.properties)
+		modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
+		modifiedSrc.put("version", formattedBaseVersion)
+
+		modifiedSrc.put("supported_minecraft_versions_fabric", getFabricVersionString(modifiedSrc))
+		modifiedSrc.put("supported_minecraft_versions_forge", getForgeVersionString(modifiedSrc))
+		modifiedSrc.put("supported_minecraft_versions_neoforge", getForgeVersionString(modifiedSrc))
+
+		filesMatching("META-INF/mods.toml") {
+			expand modifiedSrc
+		}
+
+		filesMatching("fabric.mod.json") {
+			expand modifiedSrc
+		}
+
+	}
 }
 
 allprojects {
@@ -41,7 +70,7 @@ allprojects {
 
 	base.archivesName = rootProject.archives_base_name
 	group = rootProject.maven_group
-	version = "%s+%s.%s".formatted(modVer, project.properties["minecraft_version"], project.name)
+	version = "%s.%s".formatted(formattedBaseVersion, project.name)
 
 	repositories {
 		maven {
@@ -85,6 +114,30 @@ static def formatAsBadgeSafe(var val) {
 
 	// Badges break if hyphens are present.
 	return ((String) val).replaceAll("[- /]", "_")
+}
+
+static String getModrinthToken() {
+	return "Boo"
+}
+
+static String getCurseToken() {
+	return "Boo"
+}
+
+static String[] getSupportedVersions(Map<String, ?> properties) {
+	return properties.getOrDefault("supported_minecraft_versions", "")
+					 .toString()
+					 .split(Pattern.quote(","))
+}
+
+static String getFabricVersionString(Map<String, ?> properties) {
+	String versionRoot = getSupportedVersions(properties)[0]
+	return ">=%s".formatted(versionRoot)
+}
+
+static String getForgeVersionString(Map<String, ?> properties) {
+	String versionRoot = getSupportedVersions(properties)[0]
+	return "[%s,)".formatted(versionRoot)
 }
 
 tasks.register('updateDocTemplates', Copy) {

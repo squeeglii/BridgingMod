@@ -1,6 +1,6 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "com.modrinth.minotaur"
+apply plugin: "net.darkhax.curseforgegradle"
 
 architectury {
     platformSetupLoomIde()
@@ -41,18 +41,6 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
-}
-
-processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
-
-    HashMap modifiedSrc = new HashMap<>(project.properties)
-    modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
-
-    filesMatching("META-INF/mods.toml") {
-        expand modifiedSrc
-    }
 }
 
 shadowJar {
