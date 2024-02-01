@@ -17,7 +17,8 @@ String modVer = isModVersionDefined
 		? "indev"
 		: project.properties["mod_version"].toString()
 
-String formattedBaseVersion = "%s+%s".formatted(modVer, project.properties["minecraft_version"])
+ext.formattedBaseVersion = "%s+%s".formatted(modVer, project.properties["minecraft_version"])
+
 
 architectury {
 	minecraft = rootProject.minecraft_version
@@ -116,12 +117,40 @@ static def formatAsBadgeSafe(var val) {
 	return ((String) val).replaceAll("[- /]", "_")
 }
 
-static String getModrinthToken() {
-	return "Boo"
+static String getModrinthToken(Project project) {
+	File file = new File(project.getRootDir(), "modrinth_creds.txt")
+
+	if(file.isDirectory() || !file.exists()) {
+		System.err.println("Unable to find a Modrinth token! (Add a modrinth_creds.txt to root project dir)")
+		return ""
+	}
+
+	List<String> lines = file.readLines()
+
+	if(lines.size() == 0) {
+		System.err.println("Modrinth token file is empty!")
+		return ""
+	}
+
+	return lines.get(0)
 }
 
-static String getCurseToken() {
-	return "Boo"
+static String getCurseToken(Project project) {
+	File file = new File(project.getRootDir(), "curse_creds.txt")
+
+	if(file.isDirectory() || !file.exists()) {
+		System.err.println("Unable to find a CurseForge token! (Add a curse_creds.txt to root project dir)")
+		return ""
+	}
+
+	List<String> lines = file.readLines()
+
+	if(lines.size() == 0) {
+		System.err.println("CurseForge token file is empty!")
+		return ""
+	}
+
+	return lines.get(0)
 }
 
 static String[] getSupportedVersions(Map<String, ?> properties) {
@@ -131,13 +160,17 @@ static String[] getSupportedVersions(Map<String, ?> properties) {
 }
 
 static String getFabricVersionString(Map<String, ?> properties) {
-	String versionRoot = getSupportedVersions(properties)[0]
-	return ">=%s".formatted(versionRoot)
+	String[] versions = getSupportedVersions(properties)
+	return versions.size() > 0
+			? ">=%s".formatted(versions[0])
+			: "*"
 }
 
 static String getForgeVersionString(Map<String, ?> properties) {
-	String versionRoot = getSupportedVersions(properties)[0]
-	return "[%s,)".formatted(versionRoot)
+	String[] versions = getSupportedVersions(properties)
+	return versions.size() > 0
+			? "[%s,)".formatted(versions[0])
+			: "*"
 }
 
 tasks.register('updateDocTemplates', Copy) {
@@ -190,4 +223,18 @@ def collectJars = tasks.register('collectJars', Copy) {
 	include("*-release.jar")
 	rename { String name -> name.substring(0, name.length() - 12) + ".jar" }
 	into "$buildDir/for-publishing"
+}
+
+tasks.register("publish-all") {
+	group = "modgradle"
+	description = "Publishes all subprojects on Modrinth & CurseForge"
+	dependsOn subprojects.collect({
+		def discoveredTasks = it.tasks.findAll {
+			it.name == "curseforge" || it.name == "modrinth"
+		}
+
+		return discoveredTasks == null
+				? []
+				: discoveredTasks;
+	})
 }
