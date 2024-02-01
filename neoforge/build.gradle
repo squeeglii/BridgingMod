@@ -4,6 +4,8 @@ apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "com.modrinth.minotaur"
 apply plugin: "net.darkhax.curseforgegradle"
 
+apply from: "$rootDir/publishing.gradle"
+
 architectury {
     platformSetupLoomIde()
     neoForge()
@@ -81,6 +83,8 @@ modrinth {
     gameVersions = Arrays.asList(versions)
     loaders = [ "neoforge" ]
 
+    changelog = new File(project.getRootDir(), "changelog.md").readLines().join("\n")
+
     var shouldPublish = project.properties["debug_publishing"]
     if(shouldPublish != null && shouldPublish.toString().equalsIgnoreCase("true"))
         setDebugMode(true)
@@ -115,5 +119,12 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     mainFile.addModLoader("neoforge")
     mainFile.releaseType = project.properties["release_type"]
 
+    mainFile.changelogType = "markdown"
+    mainFile.changelog = new File(project.getRootDir(), "changelog.md")
+
+    for(String version: getSupportedVersions(project.properties))
+        mainFile.addGameVersion(version)
+
     mainFile.addRequirement("cloth-config")
+
 }
