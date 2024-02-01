@@ -98,10 +98,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     group = "publishing"
     description = "Publishes project to CurseForge"
 
-    String[] minecraftVersions = getSupportedVersions(project.properties)
-    String mcVer = minecraftVersions.size() > 0
-            ? minecraftVersions[0]
-            : "any"
+    String mcVer = project.properties["minecraft_version"]
     String projectVer = project.properties["mod_version"]
     String projectId = project.properties["curseforge_project"]
 

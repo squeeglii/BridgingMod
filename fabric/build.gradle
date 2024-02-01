@@ -97,10 +97,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     group = "publishing"
     description = "Publishes project to CurseForge"
 
-    String[] minecraftVersions = getSupportedVersions(project.properties)
-    String mcVer = minecraftVersions.size() > 0
-            ? minecraftVersions[0]
-            : "any"
+    String mcVer = project.properties["minecraft_version"]
     String projectVer = project.properties["mod_version"]
     String projectId = project.properties["curseforge_project"]
 
@@ -116,6 +113,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     def mainFile = upload(projectId, remapJar)
     mainFile.displayName = "[Fabric %s] v%s Bridging Mod".formatted(mcVer, projectVer)
     mainFile.addModLoader("fabric")
+    mainFile.addModLoader("quilt")
     mainFile.releaseType = project.properties["release_type"]
 
     mainFile.changelogType = "markdown"
