@@ -9,6 +9,7 @@ import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
@@ -38,6 +39,15 @@ public class CrosshairRenderingMixin {
         if(this.minecraft.options.hideGui) return;
 
         if(!BridgingMod.getConfig().shouldShowCrosshair()) return;
+
+        LocalPlayer player = this.minecraft.player;
+
+        boolean isPlayerCrouching = player != null && player.isCrouching();
+        boolean isBridgingActive = BridgingMod.getConfig().isBridgingEnabled() &&
+                                   (!BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() || isPlayerCrouching);
+
+        if(!isBridgingActive)
+            return;
 
         Direction direction = BridgingStateTracker.getLastTickTarget().getB();
         PlacementAlignment alignment = PlacementAlignment.from(direction);

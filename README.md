@@ -1,13 +1,6 @@
 [![](./media/banner.png)](https://github.com/CloudG360/BridgingMod)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-orange?style=flat-square)](https://github.com/CloudG360/BridgingMod/blob/latest/LICENSE.md)
-[![Minecraft Version](https://img.shields.io/badge/Minecraft-v1.20.1-blue?style=flat-square)](https://www.minecraft.net/en-us)
-
-[![Fabric Loader Version](https://img.shields.io/badge/Fabric_Loader-v0.14.21-AA8554?style=flat-square)](https://fabricmc.net/use/installer/)
-[![Forge Mod Loader Version](https://img.shields.io/badge/Forge-v1.20.1_47.1.37-CC1602?style=flat-square)](https://neoforged.net/)
-[![Cloth Config Version](https://img.shields.io/badge/Cloth_Config-v11.0.99-pink?style=flat-square)](https://modrinth.com/mod/cloth-config)
-[![Mod Menu Version](https://img.shields.io/badge/Mod_Menu-v7.1.0-indigo?style=flat-square)](https://modrinth.com/mod/modmenu)
-
 
 [![Modrinth](https://img.shields.io/modrinth/dt/lO3s8hjs?logo=modrinth&style=flat-square)](https://modrinth.com/mod/bridging-mod)
 [![Curseforge](https://cf.way2muchnoise.eu/short_bridging-mod.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/bridging-mod)
@@ -37,6 +30,10 @@ Previous versions of the Bridging Mod (< 2.0.0) were based on the Quark implemen
 You can find Quark's source here:
 
 - [https://github.com/VazkiiMods/Quark](https://github.com/VazkiiMods/Quark)
+
+### Translations
+
+- Mexican Spanish: @TheLegendofSaram
 
 --- 
 

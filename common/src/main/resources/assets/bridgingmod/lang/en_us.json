@@ -20,8 +20,12 @@
 
     "text.autoconfig.bridgingmod.option.showCrosshair": "Show Bridge-Assist crosshair",
     "text.autoconfig.bridgingmod.option.showOutline": "Show Bridge-Assist block outline",
+    "text.autoconfig.bridgingmod.option.showOutlineEvenWhenNotBridging": "Show Non-Bridge-Assist block outline",
+    "text.autoconfig.bridgingmod.option.nonBridgeRespectsCrouchRules": "Show Non-Bridge-Assist when Bridging is enabled",
+    "text.autoconfig.bridgingmod.option.nonBridgeRespectsCrouchRules.@Tooltip": "Crouching rules & Bridging being enabled or disabled affects whether this outline is visible.",
     "text.autoconfig.bridgingmod.option.outlineColour": "Colour for Bridge-Assist block outline",
 
     "text.autoconfig.bridgingmod.option.showDebugHighlight": "Show Bridge-Assist block outline in F3",
+    "text.autoconfig.bridgingmod.option.showNonBridgingDebugHighlight": "Show Non-Bridge-Assist block outline in F3",
     "text.autoconfig.bridgingmod.option.showDebugTrace": "Show Bridge-Assist block trail in F3"
 }
