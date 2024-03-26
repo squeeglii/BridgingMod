@@ -1,3 +1,7 @@
-__**Changelog (v2.2.1)**__
+__**Changelog (v2.3.0)**__
 
-- Fix placement borders not displaying while using Fabulous graphics.
+- Added Mexican Spanish translation (thank you, @TheLegendofSaram)
+- Added block placement outline for when you're not bridging.
+ - Configurable with 3 new config entries.
+ - Disabled by default.
+- Bridging cursor is now hidden when bridging is disabled / or only when crouching (if that setting is enabled)

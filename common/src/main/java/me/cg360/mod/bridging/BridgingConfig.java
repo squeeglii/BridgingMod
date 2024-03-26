@@ -30,12 +30,19 @@ public class BridgingConfig implements ConfigData {
     @ConfigEntry.Category("vfx")
     private boolean showOutline = false;
     @ConfigEntry.Category("vfx")
+    private boolean showOutlineEvenWhenNotBridging = false;
+    @ConfigEntry.Category("vfx")
+    @ConfigEntry.Gui.Tooltip()
+    private boolean nonBridgeRespectsCrouchRules = true;
+    @ConfigEntry.Category("vfx")
     @ConfigEntry.ColorPicker(allowAlpha = true)
     private int outlineColour = 0x66000000;  // aarrggbb
 
 
     @ConfigEntry.Category("debug")
     private boolean showDebugHighlight = true;
+    @ConfigEntry.Category("debug")
+    private boolean showNonBridgingDebugHighlight = false;
     @ConfigEntry.Category("debug")
     private boolean showDebugTrace = false;
 
@@ -73,6 +80,14 @@ public class BridgingConfig implements ConfigData {
         return this.showOutline;
     }
 
+    public boolean shouldShowOutlineEvenWhenNotBridging() {
+        return this.showOutlineEvenWhenNotBridging;
+    }
+
+    public boolean shouldNonBridgeRespectsCrouchRules() {
+        return this.nonBridgeRespectsCrouchRules;
+    }
+
     public int getOutlineColour() {
         return this.outlineColour;
     }
@@ -80,6 +95,10 @@ public class BridgingConfig implements ConfigData {
 
     public boolean shouldShowOutlineInF3() {
         return this.showDebugHighlight;
+    }
+
+    public boolean shouldShowNonBridgeOutlineInF3() {
+        return this.showNonBridgingDebugHighlight;
     }
 
     public boolean shouldShowDebugTrace() {
