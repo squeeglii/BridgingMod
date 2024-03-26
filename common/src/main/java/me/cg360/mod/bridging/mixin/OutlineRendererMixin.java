@@ -1,18 +1,13 @@
 package me.cg360.mod.bridging.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
-import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.Render;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,15 +33,24 @@ public abstract class OutlineRendererMixin {
         LocalPlayer player = this.minecraft.player;
 
         boolean isPlayerCrouching = player != null && player.isCrouching();
+        boolean isInDebugMenu = this.minecraft.options.renderDebug;
+
+        // Rules to display any bridging - whether these are followed or not depends on the config :)
         boolean isBridgingEnabled = BridgingMod.getConfig().isBridgingEnabled() &&
                                     (!BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() || isPlayerCrouching);
 
-        if(!isBridgingEnabled)
-            return;
-
-        boolean isInDebugMenu = this.minecraft.options.renderDebug;
         boolean shouldRenderOutline = (isInDebugMenu  && BridgingMod.getConfig().shouldShowOutlineInF3()) ||
-                (!isInDebugMenu && BridgingMod.getConfig().shouldShowOutline());
+                                      (!isInDebugMenu && BridgingMod.getConfig().shouldShowOutline());
+        boolean isOutlineEnabled = shouldRenderOutline && isBridgingEnabled;
+
+        boolean shouldRenderNonBridgeOutline = (isInDebugMenu  && BridgingMod.getConfig().shouldShowNonBridgeOutlineInF3()) ||
+                                               (!isInDebugMenu && BridgingMod.getConfig().shouldShowOutlineEvenWhenNotBridging());
+        boolean isNonBridgeOutlineEnabled = shouldRenderNonBridgeOutline &&
+                                            (isBridgingEnabled || !BridgingMod.getConfig().shouldNonBridgeRespectsCrouchRules());
+
+        // Skip if nothing is valid to render.
+        if(!(isOutlineEnabled || isNonBridgeOutlineEnabled))
+            return;
 
         MultiBufferSource.BufferSource bufferSource = this.renderBuffers.bufferSource();
         VertexConsumer vertices = bufferSource.getBuffer(RenderType.lines());
@@ -55,15 +59,9 @@ public abstract class OutlineRendererMixin {
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, camera);
 
-        if(shouldRenderOutline) {
-            Tuple<BlockPos, Direction> lastTarget = BridgingStateTracker.getLastTickTarget();
+        if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, camera, vertices);
+        if(isNonBridgeOutlineEnabled) Render.currentNonBridgingOutline(poseStack, camera, vertices);
 
-            if(lastTarget == null)
-                return;
-
-            int outlineColour = BridgingMod.getConfig().getOutlineColour();
-
-            Render.cubeOutline(poseStack, vertices, camera, lastTarget.getA(), outlineColour);
-        }
     }
+
 }
