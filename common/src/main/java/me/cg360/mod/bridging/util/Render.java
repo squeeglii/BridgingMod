@@ -15,6 +15,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -84,7 +85,11 @@ public class Render {
         if(hit == null || hit.getType() != HitResult.Type.BLOCK)
             return;
 
-        BlockPos placeTarget = BlockPos.containing(hit.getLocation());
+        BlockHitResult blockHitResult = (BlockHitResult) hit;
+        BlockPos hitBlock = blockHitResult.getBlockPos();
+        Direction hitSide = blockHitResult.getDirection();
+
+        BlockPos placeTarget = hitBlock.relative(hitSide);
         Player player = Minecraft.getInstance().player;
 
         // Avoid boxes beneath player feet - other entities should be fiiiine
