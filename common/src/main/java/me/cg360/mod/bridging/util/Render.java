@@ -2,12 +2,20 @@ package me.cg360.mod.bridging.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.raytrace.PathTraversalHandler;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -69,5 +77,37 @@ public class Render {
     }
 
 
+    public static void currentNonBridgingOutline(PoseStack poseStack, Camera camera, VertexConsumer vertices) {
+        HitResult hit = Minecraft.getInstance().hitResult;
+
+        // Skip non-placement hits.
+        if(hit == null || hit.getType() != HitResult.Type.BLOCK)
+            return;
+
+        BlockPos placeTarget = BlockPos.containing(hit.getLocation());
+        Player player = Minecraft.getInstance().player;
+
+        // Avoid boxes beneath player feet - other entities should be fiiiine
+        // Calculating collisions for every entity every tick just sounds messy.
+        if(player != null) {
+            AABB placeDeadzone = new AABB(placeTarget);
+            if (player.getBoundingBox().intersects(placeDeadzone))
+                return;
+        }
+
+        int outlineColour = BridgingMod.getConfig().getOutlineColour();
+        Render.cubeOutline(poseStack, vertices, camera, placeTarget, outlineColour);
+    }
+
+    public static void currentBridgingOutline(PoseStack poseStack, Camera camera, VertexConsumer vertices) {
+        Tuple<BlockPos, Direction> lastTarget = BridgingStateTracker.getLastTickTarget();
+
+        if(lastTarget == null)
+            return;
+
+        int outlineColour = BridgingMod.getConfig().getOutlineColour();
+
+        Render.cubeOutline(poseStack, vertices, camera, lastTarget.getA(), outlineColour);
+    }
 
 }
