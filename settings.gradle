@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 pluginManagement {
     repositories {
         maven {
@@ -20,9 +22,17 @@ pluginManagement {
     }
 }
 
+var platforms = properties.get("enabled_platforms")
+
+if(!(platforms instanceof String)) {
+    throw new IllegalStateException("No platforms are enabled (%s) - check 'enabled_platforms' in root gradle.properties")
+}
+
+String[] platformTokens = platforms.split(Pattern.quote(","))
+
 include("common")
-include("fabric")
-include("forge")
-include("neoforge")
+if(platformTokens.contains("fabric")) include("fabric")
+if(platformTokens.contains("neoforge")) include("neoforge")
+if(platformTokens.contains("forge")) include("forge")
 
 rootProject.name = "BridgingMod"
