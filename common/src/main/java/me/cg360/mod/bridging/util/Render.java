@@ -92,13 +92,17 @@ public class Render {
         BlockPos placeTarget = hitBlock.relative(hitSide);
         Player player = Minecraft.getInstance().player;
 
+        if(player == null)
+            return;
+
+        if(!GameSupport.isHoldingPlaceable(player))
+            return;
+
         // Avoid boxes beneath player feet - other entities should be fiiiine
         // Calculating collisions for every entity every tick just sounds messy.
-        if(player != null) {
-            AABB placeDeadzone = new AABB(placeTarget);
-            if (player.getBoundingBox().intersects(placeDeadzone))
-                return;
-        }
+        AABB placeDeadzone = new AABB(placeTarget);
+        if (player.getBoundingBox().intersects(placeDeadzone))
+            return;
 
         int outlineColour = BridgingMod.getConfig().getOutlineColour();
         Render.cubeOutline(poseStack, vertices, camera, placeTarget, outlineColour);
