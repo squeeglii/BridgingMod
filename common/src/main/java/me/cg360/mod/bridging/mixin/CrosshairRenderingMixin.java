@@ -27,16 +27,13 @@ public class CrosshairRenderingMixin {
     @Unique
     private static final int ICON_SIZE = 31;
 
-    @Shadow private int screenHeight;
-    @Shadow private int screenWidth;
-
     @Shadow @Final private Minecraft minecraft;
 
     @Shadow @Final private DebugScreenOverlay debugOverlay;
 
-    @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V",
+    @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;F)V",
             at = @At(value = "TAIL"))
-    public void renderPlacementAssistMarker(GuiGraphics gui, CallbackInfo ci) {
+    public void renderPlacementAssistMarker(GuiGraphics gui, float f, CallbackInfo ci) {
         if(BridgingStateTracker.getLastTickTarget() == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
@@ -65,8 +62,8 @@ public class CrosshairRenderingMixin {
                 GlStateManager.DestFactor.ZERO
         );
 
-        int w = this.screenWidth;
-        int h = this.screenHeight;
+        int w = gui.guiWidth();
+        int h = gui.guiHeight();
 
         if(alignment == null) return;
 

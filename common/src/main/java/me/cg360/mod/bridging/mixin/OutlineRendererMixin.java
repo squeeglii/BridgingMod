@@ -22,14 +22,16 @@ public abstract class OutlineRendererMixin {
     @Shadow @Final private RenderBuffers renderBuffers;
     @Shadow @Final private Minecraft minecraft;
 
-    @Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V",
+    @Shadow protected abstract void checkPoseStack(PoseStack poseStack);
+
+    @Inject(method = "renderLevel(FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V",
                     shift = At.Shift.BEFORE,
                     ordinal = 0
             ))
-    public void renderTracedViewPath(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+    public void renderTracedViewPath(float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matA, Matrix4f matB, CallbackInfo ci) {
         LocalPlayer player = this.minecraft.player;
 
         boolean isPlayerCrouching = player != null && player.isCrouching();
@@ -55,6 +57,10 @@ public abstract class OutlineRendererMixin {
         MultiBufferSource.BufferSource bufferSource = this.renderBuffers.bufferSource();
         VertexConsumer vertices = bufferSource.getBuffer(RenderType.lines());
 
+        // Creating a fresh pose stack should be fine - the main pose stack is meant to be
+        // empty before rendering the vanilla outline anyway.
+        PoseStack poseStack = new PoseStack();
+
 
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, camera);
@@ -62,6 +68,7 @@ public abstract class OutlineRendererMixin {
         if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, camera, vertices);
         if(isNonBridgeOutlineEnabled) Render.currentNonBridgingOutline(poseStack, camera, vertices);
 
+        this.checkPoseStack(poseStack);
     }
 
 }

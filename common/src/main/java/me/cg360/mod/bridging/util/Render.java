@@ -67,12 +67,12 @@ public class Render {
 
             consumer.vertex(pose.pose(), (float)(startX + x), (float)(startY + y), (float)(startZ + z))
                     .color(argbColor)
-                    .normal(pose.normal(), dx /= length, dy /= length, dz /= length)
+                    .normal(pose, dx /= length, dy /= length, dz /= length)
                     .endVertex();
 
             consumer.vertex(pose.pose(), (float)(endX + x), (float)(endY + y), (float)(endZ + z))
                     .color(argbColor)
-                    .normal(pose.normal(), dx, dy, dz)
+                    .normal(pose, dx, dy, dz)
                     .endVertex();
         });
     }

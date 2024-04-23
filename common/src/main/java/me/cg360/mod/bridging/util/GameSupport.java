@@ -10,10 +10,10 @@ public class GameSupport {
     public static final double MAXIMUM_PLACE_REACH = 4.5d;
 
     public static double getReach() {
-        if(Minecraft.getInstance().gameMode == null)
+        if(Minecraft.getInstance().player == null)
             return MAXIMUM_PLACE_REACH;
 
-        return Minecraft.getInstance().gameMode.getPickRange();
+        return Minecraft.getInstance().player.blockInteractionRange();
     }
 
     public static boolean isHoldingPlaceable(Player player) {
