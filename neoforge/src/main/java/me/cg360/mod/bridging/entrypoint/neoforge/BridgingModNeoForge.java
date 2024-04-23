@@ -12,8 +12,8 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(BridgingMod.MOD_ID)
 public class BridgingModNeoForge {
@@ -30,10 +30,10 @@ public class BridgingModNeoForge {
         BridgingMod.init(AutoConfig.register(BridgingConfig.class, GsonConfigSerializer::new));
 
         if(BridgingMod.isConfigSuccessfullyInitialized())
-            ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () ->
-                    new ConfigScreenHandler.ConfigScreenFactory((client, parent) ->
-                            AutoConfig.getConfigScreen(BridgingConfig.class, parent).get()
-            ));
+            ModLoadingContext.get().registerExtensionPoint(
+                    IConfigScreenFactory.class,
+                    () -> (client, parent) -> AutoConfig.getConfigScreen(BridgingConfig.class, parent).get()
+            );
 
         if(ModList.get().isLoaded(DYNAMIC_CROSSHAIR_MOD))
             InterModComms.sendTo(DYNAMIC_CROSSHAIR_MOD, "register_api", DynamicCrosshairCompat::new);

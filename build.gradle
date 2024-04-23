@@ -61,6 +61,10 @@ subprojects {
 			expand modifiedSrc
 		}
 
+		filesMatching("META-INF/neoforge.mods.toml") {
+			expand modifiedSrc
+		}
+
 		filesMatching("fabric.mod.json") {
 			expand modifiedSrc
 		}

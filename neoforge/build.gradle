@@ -58,6 +58,12 @@ jar {
     archiveClassifier.set("dev")
 }
 
+processResources {
+
+    // 1.20.5 support - this'll probably be covered by architectury soon enough.
+    rename "mods.toml", "neoforge.mods.toml"
+}
+
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
