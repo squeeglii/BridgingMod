@@ -3,11 +3,13 @@ package me.cg360.mod.bridging.mixin;
 import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
+import me.cg360.mod.bridging.util.InfoStrings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
@@ -36,6 +38,12 @@ public abstract class MinecraftClientMixin {
     public void onTick(CallbackInfo ci) {
         if(BridgingKeyMappings.TOGGLE_BRIDGING.consumeClick()) {
             BridgingMod.getConfig().toggleBridgingEnabled();
+
+            Component stateMsg = BridgingMod.getConfig().isBridgingEnabled()
+                    ? InfoStrings.ON
+                    : InfoStrings.OFF;
+            Component text = InfoStrings.TOGGLE_BRIDGING.copy().append(stateMsg);
+            Minecraft.getInstance().gui.setOverlayMessage(text, false);
         }
 
         BridgingStateTracker.tick(this.player);

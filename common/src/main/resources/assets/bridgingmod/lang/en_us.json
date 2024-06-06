@@ -5,6 +5,10 @@
     "key.categories.bridgingmod": "Bridging Mod",
     "key.bridgingmod.toggle_bridging": "Toggle Bridging",
 
+    "notif.bridgingmod.toggle_bridging": "Toggled Bridging",
+    "notif.bridgingmod.action.enabled": "ON",
+    "notif.bridgingmod.action.disabled": "OFF",
+
     "text.autoconfig.bridgingmod.title": "Bridging Mod",
     "text.autoconfig.bridgingmod.category.feature": "Features",
     "text.autoconfig.bridgingmod.category.vfx": "Visuals",
