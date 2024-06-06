@@ -1,8 +1,12 @@
 package me.cg360.mod.bridging.util;
 
-import net.minecraft.core.Direction;
+import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
 
-public enum PlacementAxisMode {
+import net.minecraft.core.Direction;
+import org.jetbrains.annotations.NotNull;
+
+public enum PlacementAxisMode implements Translatable {
+
     HORIZONTAL(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST),
     VERTICAL(Direction.UP, Direction.DOWN),
     BOTH(Direction.values());
@@ -20,5 +24,11 @@ public enum PlacementAxisMode {
         }
 
         return false;
+    }
+
+    @Override
+    @NotNull
+    public String getKey() {
+        return "enum.bridgingmod.placement_axis.%s".formatted(this.name().toLowerCase());
     }
 }

@@ -1,5 +1,4 @@
-__**Changelog (v2.3.2)**__
+__**Changelog (v2.4.0)**__
 
-- Place outline for non-bridging mode is now properly hidden when not holding a block
-- Fixed crash when the mod is loaded on the server-side.
-- Added a text toast when bridging is toggled via the keybinding. 
+- Improved Slab-Assist (Better trapdoors + vertical support)
+- Bridging axis is now toggleable with crouch
