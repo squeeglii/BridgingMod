@@ -7,6 +7,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class GameSupport {
 
+    public static final double TRAPDOOR_HEIGHT = 3/16d;
+    public static final double SLAB_HEIGHT = 8/16d;
     public static final double MAXIMUM_PLACE_REACH = 4.5d;
 
     public static double getReach() {
@@ -14,6 +16,13 @@ public class GameSupport {
             return MAXIMUM_PLACE_REACH;
 
         return Minecraft.getInstance().gameMode.getPickRange();
+    }
+
+    public static boolean isControllerCrouching() {
+        if(Minecraft.getInstance().player == null)
+            return false;
+
+        return Minecraft.getInstance().player.isCrouching();
     }
 
     public static boolean isHoldingPlaceable(Player player) {
