@@ -6,6 +6,7 @@ import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.neoforge.DynamicCrosshairCompat;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModList;
@@ -15,7 +16,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-@Mod(BridgingMod.MOD_ID)
+@Mod(value = BridgingMod.MOD_ID, dist = Dist.CLIENT)
 public class BridgingModNeoForge {
 
     private static final String DYNAMIC_CROSSHAIR_MOD = "dynamiccrosshair";
