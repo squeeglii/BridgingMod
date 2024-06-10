@@ -3,6 +3,7 @@ package me.cg360.mod.bridging.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Render;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -32,14 +33,11 @@ public abstract class OutlineRendererMixin {
                     ordinal = 0
             ))
     public void renderTracedViewPath(float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matA, Matrix4f matB, CallbackInfo ci) {
-        LocalPlayer player = this.minecraft.player;
-
-        boolean isPlayerCrouching = player != null && player.isCrouching();
         boolean isInDebugMenu = this.minecraft.getDebugOverlay().showDebugScreen();
 
         // Rules to display any bridging - whether these are followed or not depends on the config :)
         boolean isBridgingEnabled = BridgingMod.getConfig().isBridgingEnabled() &&
-                                    (!BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() || isPlayerCrouching);
+                                    (!BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() || GameSupport.isControllerCrouching());
 
         boolean shouldRenderOutline = (isInDebugMenu  && BridgingMod.getConfig().shouldShowOutlineInF3()) ||
                                       (!isInDebugMenu && BridgingMod.getConfig().shouldShowOutline());

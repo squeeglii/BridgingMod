@@ -16,6 +16,13 @@ public class GameSupport {
         return Minecraft.getInstance().player.blockInteractionRange();
     }
 
+    public static boolean isControllerCrouching() {
+        if(Minecraft.getInstance().player == null)
+            return false;
+
+        return Minecraft.getInstance().player.isCrouching();
+    }
+
     public static boolean isHoldingPlaceable(Player player) {
         return GameSupport.isStackPlaceable(player.getMainHandItem()) ||
                GameSupport.isStackPlaceable(player.getOffhandItem());

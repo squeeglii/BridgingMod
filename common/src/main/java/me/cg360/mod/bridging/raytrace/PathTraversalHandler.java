@@ -3,6 +3,7 @@ package me.cg360.mod.bridging.raytrace;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Path;
+import me.cg360.mod.bridging.util.PlacementAxisMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -129,10 +130,23 @@ public class PathTraversalHandler {
         if(level == null)
             return false;
 
-        // Should probably find a better place to do this but this makes the mod
-        // run the smoothest.
-        if(!BridgingMod.getConfig().getSupportedBridgeAxes().isDirectionEnabled(checkSide))
-            return false;
+
+        PlacementAxisMode baseMode = BridgingMod.getConfig().getSupportedBridgeAxes();
+
+        // If crouching, the placement axis limit can be optionally overriden.
+        // This just needs a bit of extra checking to get the final expected value.
+        if(GameSupport.isControllerCrouching()) {
+            PlacementAxisMode mode = BridgingMod.getConfig()
+                                                .getSupportedBridgeAxesWhenCrouched()
+                                                .getPlacementAxisMode(baseMode);
+
+            if(!mode.isDirectionEnabled(checkSide))
+                return false;
+
+        } else {
+            if(!baseMode.isDirectionEnabled(checkSide))
+                return false;
+        }
 
 
         BlockPos blockPlacingOffOf = placementTarget.offset(checkSide.getNormal());
