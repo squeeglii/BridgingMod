@@ -3,12 +3,14 @@ package me.cg360.mod.bridging.compat.fabric;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;
-import mod.crend.dynamiccrosshair.api.CrosshairContext;
-import mod.crend.dynamiccrosshair.api.DynamicCrosshairApi;
-import mod.crend.dynamiccrosshair.component.Crosshair;
+import mod.crend.dynamiccrosshairapi.DynamicCrosshairApi;
+import mod.crend.dynamiccrosshairapi.crosshair.Crosshair;
+import mod.crend.dynamiccrosshairapi.crosshair.CrosshairContext;
+import mod.crend.dynamiccrosshairapi.interaction.InteractionType;
 import net.minecraft.world.phys.HitResult;
 
 public class DynamicCrosshairCompat implements DynamicCrosshairApi {
+
 	@Override
 	public String getNamespace() {
 		return "bridgingmod";
@@ -17,8 +19,8 @@ public class DynamicCrosshairCompat implements DynamicCrosshairApi {
 	@Override
 	public boolean forceInvalidate(CrosshairContext context) {
 		return BridgingMod.getConfig().isBridgingEnabled()
-				&& GameSupport.isHoldingPlaceable(context.player)
-				&& context.hitResult.getType() == HitResult.Type.MISS;
+				&& GameSupport.isHoldingPlaceable(context.getPlayer())
+				&& context.getHitResult().getType() == HitResult.Type.MISS;
 	}
 
 	@Override
@@ -29,8 +31,9 @@ public class DynamicCrosshairCompat implements DynamicCrosshairApi {
 	@Override
 	public Crosshair computeFromItem(CrosshairContext context) {
 		if (BridgingStateTracker.getLastTickTarget() != null) {
-			return Crosshair.HOLDING_BLOCK;
+			return new Crosshair(InteractionType.PLACE_BLOCK);
 		}
+
 		return null;
 	}
 }

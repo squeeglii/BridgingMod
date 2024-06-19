@@ -32,6 +32,8 @@ dependencies {
     }
 
     modApi("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
+
+    modCompileOnly(fileTree(dir: 'jarDeps', include: '*.jar'))
     modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_fabric}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
