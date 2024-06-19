@@ -65,15 +65,13 @@ public class Render {
             float dz = (float)(endZ - startZ);
             float length = Mth.sqrt(dx * dx + dy * dy + dz * dz);
 
-            consumer.vertex(pose.pose(), (float)(startX + x), (float)(startY + y), (float)(startZ + z))
-                    .color(argbColor)
-                    .normal(pose, dx /= length, dy /= length, dz /= length)
-                    .endVertex();
+            consumer.addVertex(pose.pose(), (float)(startX + x), (float)(startY + y), (float)(startZ + z))
+                    .setColor(argbColor)
+                    .setNormal(pose, dx /= length, dy /= length, dz /= length);
 
-            consumer.vertex(pose.pose(), (float)(endX + x), (float)(endY + y), (float)(endZ + z))
-                    .color(argbColor)
-                    .normal(pose, dx, dy, dz)
-                    .endVertex();
+            consumer.addVertex(pose.pose(), (float)(endX + x), (float)(endY + y), (float)(endZ + z))
+                    .setColor(argbColor)
+                    .setNormal(pose, dx, dy, dz);
         });
     }
 

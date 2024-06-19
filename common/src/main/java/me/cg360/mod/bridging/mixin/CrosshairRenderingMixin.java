@@ -7,6 +7,7 @@ import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.raytrace.PlacementAlignment;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -32,9 +33,9 @@ public class CrosshairRenderingMixin {
 
     @Shadow @Final private DebugScreenOverlay debugOverlay;
 
-    @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;F)V",
+    @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At(value = "TAIL"))
-    public void renderPlacementAssistMarker(GuiGraphics gui, float f, CallbackInfo ci) {
+    public void renderPlacementAssistMarker(GuiGraphics gui, DeltaTracker deltaTracker, CallbackInfo ci) {
         if(BridgingStateTracker.getLastTickTarget() == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
