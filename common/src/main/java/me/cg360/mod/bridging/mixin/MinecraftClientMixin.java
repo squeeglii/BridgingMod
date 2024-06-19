@@ -102,7 +102,7 @@ public abstract class MinecraftClientMixin {
             if (!this.player.mayUseItemAt(pos, dir, itemStack))
                 continue;
 
-            BlockHitResult blockHitResult = bridgingmod$getFinalPlaceAssistTarget(this.player, itemStack, dir, pos);
+            BlockHitResult blockHitResult = bridgingmod$getFinalPlaceAssistTarget(itemStack, dir, pos);
 
             int originalStackSize = itemStack.getCount();
             InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
@@ -130,13 +130,13 @@ public abstract class MinecraftClientMixin {
 
     @Unique
     @NotNull
-    private BlockHitResult bridgingmod$getFinalPlaceAssistTarget(Player player, ItemStack heldItem, Direction dir, BlockPos pos) {
+    private BlockHitResult bridgingmod$getFinalPlaceAssistTarget(ItemStack heldItem, Direction dir, BlockPos pos) {
         // Where is the placement action coming from?
         // This is used by the game to determine the state used for directional blocks.
 
         if(BridgingMod.getConfig().isSlabAssistEnabled()) {
             BlockHitResult override = switch (dir.getAxis()) {
-                case X, Z -> bridgingmod$handleHorizontalSlabAssist(player, dir, pos);
+                case X, Z -> bridgingmod$handleHorizontalSlabAssist(dir, pos);
                 case Y -> bridgingmod$handleVerticalSlabAssist(heldItem, dir, pos);
             };
 
@@ -148,7 +148,7 @@ public abstract class MinecraftClientMixin {
     }
 
     @Unique
-    private BlockHitResult bridgingmod$handleHorizontalSlabAssist(Player player, Direction dir, BlockPos pos) {
+    private BlockHitResult bridgingmod$handleHorizontalSlabAssist(Direction dir, BlockPos pos) {
         // Slab assist should also help with trapdoors.
         // I would get stairs to work too but that either requires major jank
         // or server-side mods.
@@ -160,7 +160,14 @@ public abstract class MinecraftClientMixin {
                 ? Vec3.atBottomCenterOf(pos).add(0, 0.1d, 0)
                 : Vec3.atBottomCenterOf(pos).add(0, 0.9d, 0);
 
-        return new BlockHitResult(placerOrigin, dir, pos, true);
+        // A bit of jank to get trapdoors working. context.replacingClickedOnBlock() seems to always == true
+        // with my current impl so let's ignore that. I don't think this has major side-effects?
+        Direction placeDir = shouldTargetLowerHalf
+                ? Direction.UP
+                : Direction.DOWN;
+
+        // When jank is fixed, replace 'placeDir' with 'dir'
+        return new BlockHitResult(placerOrigin, placeDir, pos, false);
     }
 
     // When bridging up or down, using slabs on slabs, merge them into double slabs where possible so it looks nice :)
