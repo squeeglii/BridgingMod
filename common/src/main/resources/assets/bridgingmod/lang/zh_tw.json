@@ -1,0 +1,41 @@
+{
+  "bridgingmod.config.failed_integration.title": "設定介面已停用！",
+  "bridgingmod.config.failed_integration.description": "模組的設定在快照中已停用",
+
+  "key.categories.bridgingmod": "Bridging Mod 疊橋模組",
+  "key.bridgingmod.toggle_bridging": "切換疊橋",
+
+  "notif.bridgingmod.toggle_bridging": "已切換疊橋",
+  "notif.bridgingmod.action.enabled": "開啟",
+  "notif.bridgingmod.action.disabled": "關閉",
+
+  "text.autoconfig.bridgingmod.title": "Bridging Mod 疊橋模組",
+  "text.autoconfig.bridgingmod.category.feature": "功能",
+  "text.autoconfig.bridgingmod.category.vfx": "視覺效果",
+  "text.autoconfig.bridgingmod.category.debug": "除錯",
+
+  "text.autoconfig.bridgingmod.option.enableBridgingAssist": "啟用疊橋輔助",
+  "text.autoconfig.bridgingmod.option.onlyBridgeWhenCrouched": "僅在蹲下時使用疊橋輔助",
+  "text.autoconfig.bridgingmod.option.enableSlabAssist": "對齊使用疊橋輔助放置的半磚",
+  "text.autoconfig.bridgingmod.option.enableNonSolidReplace": "替換非固體方塊",
+  "text.autoconfig.bridgingmod.option.delayPostBridging": "疊橋後延遲",
+  "text.autoconfig.bridgingmod.option.delayPostBridging.@Tooltip": "再次放置之前要等待多少刻？ 4 刻是原版。 3 刻使疊橋更容易。",
+  "text.autoconfig.bridgingmod.option.supportedBridgeAxes": "疊橋軸",
+  "text.autoconfig.bridgingmod.option.supportedBridgeAxesWhenCrouched": "潛行時的疊橋軸",
+
+  "enum.bridgingmod.placement_axis.horizontal": "僅水平",
+  "enum.bridgingmod.placement_axis.vertical": "僅垂直",
+  "enum.bridgingmod.placement_axis.both": "兩者",
+  "enum.bridgingmod.placement_axis.fallback": "與平常相同",
+
+  "text.autoconfig.bridgingmod.option.showCrosshair": "顯示疊橋輔助準心",
+  "text.autoconfig.bridgingmod.option.showOutline": "顯示疊橋輔助方塊輪廓",
+  "text.autoconfig.bridgingmod.option.showOutlineEvenWhenNotBridging": "顯示非疊橋輔助方塊輪廓",
+  "text.autoconfig.bridgingmod.option.nonBridgeRespectsCrouchRules": "在疊橋啟用時顯示非疊橋輔助",
+  "text.autoconfig.bridgingmod.option.nonBridgeRespectsCrouchRules.@Tooltip": "蹲下規則和疊橋啟用或停用會影響此輪廓是否可見。",
+  "text.autoconfig.bridgingmod.option.outlineColour": "疊橋輔助方塊輪廓的顏色",
+
+  "text.autoconfig.bridgingmod.option.showDebugHighlight": "在 F3 中顯示疊橋輔助方塊輪廓",
+  "text.autoconfig.bridgingmod.option.showNonBridgingDebugHighlight": "在 F3 中顯示非疊橋輔助方塊輪廓",
+  "text.autoconfig.bridgingmod.option.showDebugTrace": "在 F3 中顯示疊橋輔助方塊軌跡"
+}
