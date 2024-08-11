@@ -1,0 +1,41 @@
+{
+    "bridgingmod.config.failed_integration.title": "Yapılandırma Kullanıcı Arayüzü Devre Dışı!",
+    "bridgingmod.config.failed_integration.description": "Modun yapılandırması test sürümlerinde devre dışı bırakılmıştır",
+
+    "key.categories.bridgingmod": "Köprü Kurma Modu",
+    "key.bridgingmod.toggle_bridging": "Köprü Kurma'yı Değiştir",
+
+    "notif.bridgingmod.toggle_bridging": "Köprü Kurma Değiştirildi",
+    "notif.bridgingmod.action.enabled": "AÇIK",
+    "notif.bridgingmod.action.disabled": "KAPALI",
+
+    "text.autoconfig.bridgingmod.title": "Köprü Kurma Modu",
+    "text.autoconfig.bridgingmod.category.feature": "Özellikler",
+    "text.autoconfig.bridgingmod.category.vfx": "Görseller",
+    "text.autoconfig.bridgingmod.category.debug": "Hata Ayıklama",
+
+    "text.autoconfig.bridgingmod.option.enableBridgingAssist": "Köprü-Yardımcısını Etkinleştir",
+    "text.autoconfig.bridgingmod.option.onlyBridgeWhenCrouched": "Köprü-yardımcısını yalnızca çömelirken kullan",
+    "text.autoconfig.bridgingmod.option.enableSlabAssist": "Köprü-Yardımcısı ile yerleştirilen basamakları hizala",
+    "text.autoconfig.bridgingmod.option.enableNonSolidReplace": "Katı Olmayan Blokları Değiştir",
+    "text.autoconfig.bridgingmod.option.delayPostBridging": "Köprü Kurma-Sonrası Gecikme",
+    "text.autoconfig.bridgingmod.option.delayPostBridging.@Tooltip": "Tekrar yerleştirmeden önce kaç tik var? 4 vanilla. 3 köprü kurmayı kolaylaştırır.",
+    "text.autoconfig.bridgingmod.option.supportedBridgeAxes": "Köprü Kurma Ekseni",
+	"text.autoconfig.bridgingmod.option.supportedBridgeAxesWhenCrouched": "Çömelirken Köprü Kurma Ekseni",
+	
+	"enum.bridgingmod.placement_axis.horizontal": "Sadece Yatay",
+    "enum.bridgingmod.placement_axis.vertical": "Sadece Dikey",
+    "enum.bridgingmod.placement_axis.both": "İkisi de",
+    "enum.bridgingmod.placement_axis.fallback": "Her Zamanki Gibi",
+
+    "text.autoconfig.bridgingmod.option.showCrosshair": "Köprü-Yardımcısı artı işaretini göster",
+    "text.autoconfig.bridgingmod.option.showOutline": "Köprü-Yardımcısı blok anahattını göster",
+    "text.autoconfig.bridgingmod.option.showOutlineEvenWhenNotBridging": "Köprü-Yardımcısı-Olmayan blok anahattını göster",
+    "text.autoconfig.bridgingmod.option.nonBridgeRespectsCrouchRules": "Köprü Kurma etkinleştirildiğinde Köprü-Yardımcısı-Olmayanı Göster",
+    "text.autoconfig.bridgingmod.option.nonBridgeRespectsCrouchRules.@Tooltip": "Çömelmek kuralları & Köprü Kurma'nın etkinleştirilmesi veya devre dışı bırakılması bu anahattın görünür olup olmadığını etkiler.",
+    "text.autoconfig.bridgingmod.option.outlineColour": "Köprü-Yardımcısı blok anahattı için renk",
+
+    "text.autoconfig.bridgingmod.option.showDebugHighlight": "F3'te Köprü-Yardımcısı blok anahatlarını göster",
+    "text.autoconfig.bridgingmod.option.showNonBridgingDebugHighlight": "F3'te Köprü-Yardımcısı-Olmayan blok anahatlarını göster",
+    "text.autoconfig.bridgingmod.option.showDebugTrace": "F3'te Köprü-Yardımcısı blok izini göster"
+}
