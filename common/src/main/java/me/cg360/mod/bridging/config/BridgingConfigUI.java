@@ -34,7 +34,6 @@ public class BridgingConfigUI {
 
         return builder
                 .title(Component.translatable(ConfigUtil.TRANSLATION_TITLE))
-                .screenInit(screen -> BridgingConfig.HANDLER.load()) // Make sure the config is the most up-to-date.
                 .save(BridgingConfig.HANDLER::save)
                 .build();
     }
@@ -162,7 +161,6 @@ public class BridgingConfigUI {
 
             if(foundCategories.length > 0) {
                 String firstCatName = foundCategories[0].value();
-                BridgingMod.getLogger().info("Category !!!!! %s".formatted(firstCatName));
                 categoryName = firstCatName == null
                         ? DEFAULT_CATEGORY_NAME
                         : firstCatName.trim().toLowerCase();
