@@ -27,11 +27,11 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.clothconfig_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-
     modApi("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
+
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
+
+    modCompileOnly(fileTree(dir: 'jarDeps', include: '*.jar'))
     modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_fabric}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
@@ -88,7 +88,7 @@ modrinth {
 
     dependencies {
         required.project "fabric-api"
-        required.project "cloth-config"
+        required.project "yacl"
         optional.project "modmenu"
     }
 }
@@ -123,6 +123,6 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.addGameVersion(version)
 
     mainFile.addRequirement("fabric-api")
-    mainFile.addRequirement("cloth-config")
+    mainFile.addRequirement("yacl")
 
 }

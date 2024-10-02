@@ -30,7 +30,7 @@ public class Render {
         if(player == null)
             return;
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player);
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, camera);
 
         if(path.isEmpty())
             return;
@@ -104,7 +104,7 @@ public class Render {
         if (player.getBoundingBox().intersects(placeDeadzone))
             return;
 
-        int outlineColour = BridgingMod.getConfig().getOutlineColour();
+        int outlineColour = BridgingMod.getConfig().getOutlineColour().getRGB();
         Render.cubeOutline(poseStack, vertices, camera, placeTarget, outlineColour);
     }
 
@@ -114,7 +114,7 @@ public class Render {
         if(lastTarget == null)
             return;
 
-        int outlineColour = BridgingMod.getConfig().getOutlineColour();
+        int outlineColour = BridgingMod.getConfig().getOutlineColour().getRGB();
 
         Render.cubeOutline(poseStack, vertices, camera, lastTarget.getA(), outlineColour);
     }

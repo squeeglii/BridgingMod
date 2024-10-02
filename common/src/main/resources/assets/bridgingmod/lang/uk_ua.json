@@ -1,0 +1,41 @@
+{
+    "bridgingmod.config.failed_integration.title": "Конфігураційний інтерфейс вимкнено!",
+    "bridgingmod.config.failed_integration.description": "Конфіг мода вимкнено на знімках",
+
+    "key.categories.bridgingmod": "Bridging Mod",
+    "key.bridgingmod.toggle_bridging": "Перемикання мостіння",
+
+    "notif.bridgingmod.toggle_bridging": "Переключити мостіння",
+    "notif.bridgingmod.action.enabled": "УВІМК.",
+    "notif.bridgingmod.action.disabled": "ВИМК.",
+
+    "config.bridgingmod.title": "Bridging Mod",
+    "config.bridgingmod.category.feature": "Особливості",
+    "config.bridgingmod.category.vfx": "Візуальне",
+    "config.bridgingmod.category.debug": "Налагодження",
+
+    "config.bridgingmod.option.enableBridgingAssist": "Увімкнути містовий асистент",
+    "config.bridgingmod.option.onlyBridgeWhenCrouched": "Використовуйте містовий асистент тільки під час присідання",
+    "config.bridgingmod.option.enableSlabAssist": "Вирівняти плити, укладені за допомогою містового асистента",
+    "config.bridgingmod.option.enableNonSolidReplace": "Заміна нетвердих блоків",
+    "config.bridgingmod.option.delayPostBridging": "Затримка після зведення мосту",
+    "config.bridgingmod.option.delayPostBridging.description.0": "Через скільки тиків ви зможете знову розмістити блок? 4 - ваніль. 3 полегшує зведення мостів.",
+    "config.bridgingmod.option.supportedBridgeAxes": "Мостова вісь",
+    "config.bridgingmod.option.supportedBridgeAxesWhenCrouched": "Мостова вісь при підкраданні",
+
+    "enum.bridgingmod.placement_axis.horizontal": "Тільки горизонтально",
+    "enum.bridgingmod.placement_axis.vertical": "Тільки вертикально",
+    "enum.bridgingmod.placement_axis.both": "Обидва",
+    "enum.bridgingmod.placement_axis.fallback": "Як зазвичай",
+
+    "config.bridgingmod.option.showCrosshair": "Показати перехрестя містового асистента",
+    "config.bridgingmod.option.showOutline": "Показати контур блоку містового асистента",
+    "config.bridgingmod.option.showOutlineEvenWhenNotBridging": "Показати контур блоку без містового асистента",
+    "config.bridgingmod.option.nonBridgeRespectsCrouchRules": "Показатибез містового асистента коли ввімкнено мостіння",
+    "config.bridgingmod.option.nonBridgeRespectsCrouchRules.description.0": "Увімкнення або вимкнення правил присідання та перекриття впливає на те, чи буде цей контур видимим.",
+    "config.bridgingmod.option.outlineColour": "Колір для контуру блоку містового асистента",
+
+    "config.bridgingmod.option.showDebugHighlight": "Показати контур блоку містового асистента у F3",
+    "config.bridgingmod.option.showNonBridgingDebugHighlight": "Показати контур блоку без містового асистента у F3",
+    "config.bridgingmod.option.showDebugTrace": "Показувати слід блоку містового асистента у F3"
+}
