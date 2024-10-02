@@ -20,7 +20,7 @@ public class BridgingConfigUI {
     public static String DEFAULT_CATEGORY_NAME = "other".trim().toLowerCase(); // enforce lowercase.
 
 
-    public static Optional<YetAnotherConfigLib> buildConfig() {
+    public static YetAnotherConfigLib buildConfig() {
         YetAnotherConfigLib.Builder builder = YetAnotherConfigLib.createBuilder();
 
         Map<String, List<Field>> sortedCategories = sortConfigIntoCategories(BridgingConfig.class);
@@ -32,24 +32,35 @@ public class BridgingConfigUI {
             builder.category(category);
         }
 
-        return Optional.ofNullable(builder.build());
+        return builder
+                .title(Component.translatable(ConfigUtil.TRANSLATION_TITLE))
+                .screenInit(screen -> BridgingConfig.HANDLER.load()) // Make sure the config is the most up-to-date.
+                .save(BridgingConfig.HANDLER::save)
+                .build();
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Option<T> createOption(Field field, Function<Option<T>, ControllerBuilder<T>> controllerBuilder) {
+    private static <T> Optional<Option<T>> createOption(Field field, Function<Option<T>, ControllerBuilder<T>> controllerBuilder) {
         String id = field.getName();
 
         String nameTranslation = ConfigUtil.TRANSLATION_OPTION_NAME.formatted(id);
 
         BridgingConfig instance = BridgingConfig.HANDLER.instance();
         Object defaultValue = instance.getDefaultForField(field);
-        T castedDefault = defaultValue == null ? null : (T) defaultValue; // trust.
+
+        if(defaultValue == null) {
+            BridgingMod.getLogger().error("Config field '%s' has no default value. Skipping.");
+            return Optional.empty();
+        }
+
+        T castedDefault = (T) defaultValue; // trust.
 
         Option.Builder<T> option = Option.<T>createBuilder()
                 .name(Component.translatable(nameTranslation))
                 .binding(castedDefault,
                         () -> {
                             try {
+                                field.setAccessible(true);
                                 Object val = field.get(instance);
                                 return val == null
                                         ? castedDefault
@@ -60,6 +71,7 @@ public class BridgingConfigUI {
                         },
                         val -> {
                             try {
+                                field.setAccessible(true);
                                 field.set(instance, val);
                             } catch (IllegalAccessException e) {
                                 throw new RuntimeException(e);
@@ -95,7 +107,7 @@ public class BridgingConfigUI {
             option.description(desc.build());
         }
 
-        return option.build();
+        return Optional.of(option.build());
     }
 
     private static ConfigCategory createCategory(String categoryName, List<Field> categoryOptions) {
@@ -109,7 +121,8 @@ public class BridgingConfigUI {
             Class<?> type = ReflectSupport.boxPrimitive(field.getType());
 
             if(Boolean.class.isAssignableFrom(type)) {
-                category.option(createOption(field, TickBoxControllerBuilder::create));
+                Optional<Option<Boolean>> optOption = createOption(field, TickBoxControllerBuilder::create);
+                optOption.ifPresent(category::option);
                 continue;
             }
 

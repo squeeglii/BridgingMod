@@ -20,21 +20,14 @@ public class DefaultValueTracker {
 
         // Try to get the value of every field and store it.
         for(Field field: this.getClass().getDeclaredFields()) {
-
-            if(!field.trySetAccessible()) {
-                BridgingMod.getLogger().warn("Unable to get value when saving defaults! Security Rejection!");
-                continue;
-            }
-
             try {
+                field.setAccessible(true);
                 Object value = field.get(this);
                 this.defaultValues.put(field.getName(), value);
             } catch (Exception err) {
                 BridgingMod.getLogger().warn("Unable to get value when saving defaults! Unexpected! [%s]".formatted(err.getMessage()));
                 return;
             }
-
-            field.setAccessible(false);
         }
     }
 

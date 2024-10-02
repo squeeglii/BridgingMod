@@ -4,6 +4,7 @@ import me.cg360.mod.bridging.config.BridgingConfig;
 import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.neoforge.DynamicCrosshairCompat;
+import me.cg360.mod.bridging.config.BridgingConfigUI;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.neoforged.api.distmarker.Dist;
@@ -33,7 +34,7 @@ public class BridgingModNeoForge {
         if(BridgingMod.isConfigSuccessfullyInitialized())
             ModLoadingContext.get().registerExtensionPoint(
                     IConfigScreenFactory.class,
-                    () -> (client, parent) -> AutoConfig.getConfigScreen(BridgingConfig.class, parent).get()
+                    () -> (client, parent) -> BridgingConfigUI.buildConfig().generateScreen(parent)
             );
 
         if(ModList.get().isLoaded(DYNAMIC_CROSSHAIR_MOD))
