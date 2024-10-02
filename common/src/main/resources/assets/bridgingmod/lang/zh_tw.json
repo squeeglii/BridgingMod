@@ -19,7 +19,7 @@
   "config.bridgingmod.option.enableSlabAssist": "對齊使用疊橋輔助放置的半磚",
   "config.bridgingmod.option.enableNonSolidReplace": "替換非固體方塊",
   "config.bridgingmod.option.delayPostBridging": "疊橋後延遲",
-  "config.bridgingmod.option.delayPostBridging.description": "再次放置之前要等待多少刻？ 4 刻是原版。 3 刻使疊橋更容易。",
+  "config.bridgingmod.option.delayPostBridging.description.0": "再次放置之前要等待多少刻？ 4 刻是原版。 3 刻使疊橋更容易。",
   "config.bridgingmod.option.supportedBridgeAxes": "疊橋軸",
   "config.bridgingmod.option.supportedBridgeAxesWhenCrouched": "潛行時的疊橋軸",
 
@@ -32,7 +32,7 @@
   "config.bridgingmod.option.showOutline": "顯示疊橋輔助方塊輪廓",
   "config.bridgingmod.option.showOutlineEvenWhenNotBridging": "顯示非疊橋輔助方塊輪廓",
   "config.bridgingmod.option.nonBridgeRespectsCrouchRules": "在疊橋啟用時顯示非疊橋輔助",
-  "config.bridgingmod.option.nonBridgeRespectsCrouchRules.description": "蹲下規則和疊橋啟用或停用會影響此輪廓是否可見。",
+  "config.bridgingmod.option.nonBridgeRespectsCrouchRules.description.0": "蹲下規則和疊橋啟用或停用會影響此輪廓是否可見。",
   "config.bridgingmod.option.outlineColour": "疊橋輔助方塊輪廓的顏色",
 
   "config.bridgingmod.option.showDebugHighlight": "在 F3 中顯示疊橋輔助方塊輪廓",

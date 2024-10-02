@@ -46,7 +46,7 @@ public class BridgingConfigUI {
         String nameTranslation = ConfigUtil.TRANSLATION_OPTION_NAME.formatted(id);
 
         BridgingConfig instance = BridgingConfig.HANDLER.instance();
-        Object defaultValue = instance.getDefaultForField(field);
+        Object defaultValue = instance.getDefaultForField(field).orElse(null);
 
         if(defaultValue == null) {
             BridgingMod.getLogger().error("Config field '%s' has no default value. Skipping.");
@@ -80,8 +80,8 @@ public class BridgingConfigUI {
                 )
                 .controller(controllerBuilder);
 
-        IncludeDescription[] descriptionNotation = field.getAnnotationsByType(IncludeDescription.class);
-        IncludeImage[] imageNotation = field.getAnnotationsByType(IncludeImage.class);
+        IncludeDescription[] descriptionNotation = field.getDeclaredAnnotationsByType(IncludeDescription.class);
+        IncludeImage[] imageNotation = field.getDeclaredAnnotationsByType(IncludeImage.class);
 
         boolean hasDescription = descriptionNotation.length > 0;
         boolean hasImage = imageNotation.length > 0;
@@ -90,8 +90,13 @@ public class BridgingConfigUI {
             OptionDescription.Builder desc = OptionDescription.createBuilder();
 
             if(hasDescription) {
-                String descTranslation = ConfigUtil.TRANSLATION_OPTION_DESCRIPTION.formatted(id);
-                desc.text(Component.translatable(descTranslation));
+                int extraParagraphs = Math.max(descriptionNotation[0].extraParagraphs(), 0);
+
+                for(int i = 0; i < extraParagraphs + 1; i++) {
+                    String descTranslation = ConfigUtil.TRANSLATION_OPTION_DESCRIPTION.formatted(id, i);
+                    Component translatable = Component.translatable(descTranslation);
+                    desc.text(translatable);
+                }
             }
 
             if(hasImage) {
@@ -136,7 +141,7 @@ public class BridgingConfigUI {
     /** Get all the valid config fields in BridgingConfig*/
     private static Map<String, List<Field>> sortConfigIntoCategories(Class<?> configClass) {
         Field[] fields = configClass.getDeclaredFields();
-        Map<String, List<Field>> sortedCategories = new HashMap<>(fields.length);
+        Map<String, List<Field>> sortedCategories = new LinkedHashMap<>(fields.length);
 
         for(Field field : fields) {
 
@@ -145,10 +150,10 @@ public class BridgingConfigUI {
 
             if(Modifier.isFinal(modifiers)) continue;
             if(Modifier.isStatic(modifiers)) continue;
-            if(field.getAnnotationsByType(HideInConfigUI.class).length > 0) continue;
+            if(field.getDeclaredAnnotationsByType(HideInConfigUI.class).length > 0) continue;
 
             // Now we do some sorting!
-            Category[] foundCategories = field.getAnnotationsByType(Category.class);
+            Category[] foundCategories = field.getDeclaredAnnotationsByType(Category.class);
 
             // If a category tag is found sort the field into that category (or use the default name if value is null)
             // Else just chuck it into the default category.
@@ -157,6 +162,7 @@ public class BridgingConfigUI {
 
             if(foundCategories.length > 0) {
                 String firstCatName = foundCategories[0].value();
+                BridgingMod.getLogger().info("Category !!!!! %s".formatted(firstCatName));
                 categoryName = firstCatName == null
                         ? DEFAULT_CATEGORY_NAME
                         : firstCatName.trim().toLowerCase();

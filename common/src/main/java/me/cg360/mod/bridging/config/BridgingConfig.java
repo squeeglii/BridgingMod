@@ -44,7 +44,7 @@ public class BridgingConfig extends DefaultValueTracker {
     private boolean enableNonSolidReplace = true;
     @Category("feature")
     @ConfigEntry.BoundedDiscrete(min = 0, max = 20)
-    @ConfigEntry.Gui.Tooltip()
+    @IncludeDescription(extraParagraphs = 2)
     private int delayPostBridging = 4; // 4 is vanilla - 3 allows for better forward bridging.
 
 
@@ -55,7 +55,7 @@ public class BridgingConfig extends DefaultValueTracker {
     @Category("vfx")
     private boolean showOutlineEvenWhenNotBridging = false;
     @Category("vfx")
-    @IncludeDescription
+    @IncludeDescription(extraParagraphs = 1)
     private boolean nonBridgeRespectsCrouchRules = true;
     @Category("vfx")
     @UseColourPicker
@@ -72,6 +72,7 @@ public class BridgingConfig extends DefaultValueTracker {
     /** = Fixes = */
     /** Fixes are simple toggles that are a bit too nitpicky for the features tab.*/
     @Category("fixes")
+    @IncludeDescription
     private boolean skipTorchBridging = true;
 
 

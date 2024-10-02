@@ -19,7 +19,7 @@
     "config.bridgingmod.option.enableSlabAssist": "Köprü-Yardımcısı ile yerleştirilen basamakları hizala",
     "config.bridgingmod.option.enableNonSolidReplace": "Katı Olmayan Blokları Değiştir",
     "config.bridgingmod.option.delayPostBridging": "Köprü Kurma-Sonrası Gecikme",
-    "config.bridgingmod.option.delayPostBridging.description": "Tekrar yerleştirmeden önce kaç tik var? 4 vanilla. 3 köprü kurmayı kolaylaştırır.",
+    "config.bridgingmod.option.delayPostBridging.description.0": "Tekrar yerleştirmeden önce kaç tik var? 4 vanilla. 3 köprü kurmayı kolaylaştırır.",
     "config.bridgingmod.option.supportedBridgeAxes": "Köprü Kurma Ekseni",
 	"config.bridgingmod.option.supportedBridgeAxesWhenCrouched": "Çömelirken Köprü Kurma Ekseni",
 	
@@ -32,7 +32,7 @@
     "config.bridgingmod.option.showOutline": "Köprü-Yardımcısı blok anahattını göster",
     "config.bridgingmod.option.showOutlineEvenWhenNotBridging": "Köprü-Yardımcısı-Olmayan blok anahattını göster",
     "config.bridgingmod.option.nonBridgeRespectsCrouchRules": "Köprü Kurma etkinleştirildiğinde Köprü-Yardımcısı-Olmayanı Göster",
-    "config.bridgingmod.option.nonBridgeRespectsCrouchRules.description": "Çömelmek kuralları & Köprü Kurma'nın etkinleştirilmesi veya devre dışı bırakılması bu anahattın görünür olup olmadığını etkiler.",
+    "config.bridgingmod.option.nonBridgeRespectsCrouchRules.description.0": "Çömelmek kuralları & Köprü Kurma'nın etkinleştirilmesi veya devre dışı bırakılması bu anahattın görünür olup olmadığını etkiler.",
     "config.bridgingmod.option.outlineColour": "Köprü-Yardımcısı blok anahattı için renk",
 
     "config.bridgingmod.option.showDebugHighlight": "F3'te Köprü-Yardımcısı blok anahatlarını göster",

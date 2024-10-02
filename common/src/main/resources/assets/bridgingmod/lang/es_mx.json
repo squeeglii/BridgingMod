@@ -15,7 +15,7 @@
     "config.bridgingmod.option.enableSlabAssist": "Alinear losas colocadas con la asistencia de puentes",
     "config.bridgingmod.option.enableNonSolidReplace": "Reemplazar bloques no sólidos",
     "config.bridgingmod.option.delayPostBridging": "Retraso después de puentes",
-    "config.bridgingmod.option.delayPostBridging.description": "¿Cuántos ticks antes de poder colocar nuevamente? 4 es el valor predeterminado. 3 facilita el puenteo.",
+    "config.bridgingmod.option.delayPostBridging.description.0": "¿Cuántos ticks antes de poder colocar nuevamente? 4 es el valor predeterminado. 3 facilita el puenteo.",
     "config.bridgingmod.option.supportedBridgeAxes": "Eje de Puentes",
 
     "config.bridgingmod.option.showCrosshair": "Mostrar mira de asistencia de puentes",
