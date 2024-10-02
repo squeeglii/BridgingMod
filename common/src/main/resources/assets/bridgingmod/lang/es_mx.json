@@ -5,23 +5,23 @@
     "key.categories.bridgingmod": "Bridging mod",
     "key.bridgingmod.toggle_bridging": "Alternar Puentes",
 
-    "text.autoconfig.bridgingmod.title": "Bridging mod",
-    "text.autoconfig.bridgingmod.category.feature": "Funciones",
-    "text.autoconfig.bridgingmod.category.vfx": "Visuales",
-    "text.autoconfig.bridgingmod.category.debug": "Depuración",
+    "config.bridgingmod.title": "Bridging mod",
+    "config.bridgingmod.category.feature": "Funciones",
+    "config.bridgingmod.category.vfx": "Visuales",
+    "config.bridgingmod.category.debug": "Depuración",
 
-    "text.autoconfig.bridgingmod.option.enableBridgingAssist": "Habilitar Asistencia de Puentes",
-    "text.autoconfig.bridgingmod.option.onlyBridgeWhenCrouched": "Usar asistencia de puentes solo cuando estés agachado",
-    "text.autoconfig.bridgingmod.option.enableSlabAssist": "Alinear losas colocadas con la asistencia de puentes",
-    "text.autoconfig.bridgingmod.option.enableNonSolidReplace": "Reemplazar bloques no sólidos",
-    "text.autoconfig.bridgingmod.option.delayPostBridging": "Retraso después de puentes",
-    "text.autoconfig.bridgingmod.option.delayPostBridging.@Tooltip": "¿Cuántos ticks antes de poder colocar nuevamente? 4 es el valor predeterminado. 3 facilita el puenteo.",
-    "text.autoconfig.bridgingmod.option.supportedBridgeAxes": "Eje de Puentes",
+    "config.bridgingmod.option.enableBridgingAssist": "Habilitar Asistencia de Puentes",
+    "config.bridgingmod.option.onlyBridgeWhenCrouched": "Usar asistencia de puentes solo cuando estés agachado",
+    "config.bridgingmod.option.enableSlabAssist": "Alinear losas colocadas con la asistencia de puentes",
+    "config.bridgingmod.option.enableNonSolidReplace": "Reemplazar bloques no sólidos",
+    "config.bridgingmod.option.delayPostBridging": "Retraso después de puentes",
+    "config.bridgingmod.option.delayPostBridging.description.0": "¿Cuántos ticks antes de poder colocar nuevamente? 4 es el valor predeterminado. 3 facilita el puenteo.",
+    "config.bridgingmod.option.supportedBridgeAxes": "Eje de Puentes",
 
-    "text.autoconfig.bridgingmod.option.showCrosshair": "Mostrar mira de asistencia de puentes",
-    "text.autoconfig.bridgingmod.option.showOutline": "Mostrar contorno de bloque de asistencia de puentes",
-    "text.autoconfig.bridgingmod.option.outlineColour": "Color del contorno de bloque de asistencia de puentes",
+    "config.bridgingmod.option.showCrosshair": "Mostrar mira de asistencia de puentes",
+    "config.bridgingmod.option.showOutline": "Mostrar contorno de bloque de asistencia de puentes",
+    "config.bridgingmod.option.outlineColour": "Color del contorno de bloque de asistencia de puentes",
 
-    "text.autoconfig.bridgingmod.option.showDebugHighlight": "Mostrar contorno de bloque de asistencia de puentes en F3",
-    "text.autoconfig.bridgingmod.option.showDebugTrace": "Mostrar rastro de bloque de asistencia de puentes en F3"
+    "config.bridgingmod.option.showDebugHighlight": "Mostrar contorno de bloque de asistencia de puentes en F3",
+    "config.bridgingmod.option.showDebugTrace": "Mostrar rastro de bloque de asistencia de puentes en F3"
 }

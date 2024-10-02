@@ -1,9 +1,13 @@
 package me.cg360.mod.bridging.util;
 
+import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.config.BridgingConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.BaseTorchBlock;
+import net.minecraft.world.level.block.TorchBlock;
 
 public class GameSupport {
 
@@ -32,7 +36,13 @@ public class GameSupport {
 
     public static boolean isStackPlaceable(ItemStack stack) {
         if(stack == null) return false;
-        return stack.getItem() instanceof BlockItem;
+        if(!(stack.getItem() instanceof BlockItem blockItem)) return false;
+
+        if(BridgingMod.getConfig().shouldSkipTorchBridging() && blockItem.getBlock() instanceof BaseTorchBlock) {
+            return false;
+        }
+
+        return true;
     }
 
 }
