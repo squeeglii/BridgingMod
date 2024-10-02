@@ -1,6 +1,6 @@
 package me.cg360.mod.bridging.entrypoint.neoforge;
 
-import me.cg360.mod.bridging.BridgingConfig;
+import me.cg360.mod.bridging.config.BridgingConfig;
 import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.neoforge.DynamicCrosshairCompat;
@@ -28,7 +28,7 @@ public class BridgingModNeoForge {
 
 
     public void init(FMLClientSetupEvent event) {
-        BridgingMod.init(AutoConfig.register(BridgingConfig.class, GsonConfigSerializer::new));
+        BridgingMod.init();
 
         if(BridgingMod.isConfigSuccessfullyInitialized())
             ModLoadingContext.get().registerExtensionPoint(

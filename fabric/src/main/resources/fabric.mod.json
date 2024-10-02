@@ -35,7 +35,8 @@
         "fabric": "*",
         "minecraft": "${supported_minecraft_versions_fabric}",
         "java": ">=17",
-        "cloth-config": ">=${clothconfig_version}"
+        "cloth-config": ">=${clothconfig_version}",
+        "yet_another_config_lib_v3": ">=${yacl_version}"
     },
 
     "recommends": {

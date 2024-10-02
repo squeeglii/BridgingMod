@@ -33,6 +33,8 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
 
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
+
     modCompileOnly(fileTree(dir: 'jarDeps', include: '*.jar'))
     modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_fabric}")
 

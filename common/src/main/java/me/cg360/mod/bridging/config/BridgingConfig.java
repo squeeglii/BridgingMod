@@ -1,58 +1,79 @@
-package me.cg360.mod.bridging;
+package me.cg360.mod.bridging.config;
 
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
+import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.config.helper.*;
 import me.cg360.mod.bridging.util.PlacementAxisMode;
 import me.cg360.mod.bridging.util.PlacementAxisModeOverride;
-import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.fabricmc.loader.api.FabricLoader;
 
 @Config(name = "bridgingmod")
-public class BridgingConfig implements ConfigData {
+public class BridgingConfig extends DefaultValueTracker {
 
-    @ConfigEntry.Category("feature")
-    @ConfigEntry.Gui.Excluded
-    private int version = 2;
+    public static ConfigClassHandler<BridgingConfig> HANDLER = ConfigClassHandler.createBuilder(BridgingConfig.class)
+            .id(BridgingMod.id("main"))
+            .serializer(config -> GsonConfigSerializerBuilder.create(config)
+                    .setPath(FabricLoader.getInstance().getConfigDir().resolve(BridgingMod.MOD_ID + ".json"))
+                    .setJson5(true)
+                    .build())
+            .build();
 
-    @ConfigEntry.Category("feature")
+    public BridgingConfig() {
+        this.saveDefaults(); // This should be run before /any/ saving or loading occurs.
+    }
+
+
+    @Category("feature")
+    @HideInConfigUI
+    private int version = 3;
+
+    @Category("feature")
     private boolean enableBridgingAssist = true;
-    @ConfigEntry.Category("feature")
+    @Category("feature")
     private boolean onlyBridgeWhenCrouched = false;
-    @ConfigEntry.Category("feature")
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @Category("feature")
     private PlacementAxisMode supportedBridgeAxes = PlacementAxisMode.BOTH;
-    @ConfigEntry.Category("feature")
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @Category("feature")
     private PlacementAxisModeOverride supportedBridgeAxesWhenCrouched = PlacementAxisModeOverride.FALLBACK;
-    @ConfigEntry.Category("feature")
+    @Category("feature")
     private boolean enableSlabAssist = true;
-    @ConfigEntry.Category("feature")
+    @Category("feature")
     private boolean enableNonSolidReplace = true;
-    @ConfigEntry.Category("feature")
+    @Category("feature")
     @ConfigEntry.BoundedDiscrete(min = 0, max = 20)
     @ConfigEntry.Gui.Tooltip()
     private int delayPostBridging = 4; // 4 is vanilla - 3 allows for better forward bridging.
 
 
-    @ConfigEntry.Category("vfx")
+    @Category("vfx")
     private boolean showCrosshair = true;
-    @ConfigEntry.Category("vfx")
+    @Category("vfx")
     private boolean showOutline = false;
-    @ConfigEntry.Category("vfx")
+    @Category("vfx")
     private boolean showOutlineEvenWhenNotBridging = false;
-    @ConfigEntry.Category("vfx")
-    @ConfigEntry.Gui.Tooltip()
+    @Category("vfx")
+    @IncludeDescription
     private boolean nonBridgeRespectsCrouchRules = true;
-    @ConfigEntry.Category("vfx")
-    @ConfigEntry.ColorPicker(allowAlpha = true)
+    @Category("vfx")
+    @UseColourPicker
     private int outlineColour = 0x66000000;  // aarrggbb
 
 
-    @ConfigEntry.Category("debug")
+    @Category("debug")
     private boolean showDebugHighlight = true;
-    @ConfigEntry.Category("debug")
+    @Category("debug")
     private boolean showNonBridgingDebugHighlight = false;
-    @ConfigEntry.Category("debug")
+    @Category("debug")
     private boolean showDebugTrace = false;
+
+    /** = Fixes = */
+    /** Fixes are simple toggles that are a bit too nitpicky for the features tab.*/
+    @Category("fixes")
+    private boolean skipTorchBridging = true;
+
 
 
     public boolean isBridgingEnabled() {
@@ -117,9 +138,14 @@ public class BridgingConfig implements ConfigData {
     }
 
 
+    public boolean shouldSkipTorchBridging() {
+        return this.skipTorchBridging;
+    }
 
     public void toggleBridgingEnabled() {
         this.enableBridgingAssist = !this.isBridgingEnabled();
     }
+
+
 
 }
