@@ -28,13 +28,20 @@ repositories {
     maven {
         url "https://maven.neoforged.net/releases/"
     }
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
+        content { includeGroup "thedarkcolour" }
+    }
 }
 
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 
-    modApi("me.shedaniel.cloth:cloth-config-neoforge:${project.clothconfig_version}")
-    modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_forge}")
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
+
+    modCompileOnly(fileTree(dir: 'jarDeps', include: '*.jar'))
+    modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_neoforge}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
@@ -90,7 +97,7 @@ modrinth {
         setDebugMode(true)
 
     dependencies {
-        required.project "cloth-config"
+        required.project "yacl"
     }
 }
 
@@ -122,6 +129,6 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     for(String version: getSupportedVersions(project.properties))
         mainFile.addGameVersion(version)
 
-    mainFile.addRequirement("cloth-config")
+    mainFile.addRequirement("yacl")
 
 }

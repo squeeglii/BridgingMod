@@ -31,9 +31,9 @@ ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.bridgingmod]]
-modId = "cloth_config"
-type = "required"
-versionRange = "[${clothconfig_version},)"
+modId = "yet_another_config_lib_v3"
+mandatory = true
+versionRange = "[${yacl_version},)"
 ordering = "NONE"
 side = "CLIENT"
 
