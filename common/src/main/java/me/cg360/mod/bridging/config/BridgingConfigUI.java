@@ -1,18 +1,19 @@
 package me.cg360.mod.bridging.config;
 
 import dev.isxander.yacl3.api.*;
-import dev.isxander.yacl3.api.controller.ControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.api.controller.*;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.config.helper.*;
 import me.cg360.mod.bridging.util.ReflectSupport;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 
 public class BridgingConfigUI {
@@ -35,6 +36,7 @@ public class BridgingConfigUI {
         return builder
                 .title(Component.translatable(ConfigUtil.TRANSLATION_TITLE))
                 .save(BridgingConfig.HANDLER::save)
+                .screenInit(screen -> BridgingConfig.HANDLER.instance().upgrade())
                 .build();
     }
 
@@ -114,6 +116,7 @@ public class BridgingConfigUI {
         return Optional.of(option.build());
     }
 
+
     private static ConfigCategory createCategory(String categoryName, List<Field> categoryOptions) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         String translatedName = ConfigUtil.TRANSLATION_CATEGORY_NAME.formatted(categoryName);
@@ -130,7 +133,41 @@ public class BridgingConfigUI {
                 continue;
             }
 
-            //TODO: Support more types.
+            if(Integer.class.isAssignableFrom(type)) {
+                DiscreteRange[] rangeAnnotations = field.getDeclaredAnnotationsByType(DiscreteRange.class);
+
+                if(rangeAnnotations.length > 0) {
+                    DiscreteRange range = rangeAnnotations[0];
+                    Optional<Option<Integer>> optOption = createOption(
+                            field,
+                            option -> IntegerSliderControllerBuilder.create(option)
+                                                                    .range(range.min(), range.max())
+                                                                    .step(1)
+                    );
+
+                    optOption.ifPresent(category::option);
+                    continue;
+                }
+
+                Optional<Option<Integer>> optOption = createOption(field, IntegerFieldControllerBuilder::create);
+                optOption.ifPresent(category::option);
+                continue;
+            }
+
+            if(Color.class.isAssignableFrom(type)) {
+                Optional<Option<Color>> optOption = createOption(field, opt -> ColorControllerBuilder.create(opt).allowAlpha(true));
+                optOption.ifPresent(category::option);
+                continue;
+            }
+
+            if(Enum.class.isAssignableFrom(type)) {
+                Optional<Option<Enum>> optOption = createOption(field, opt -> EnumControllerBuilder.create(opt).enumClass((Class<Enum>)(Object)type));
+                optOption.ifPresent(category::option);
+                continue;
+            }
+
+            // [ new types here ]
+            BridgingMod.getLogger().warn("Skipped displaying config entry '%s' as its type has no display logic".formatted(field.getName()));
 
         }
 

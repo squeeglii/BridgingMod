@@ -7,5 +7,9 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UseColourPicker {
+public @interface DiscreteRange {
+
+    int min();
+    int max();
+
 }

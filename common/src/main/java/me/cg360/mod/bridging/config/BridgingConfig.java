@@ -8,8 +8,9 @@ import me.cg360.mod.bridging.config.helper.*;
 import me.cg360.mod.bridging.util.PlacementAxisMode;
 import me.cg360.mod.bridging.util.PlacementAxisModeOverride;
 import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.loader.api.FabricLoader;
+
+import java.awt.*;
 
 @Config(name = "bridgingmod")
 public class BridgingConfig extends DefaultValueTracker {
@@ -23,6 +24,7 @@ public class BridgingConfig extends DefaultValueTracker {
             .build();
 
     public BridgingConfig() {
+        this.upgrade();
         this.saveDefaults(); // This should be run before /any/ saving or loading occurs.
     }
 
@@ -43,7 +45,7 @@ public class BridgingConfig extends DefaultValueTracker {
     @Category("feature") @SerialEntry
     private boolean enableNonSolidReplace = true;
     @Category("feature") @SerialEntry
-    @ConfigEntry.BoundedDiscrete(min = 0, max = 20)
+    @DiscreteRange(min = 0, max = 20)
     @IncludeDescription(extraParagraphs = 2)
     private int delayPostBridging = 4; // 4 is vanilla - 3 allows for better forward bridging.
 
@@ -58,8 +60,14 @@ public class BridgingConfig extends DefaultValueTracker {
     @IncludeDescription(extraParagraphs = 1)
     private boolean nonBridgeRespectsCrouchRules = true;
     @Category("vfx") @SerialEntry
-    @UseColourPicker
-    private int outlineColour = 0x66000000;  // aarrggbb
+    private Color outlineColour = new Color(0, 0, 0, 0.4f);
+
+
+    /** = Fixes = */
+    /** Fixes are simple toggles that are a bit too nitpicky for the features tab.*/
+    @Category("fixes") @SerialEntry
+    @IncludeDescription
+    private boolean skipTorchBridging = true;
 
 
     @Category("debug") @SerialEntry
@@ -69,11 +77,7 @@ public class BridgingConfig extends DefaultValueTracker {
     @Category("debug") @SerialEntry
     private boolean showDebugTrace = false;
 
-    /** = Fixes = */
-    /** Fixes are simple toggles that are a bit too nitpicky for the features tab.*/
-    @Category("fixes") @SerialEntry
-    @IncludeDescription
-    private boolean skipTorchBridging = true;
+
 
 
 
@@ -121,7 +125,7 @@ public class BridgingConfig extends DefaultValueTracker {
         return this.nonBridgeRespectsCrouchRules;
     }
 
-    public int getOutlineColour() {
+    public Color getOutlineColour() {
         return this.outlineColour;
     }
 
@@ -148,6 +152,9 @@ public class BridgingConfig extends DefaultValueTracker {
         BridgingConfig.HANDLER.save();
     }
 
+    public void upgrade() {
+        this.version = 3;
+    }
 
 
 }

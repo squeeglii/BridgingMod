@@ -102,7 +102,7 @@ public class Render {
         if (player.getBoundingBox().intersects(placeDeadzone))
             return;
 
-        int outlineColour = BridgingMod.getConfig().getOutlineColour();
+        int outlineColour = BridgingMod.getConfig().getOutlineColour().getRGB();
         Render.cubeOutline(poseStack, vertices, camera, placeTarget, outlineColour);
     }
 
@@ -112,7 +112,7 @@ public class Render {
         if(lastTarget == null)
             return;
 
-        int outlineColour = BridgingMod.getConfig().getOutlineColour();
+        int outlineColour = BridgingMod.getConfig().getOutlineColour().getRGB();
 
         Render.cubeOutline(poseStack, vertices, camera, lastTarget.getA(), outlineColour);
     }
