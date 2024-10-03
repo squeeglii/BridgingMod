@@ -4,17 +4,20 @@ import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Path;
 import me.cg360.mod.bridging.util.PlacementAxisMode;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.*;
 
@@ -27,15 +30,16 @@ public class PathTraversalHandler {
      * @param player the player whose view line should be used.
      * @return the closest block position in view that supports bridge assist.
      */
-    public static Tuple<BlockPos, Direction> getClosestAssistTarget(Player player) {
+    public static Tuple<BlockPos, Direction> getClosestAssistTarget(Entity player) {
         ClientLevel level = Minecraft.getInstance().level;
 
         if(level == null)
             return null;
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player);
+        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, camera);
 
-        Vec3 viewDirection = player.getViewVector(1f);
+        Vector3f viewDirection = camera.getLookVector();
         List<Direction> validSides = PathTraversalHandler.getValidAssistSides(viewDirection);
 
         Direction validDirection = null;
@@ -80,19 +84,24 @@ public class PathTraversalHandler {
      * Generates a list of blocks which follow the reach line of a given
      * player from a certain distance.
      */
-    public static List<BlockPos> getViewBlockPath(Player player) {
+    public static List<BlockPos> getViewBlockPath(Entity player, Camera view) {
         if(player == null)
             return new ArrayList<>();
 
-        float eyeOffset = player.getEyeHeight(player.getPose());
-        Vec3 viewOrigin = player.position().add(0, eyeOffset, 0);
+        // Figure out the diff between the player's current edge of placement
+        // & the camera's pos. This is now the max diff.
+        double playerReach = GameSupport.getReach();
+        Vec3 playerViewVec = player.getViewVector(1f).scale(playerReach);
+        Vec3 worldSpaceViewEnd = playerViewVec.add(player.getPosition(1f));
+        Vec3 worldSpaceCameraOrigin = view.getPosition();
+        double distance = worldSpaceViewEnd.distanceTo(worldSpaceCameraOrigin);
 
-        Vec3 viewDirection = player.getViewVector(1f);
+        Vec3 viewDirection = new Vec3(view.getLookVector());
         Vec3 nearVec = viewDirection.scale(MIN_DISTANCE);
-        Vec3 farVec = viewDirection.scale(GameSupport.getReach());
+        Vec3 farVec = viewDirection.scale(distance);
 
-        BlockPos startPos = BlockPos.containing(viewOrigin.add(nearVec));
-        BlockPos endPos = BlockPos.containing(viewOrigin.add(farVec));
+        BlockPos startPos = BlockPos.containing(worldSpaceCameraOrigin.add(nearVec));
+        BlockPos endPos = BlockPos.containing(worldSpaceCameraOrigin.add(farVec));
 
         return Path.calculateBresenhamVoxels(startPos, endPos);
     }
@@ -102,11 +111,11 @@ public class PathTraversalHandler {
      * that the view is facing, then returning their opposites indicating at
      * what offset these sides can be found compared to a blockpos
      */
-    private static List<Direction> getValidAssistSides(Vec3 viewDirection) {
+    private static List<Direction> getValidAssistSides(Vector3f viewDirection) {
         LinkedList<Direction> validSides = new LinkedList<>();
 
         for(Direction direction: Direction.values()) {
-            Vec3 directionNormal = Vec3.atLowerCornerOf(direction.getNormal());
+            Vector3f directionNormal = Vec3.atLowerCornerOf(direction.getNormal()).toVector3f();
 
             double similarity = viewDirection.dot(directionNormal);
 

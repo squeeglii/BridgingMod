@@ -30,7 +30,7 @@ public class Render {
         if(player == null)
             return;
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player);
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, camera);
 
         if(path.isEmpty())
             return;
