@@ -1,7 +1,7 @@
 package me.cg360.mod.bridging.util;
 
-import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry.Translatable;
 
+import me.cg360.mod.bridging.config.helper.Translatable;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ public enum PlacementAxisMode implements Translatable {
 
     @Override
     @NotNull
-    public String getKey() {
+    public String getTranslationKey() {
         return "enum.bridgingmod.placement_axis.%s".formatted(this.name().toLowerCase());
     }
 }

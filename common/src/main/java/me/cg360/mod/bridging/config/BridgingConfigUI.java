@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 import java.util.function.Function;
@@ -23,8 +22,9 @@ public class BridgingConfigUI {
 
     public static YetAnotherConfigLib buildConfig() {
         YetAnotherConfigLib.Builder builder = YetAnotherConfigLib.createBuilder();
-
         Map<String, List<Field>> sortedCategories = sortConfigIntoCategories(BridgingConfig.class);
+
+        //builder.category(createPresetsCategory()); -- will consider again. Couldn't make UI update fully.
 
         for(String categoryName : sortedCategories.keySet()) {
             List<Field> categoryOptions = sortedCategories.get(categoryName);
@@ -81,46 +81,55 @@ public class BridgingConfigUI {
                 )
                 .controller(controllerBuilder);
 
-        IncludeDescription[] descriptionNotation = field.getDeclaredAnnotationsByType(IncludeDescription.class);
+        IncludeExtraDescription[] descriptionNotation = field.getDeclaredAnnotationsByType(IncludeExtraDescription.class);
         IncludeImage[] imageNotation = field.getDeclaredAnnotationsByType(IncludeImage.class);
+        IncludeAnimatedImage[] animatedImageNotation = field.getDeclaredAnnotationsByType(IncludeAnimatedImage.class);
+        OptionDescription.Builder desc = OptionDescription.createBuilder();
 
-        boolean hasDescription = descriptionNotation.length > 0;
-        boolean hasImage = imageNotation.length > 0;
+        // Everything has a default description [config.bridgingmod.option.[field].description.0
+        // If key isn't defined in translations, it's just blank.
+        String descTranslationKey = ConfigUtil.TRANSLATION_OPTION_DESCRIPTION.formatted(id, 0);
+        Component descTranslation = Component.translatableWithFallback(descTranslationKey, "");
+        desc.text(descTranslation);
 
-        if(hasDescription || hasImage) {
-            OptionDescription.Builder desc = OptionDescription.createBuilder();
+        // IncludeExtraDescriptions present
+        // If present, [i] extra lines are added for key [config.bridgingmod.option.[field].description.[i],
+        // WITHOUT a fallback.
+        if(descriptionNotation.length > 0) {
+            int extraParagraphs = Math.max(descriptionNotation[0].extraParagraphs(), 1); // must be >1, else snap to 1.
 
-            if(hasDescription) {
-                int extraParagraphs = Math.max(descriptionNotation[0].extraParagraphs(), 0);
-
-                for(int i = 0; i < extraParagraphs + 1; i++) {
-                    String descTranslation = ConfigUtil.TRANSLATION_OPTION_DESCRIPTION.formatted(id, i);
-                    Component translatable = Component.translatable(descTranslation);
-                    desc.text(translatable);
-                }
+            for(int i = 1; i < extraParagraphs + 1; i++) {
+                String extraDescriptionTranslationKey = ConfigUtil.TRANSLATION_OPTION_DESCRIPTION.formatted(id, i);
+                Component extraDescTranslation = Component.translatable(extraDescriptionTranslationKey);
+                desc.text(extraDescTranslation);
             }
-
-            if(hasImage) {
-                String path = imageNotation[0].value();
-                Path checkedPath = Path.of(path);
-                ResourceLocation uid = BridgingMod.id("%s_%s".formatted(
-                        id, path
-                ));
-
-                desc.image(checkedPath, uid);
-            }
-
-            option.description(desc.build());
         }
 
-        return Optional.of(option.build());
+        // IncludeImage present
+        if(imageNotation.length > 0) {
+            IncludeImage imageAnnotation = imageNotation[0];
+            ResourceLocation checkedPath = BridgingMod.id(imageAnnotation.value());
+            int width = imageAnnotation.width();
+            int height = imageAnnotation.height();
+            desc.image(checkedPath, width, height);
+        }
+
+        if(animatedImageNotation.length > 0) {
+            IncludeAnimatedImage imageAnnotation = animatedImageNotation[0];
+            ResourceLocation checkedPath = BridgingMod.id(imageAnnotation.value());
+            desc.webpImage(checkedPath);
+        }
+
+        return Optional.of(option.description(desc.build()).build());
     }
 
-
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static ConfigCategory createCategory(String categoryName, List<Field> categoryOptions) {
         ConfigCategory.Builder category = ConfigCategory.createBuilder();
         String translatedName = ConfigUtil.TRANSLATION_CATEGORY_NAME.formatted(categoryName);
+        String translatedTooltip = ConfigUtil.TRANSLATION_CATEGORY_TOOLTIP.formatted(categoryName);
         category.name(Component.translatable(translatedName));
+        category.tooltip(Component.translatableWithFallback(translatedTooltip, ""));
 
         for(Field field : categoryOptions) {
 
@@ -141,8 +150,8 @@ public class BridgingConfigUI {
                     Optional<Option<Integer>> optOption = createOption(
                             field,
                             option -> IntegerSliderControllerBuilder.create(option)
-                                                                    .range(range.min(), range.max())
-                                                                    .step(1)
+                                        .range(range.min(), range.max())
+                                        .step(1)
                     );
 
                     optOption.ifPresent(category::option);
@@ -161,7 +170,20 @@ public class BridgingConfigUI {
             }
 
             if(Enum.class.isAssignableFrom(type)) {
-                Optional<Option<Enum>> optOption = createOption(field, opt -> EnumControllerBuilder.create(opt).enumClass((Class<Enum>)(Object)type));
+                // EnumControllerBuilder use literal names by default for the button label.
+                // This is still the default, unless the enum extends Translatable & provides
+                // translation keys for each name.
+                Optional<Option<Enum>> optOption = createOption(
+                        field,
+                        opt -> EnumControllerBuilder
+                                .create(opt)
+                                .enumClass((Class<Enum>) type)
+                                .formatValue(val ->
+                                    val instanceof Translatable translatable
+                                        ? Component.translatable(translatable.getTranslationKey())
+                                        : Component.literal(((Enum) val).name()) // Causes build error without a cast. Keep it, even with IDE warning.
+                                )
+                );
                 optOption.ifPresent(category::option);
                 continue;
             }

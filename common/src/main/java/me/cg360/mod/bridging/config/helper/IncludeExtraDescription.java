@@ -7,11 +7,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface IncludeImage {
+public @interface IncludeExtraDescription {
 
-    String value();
-
-    int width() default 854;
-    int height() default 480;
+    int extraParagraphs() default 1;
 
 }

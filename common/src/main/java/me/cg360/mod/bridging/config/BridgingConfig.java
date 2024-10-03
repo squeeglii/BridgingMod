@@ -33,41 +33,49 @@ public class BridgingConfig extends DefaultValueTracker {
     private int version = 3;
 
     @Category("feature") @SerialEntry
+    @IncludeAnimatedImage("textures/gui/config/bridging.webp")
+    @IncludeExtraDescription
     private boolean enableBridgingAssist = true;
     @Category("feature") @SerialEntry
+    @IncludeExtraDescription
     private boolean onlyBridgeWhenCrouched = false;
     @Category("feature") @SerialEntry
     private PlacementAxisMode supportedBridgeAxes = PlacementAxisMode.BOTH;
     @Category("feature") @SerialEntry
     private PlacementAxisModeOverride supportedBridgeAxesWhenCrouched = PlacementAxisModeOverride.FALLBACK;
     @Category("feature") @SerialEntry
-    private boolean enableSlabAssist = true;
-    @Category("feature") @SerialEntry
-    private boolean enableNonSolidReplace = true;
-    @Category("feature") @SerialEntry
+    @IncludeExtraDescription(extraParagraphs = 2)
     @DiscreteRange(min = 0, max = 20)
-    @IncludeDescription(extraParagraphs = 2)
     private int delayPostBridging = 4; // 4 is vanilla - 3 allows for better forward bridging.
 
 
     @Category("vfx") @SerialEntry
+    @IncludeImage("textures/gui/config/show_crosshair.png")
     private boolean showCrosshair = true;
     @Category("vfx") @SerialEntry
+    @IncludeImage("textures/gui/config/bridging_outline.png")
     private boolean showOutline = false;
     @Category("vfx") @SerialEntry
+    @IncludeImage("textures/gui/config/non_bridging_outline.png")
     private boolean showOutlineEvenWhenNotBridging = false;
     @Category("vfx") @SerialEntry
-    @IncludeDescription(extraParagraphs = 1)
+    @IncludeExtraDescription
     private boolean nonBridgeRespectsCrouchRules = true;
     @Category("vfx") @SerialEntry
+    @IncludeImage("textures/gui/config/outline_colour.png")
+    @IncludeExtraDescription
     private Color outlineColour = new Color(0, 0, 0, 0.4f);
 
 
-    /** = Fixes = */
-    /** Fixes are simple toggles that are a bit too nitpicky for the features tab.*/
+    /* = Fixes = */
+    /* Fixes are simple toggles that are a bit too nitpicky for the features tab.*/
     @Category("fixes") @SerialEntry
-    @IncludeDescription
     private boolean skipTorchBridging = true;
+    @Category("fixes") @SerialEntry
+    @IncludeExtraDescription(extraParagraphs = 3)
+    private boolean enableSlabAssist = true;
+    @Category("fixes") @SerialEntry
+    private boolean enableNonSolidReplace = true;
 
 
     @Category("debug") @SerialEntry

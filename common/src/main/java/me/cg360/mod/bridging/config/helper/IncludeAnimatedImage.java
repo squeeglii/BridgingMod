@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface IncludeDescription {
+public @interface IncludeAnimatedImage {
 
-    int extraParagraphs() default 0;
+    String value();
 
 }
