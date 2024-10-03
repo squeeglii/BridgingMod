@@ -1,12 +1,9 @@
 package me.cg360.mod.bridging.entrypoint.neoforge;
 
-import me.cg360.mod.bridging.config.BridgingConfig;
 import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.neoforge.DynamicCrosshairCompat;
 import me.cg360.mod.bridging.config.BridgingConfigUI;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.InterModComms;

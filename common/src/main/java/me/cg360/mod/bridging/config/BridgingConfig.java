@@ -7,12 +7,10 @@ import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.config.helper.*;
 import me.cg360.mod.bridging.util.PlacementAxisMode;
 import me.cg360.mod.bridging.util.PlacementAxisModeOverride;
-import me.shedaniel.autoconfig.annotation.Config;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.awt.*;
 
-@Config(name = "bridgingmod")
 public class BridgingConfig extends DefaultValueTracker {
 
     public static ConfigClassHandler<BridgingConfig> HANDLER = ConfigClassHandler.createBuilder(BridgingConfig.class)
