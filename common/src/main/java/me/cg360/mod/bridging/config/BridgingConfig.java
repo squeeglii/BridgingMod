@@ -16,7 +16,7 @@ public class BridgingConfig extends DefaultValueTracker {
     public static ConfigClassHandler<BridgingConfig> HANDLER = ConfigClassHandler.createBuilder(BridgingConfig.class)
             .id(BridgingMod.id("main"))
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
-                    .setPath(FabricLoader.getInstance().getConfigDir().resolve(BridgingMod.MOD_ID + ".json"))
+                    .setPath(BridgingMod.getDefaultConfigPath().resolve(BridgingMod.MOD_ID + ".json"))
                     .setJson5(false)
                     .build())
             .build();
