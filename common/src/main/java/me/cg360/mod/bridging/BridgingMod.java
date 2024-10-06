@@ -27,7 +27,7 @@ public class BridgingMod {
     }
 
     public static ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(BridgingMod.MOD_ID, name);
+        return new ResourceLocation(BridgingMod.MOD_ID, name);
     }
 
     public static BridgingConfig getConfig() {
