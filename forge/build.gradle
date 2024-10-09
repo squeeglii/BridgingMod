@@ -114,7 +114,7 @@ modrinth {
         setDebugMode(true)
 
     dependencies {
-        required.project "cloth-config"
+        required.project "yacl"
     }
 }
 
@@ -146,6 +146,6 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     for(String version: getSupportedVersions(project.properties))
         mainFile.addGameVersion(version)
 
-    mainFile.addRequirement("cloth-config")
+    mainFile.addRequirement("yacl")
 
 }
