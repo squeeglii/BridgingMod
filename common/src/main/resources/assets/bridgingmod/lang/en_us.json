@@ -2,6 +2,9 @@
     "bridgingmod.config.failed_integration.title": "Config UI Disabled!",
     "bridgingmod.config.failed_integration.description": "Failed to open config UI. If you're in a snapshot, please do not report this as a bug.",
 
+    "config.bridgingmod.broken_yacl.title": "YetAnotherConfigLib would've crashed here.",
+    "config.bridgingmod.broken_yacl.description": "Some versions of YACL crash the game. Please use YACL v3.4.2. This is tested with the mod.",
+
     "key.categories.bridgingmod": "Bridging Mod",
     "key.bridgingmod.toggle_bridging": "Toggle Bridging",
 

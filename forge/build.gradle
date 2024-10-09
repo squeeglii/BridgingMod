@@ -35,6 +35,11 @@ repositories {
     maven {
         url "https://maven.neoforged.net/releases/"
     }
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
+        content { includeGroup "thedarkcolour" }
+    }
 }
 
 dependencies {
@@ -51,7 +56,9 @@ dependencies {
 
     forge forgeString
 
-    modApi("me.shedaniel.cloth:cloth-config-forge:${project.clothconfig_version}")
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-forge"
+
+    modCompileOnly(fileTree(dir: 'jarDeps', include: '*.jar'))
     modCompileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_forge}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }

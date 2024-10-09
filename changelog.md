@@ -1,3 +1,9 @@
+__**Changelog (v2.5.1)**__
+
+- Added a version checker to catch some crashes.
+
+& here's the features:
+
 __**Changelog (v2.5.0)**__
 
 - Revamped the config entirely w/ YetAnotherConfigLibrary

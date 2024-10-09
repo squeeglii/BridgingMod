@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.BaseTorchBlock;
 import net.minecraft.world.level.block.TorchBlock;
 
 public class GameSupport {
@@ -38,7 +37,7 @@ public class GameSupport {
         if(stack == null) return false;
         if(!(stack.getItem() instanceof BlockItem blockItem)) return false;
 
-        if(BridgingMod.getConfig().shouldSkipTorchBridging() && blockItem.getBlock() instanceof BaseTorchBlock) {
+        if(BridgingMod.getConfig().shouldSkipTorchBridging() && blockItem.getBlock() instanceof TorchBlock) {
             return false;
         }
 
