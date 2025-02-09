@@ -37,10 +37,8 @@ public class PathTraversalHandler {
         SourcePerspective perspectiveLock = BridgingMod.getCompatibleSourcePerspective();
 
         Perspective perspective = switch (perspectiveLock) {
-            case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE -> {
-                LogUtils.getLogger().info("Perspective: {}", perspectiveLock);
-                    yield Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
-            }
+            case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
+                    Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
 
             case ALWAYS_EYELINE ->
                     Perspective.fromEntity(player);
