@@ -1,5 +1,7 @@
 package me.cg360.mod.bridging.compat;
 
+import me.cg360.mod.bridging.compat.handler.BuildWandsHandler;
+import me.cg360.mod.bridging.compat.handler.PlaceableItemHandler;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -85,6 +87,11 @@ public class SpecialHandlers {
         //});
 
         // Compatibility - Storage mods.
+        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("wands", "stone_wand"), BuildWandsHandler.INSTANCE);
+        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("wands", "iron_wand"), BuildWandsHandler.INSTANCE);
+        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("wands", "diamond_wand"), BuildWandsHandler.INSTANCE);
+        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("wands", "netherite_wand"), BuildWandsHandler.INSTANCE);
+        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("wands", "creative_wand"), BuildWandsHandler.INSTANCE);
     }
 
     // Group selector is NOT the placement condition.

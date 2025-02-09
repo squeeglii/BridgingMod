@@ -17,4 +17,5 @@ dependencies {
     // optional compat
     modCompileOnly("curse.maven:dankstorage-335673:${rootProject.dank_storage_file_id}")
     modCompileOnly("maven.modrinth:bank-storage:${rootProject.bank_storage_file_id}")
+    modCompileOnly("curse.maven:building-wands-363392:${rootProject.building_wands_file_id}")
 }
