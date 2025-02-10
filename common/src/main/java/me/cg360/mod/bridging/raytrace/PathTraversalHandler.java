@@ -126,7 +126,7 @@ public class PathTraversalHandler {
         LinkedList<Direction> validSides = new LinkedList<>();
 
         for(Direction direction: Direction.values()) {
-            Vector3f directionNormal = Vec3.atLowerCornerOf(direction.getUnitVec3i()).toVector3f();
+            Vector3f directionNormal = Vec3.atLowerCornerOf(direction.getNormal()).toVector3f();
 
             double similarity = viewDirection.dot(directionNormal);
 
@@ -169,7 +169,7 @@ public class PathTraversalHandler {
         }
 
 
-        BlockPos blockPlacingOffOf = placementTarget.offset(checkSide.getUnitVec3i());
+        BlockPos blockPlacingOffOf = placementTarget.offset(checkSide.getNormal());
 
         // Can't place off of air or liquids.
         if(level.isEmptyBlock(blockPlacingOffOf)) return false;

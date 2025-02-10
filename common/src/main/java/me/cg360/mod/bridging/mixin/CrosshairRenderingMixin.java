@@ -12,10 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.CoreShaders;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,7 +51,7 @@ public class CrosshairRenderingMixin {
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShader(CoreShaders.RENDERTYPE_LINES);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(
                 GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR,
@@ -75,14 +72,13 @@ public class CrosshairRenderingMixin {
         y += this.debugOverlay.showDebugScreen() ? 15 : 0;
 
         gui.blitSprite(
-                RenderType::crosshair,
                 alignment.getTexturePath(),
                 x, y,
                 ICON_SIZE, ICON_SIZE
         );
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShader(CoreShaders.RENDERTYPE_LINES);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
     }

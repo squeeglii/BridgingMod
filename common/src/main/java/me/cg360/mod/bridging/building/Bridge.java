@@ -78,7 +78,7 @@ public class Bridge {
         if(!(blockItem.getBlock() instanceof SlabBlock)) return null;
 
         // Get the block to place "upgrade" the slab from
-        BlockPos buildingOffPos = pos.offset(dir.getUnitVec3i().multiply(-1));
+        BlockPos buildingOffPos = pos.offset(dir.getNormal().multiply(-1));
         BlockState localState = level.getBlockState(buildingOffPos);
 
         if(!(localState.getBlock() instanceof SlabBlock)) return null;

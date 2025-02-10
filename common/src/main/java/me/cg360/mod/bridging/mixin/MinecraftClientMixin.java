@@ -130,7 +130,7 @@ public abstract class MinecraftClientMixin {
                 blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
             }
 
-            if (!(blockPlaceResult instanceof InteractionResult.Success successResult)) continue;
+            if (!blockPlaceResult.consumesAction()) continue;
 
             // if successful place occurred, cancel all future behaviour for
             // item placement as this takes over instead. Stops off-hand
@@ -138,8 +138,7 @@ public abstract class MinecraftClientMixin {
             this.rightClickDelay = Math.max(0, BridgingMod.getConfig().getDelayPostBridging());
             info.cancel();
 
-            if(successResult.swingSource() != InteractionResult.SwingSource.CLIENT)
-                return;
+            if (!blockPlaceResult.shouldSwing()) return;
 
             this.player.swing(hand);
             boolean stackSizeChanged = itemStack.getCount() != originalStackSize || this.gameMode.hasInfiniteItems();
