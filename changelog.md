@@ -1,3 +1,8 @@
+## Changelog for 2.6.1 (All Versions)
+
+- Corrected config description for minimum distance sliders.
+
+
 ## Changelog for 2.6.0 (All Versions)
 
 A pretty big release of small things.
