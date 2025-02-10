@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "Пользовательский интерфейс конфигурации отключен!",
     "bridgingmod.config.failed_integration.description": "Не удалось открыть интерфейс конфигурации. Если вы используете снапшот, пожалуйста, не сообщайте об этом как об ошибке.",
 
-    "key.categories.bridgingmod": "Мостовой мод",
+    "key.categories.bridgingmod": "Bridging Mod",
     "key.bridgingmod.toggle_bridging": "Переключить размещение с обходом",
 
     "notif.bridgingmod.toggle_bridging": "Переключено размещение с обходом",
