@@ -1,9 +1,6 @@
 package me.cg360.mod.bridging.compat;
 
-import com.mojang.logging.LogUtils;
-import net.neoforged.fml.ModList;
 import org.objectweb.asm.tree.ClassNode;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 

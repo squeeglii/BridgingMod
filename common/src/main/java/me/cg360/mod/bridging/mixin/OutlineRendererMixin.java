@@ -8,7 +8,6 @@ import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Render;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.world.entity.player.Player;
@@ -28,15 +27,15 @@ public abstract class OutlineRendererMixin {
 
     @Shadow protected abstract void checkPoseStack(PoseStack poseStack);
 
-    @Inject(method = "renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V",
+    @Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V",
                     shift = At.Shift.BEFORE,
                     ordinal = 0
             ))
-    public void renderTracedViewPath(DeltaTracker deltaTracker, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
-        boolean isInDebugMenu = this.minecraft.getDebugOverlay().showDebugScreen();
+    public void renderTracedViewPath(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+        boolean isInDebugMenu = this.minecraft.options.renderDebug;
 
         // Rules to display any bridging - whether these are followed or not depends on the config :)
         boolean isBridgingEnabled = BridgingMod.getConfig().isBridgingEnabled() &&
@@ -71,10 +70,6 @@ public abstract class OutlineRendererMixin {
             case ALWAYS_EYELINE ->
                     Perspective.fromEntity(player);
         };
-
-        // Creating a fresh pose stack should be fine - the main pose stack is meant to be
-        // empty before rendering the vanilla outline anyway. -1.21.1
-        PoseStack poseStack = new PoseStack();
 
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, view);

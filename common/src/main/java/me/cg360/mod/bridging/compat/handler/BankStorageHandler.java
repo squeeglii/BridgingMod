@@ -15,6 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.natte.bankstorage.BankStorage;
 import net.natte.bankstorage.container.BankItemStorage;
+import net.natte.bankstorage.item.BankFunctionality;
+import net.natte.bankstorage.item.BankItem;
 import net.natte.bankstorage.options.BankOptions;
 import net.natte.bankstorage.util.Util;
 
@@ -63,6 +65,9 @@ public class BankStorageHandler implements SpecialBridgingHandler {
         if(storage == null) {
             return false;
         }
+
+        BankItem item = (BankItem) stack.getItem();
+        item.
 
         int slot = stack.getOrDefault(BankStorage.SelectedSlotComponentType, 0);
         ItemStack containedStack = storage.getSelectedItem(slot);

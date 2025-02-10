@@ -8,7 +8,7 @@ apply from: "$rootDir/publishing.gradle"
 
 architectury {
     platformSetupLoomIde()
-    neoForge()
+    forge()
 }
 
 loom {
@@ -21,7 +21,7 @@ configurations {
     shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
     compileOnly.extendsFrom common
     runtimeOnly.extendsFrom common
-    developmentNeoForge.extendsFrom common
+    developmentForge.extendsFrom common
 }
 
 repositories {
@@ -36,12 +36,12 @@ repositories {
 }
 
 dependencies {
-    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
-    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-forge"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
 shadowJar {
@@ -62,12 +62,6 @@ jar {
     archiveClassifier.set("dev")
 }
 
-processResources {
-
-    // 1.20.5 support - this'll probably be covered by architectury soon enough.
-    rename "mods.toml", "neoforge.mods.toml"
-}
-
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
@@ -86,12 +80,12 @@ modrinth {
 
     token = getModrinthToken(project)
     projectId = "bridging-mod"
-    versionName = "Bridging Mod ${formattedBaseVersion} (NeoForge)"
+    versionName = "Bridging Mod ${formattedBaseVersion} (Forge)"
     versionNumber = project.version.toString()
     versionType = project.properties["release_type"].toString()
     uploadFile = remapJar
     gameVersions = Arrays.asList(versions)
-    loaders = [ "neoforge" ]
+    loaders = [ "forge" ]
 
     changelog = new File(project.getRootDir(), "changelog.md").readLines().join("\n")
 
@@ -122,8 +116,8 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         debugMode = true
 
     def mainFile = upload(projectId, remapJar)
-    mainFile.displayName = "[NeoForge %s] v%s Bridging Mod".formatted(mcVer, projectVer)
-    mainFile.addModLoader("neoforge")
+    mainFile.displayName = "[Forge %s] v%s Bridging Mod".formatted(mcVer, projectVer)
+    mainFile.addModLoader("forge")
     mainFile.releaseType = project.properties["release_type"]
 
     mainFile.changelogType = "markdown"

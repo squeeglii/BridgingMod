@@ -7,11 +7,9 @@ import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.raytrace.PlacementAlignment;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
@@ -30,11 +28,9 @@ public class CrosshairRenderingMixin {
 
     @Shadow @Final private Minecraft minecraft;
 
-    @Shadow @Final private DebugScreenOverlay debugOverlay;
-
-    @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+    @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;)V",
             at = @At(value = "TAIL"))
-    public void renderPlacementAssistMarker(GuiGraphics gui, DeltaTracker deltaTracker, CallbackInfo ci) {
+    public void renderPlacementAssistMarker(GuiGraphics gui, CallbackInfo ci) {
         if(BridgingStateTracker.getLastTickTarget() == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
@@ -69,11 +65,11 @@ public class CrosshairRenderingMixin {
         int y = ((h - ICON_SIZE + 1) / 2);
 
         y += BridgingCrosshairTweaks.yShift;
-        y += this.debugOverlay.showDebugScreen() ? 15 : 0;
+        y += this.minecraft.options.renderDebug ? 15 : 0;
 
-        gui.blitSprite(
-                alignment.getTexturePath(),
-                x, y,
+        gui.blit(
+                alignment.getTexturePath(), x, y,
+                0, 0,
                 ICON_SIZE, ICON_SIZE
         );
 

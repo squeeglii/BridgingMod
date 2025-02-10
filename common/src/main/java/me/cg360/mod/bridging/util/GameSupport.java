@@ -3,12 +3,10 @@ package me.cg360.mod.bridging.util;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.SpecialBridgingHandler;
 import me.cg360.mod.bridging.compat.SpecialHandlers;
-import me.cg360.mod.bridging.config.BridgingConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.BaseTorchBlock;
 import net.minecraft.world.level.block.TorchBlock;
 
 import java.util.Optional;
@@ -20,10 +18,10 @@ public class GameSupport {
     public static final double MAXIMUM_PLACE_REACH = 4.5d;
 
     public static double getReach() {
-        if(Minecraft.getInstance().player == null)
+        if(Minecraft.getInstance().gameMode == null)
             return MAXIMUM_PLACE_REACH;
 
-        return Minecraft.getInstance().player.blockInteractionRange();
+        return Minecraft.getInstance().gameMode.getPickRange();
     }
 
     public static boolean isControllerCrouching() {
@@ -56,7 +54,7 @@ public class GameSupport {
             return false;
         }
 
-        if(BridgingMod.getConfig().shouldSkipTorchBridging() && blockItem.getBlock() instanceof BaseTorchBlock) {
+        if(BridgingMod.getConfig().shouldSkipTorchBridging() && blockItem.getBlock() instanceof TorchBlock) {
             return false;
         }
 
