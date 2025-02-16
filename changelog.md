@@ -1,6 +1,9 @@
-## Changelog for 2.6.1 (All Versions)
+## Changelog for 2.6.2 (All Versions)
 
-- Corrected config description for minimum distance sliders.
+- Combined minBridgeDistance into a single slider for all directions.
+- Fixed crash from broken BankStorage compatibility
+- Fixed off-hand bridging taking priority over main-hand useable item. (bows, tridents, food, etc.)
+- Updated Ukrainian, Russian, & Chinese translations.
 
 
 ## Changelog for 2.6.0 (All Versions)
