@@ -22,6 +22,8 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.FoodOnAStickItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
@@ -95,6 +97,18 @@ public abstract class MinecraftClientMixin {
 
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);
+            boolean isPlaceableStack = GameSupport.isStackPlaceable(itemStack);
+
+            // If you're holding a bow, trident, or other placeable in the main hand,
+            // it needs to be tested with a useItem(...) call.
+            if(!isPlaceableStack) {
+                InteractionResult usage = this.gameMode.useItem(this.player, hand);
+
+                if(usage.consumesAction())
+                    return;
+
+                continue;
+            }
 
             BlockPos pos = pair.getA();
             Direction dir = pair.getB().getOpposite(); // Fixes placing on vertical axes -- doesn't affect most horizontal blocks for some reason.
