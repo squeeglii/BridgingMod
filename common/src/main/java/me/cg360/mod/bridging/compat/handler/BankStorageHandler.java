@@ -15,8 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.natte.bankstorage.BankStorage;
 import net.natte.bankstorage.container.BankItemStorage;
-import net.natte.bankstorage.item.BankFunctionality;
-import net.natte.bankstorage.item.BankItem;
+import net.natte.bankstorage.container.CachedBankStorage;
 import net.natte.bankstorage.options.BankOptions;
 import net.natte.bankstorage.util.Util;
 
@@ -34,7 +33,6 @@ public class BankStorageHandler implements SpecialBridgingHandler {
 
         // TODO: Look for ItemComponents instead of an item type.
         if(!(Util.isBankLike(stack))) {
-            // not a dank bank. This compatibility class does nothing!
             ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
             LogUtils.getLogger().warn("Blocked using BankStorage compatibility for an unsupported item (%s)!".formatted(id));
             return false;
@@ -45,7 +43,7 @@ public class BankStorageHandler implements SpecialBridgingHandler {
             return false;
         }
 
-        BankItemStorage storage = Util.getBankItemStorage(stack);
+        CachedBankStorage storage = CachedBankStorage.getBankStorage(stack);
         if(storage == null) {
             return false;
         }
@@ -61,7 +59,7 @@ public class BankStorageHandler implements SpecialBridgingHandler {
 
     @Override
     public boolean canBePlacedInWorld(ItemStack stack, Player player, Level level, BlockPos pos, Direction direction) {
-        BankItemStorage storage = Util.getBankItemStorage(stack);
+        CachedBankStorage storage = CachedBankStorage.getBankStorage(stack);
         if(storage == null) {
             return false;
         }
@@ -79,7 +77,7 @@ public class BankStorageHandler implements SpecialBridgingHandler {
 
     @Override
     public BlockHitResult generatePlacementTarget(ItemStack stack, Player player, Level level, Direction direction, BlockPos pos) {
-        BankItemStorage storage = Util.getBankItemStorage(stack);
+        CachedBankStorage storage = CachedBankStorage.getBankStorage(stack);
         if(storage == null) {
             return null;
         }
