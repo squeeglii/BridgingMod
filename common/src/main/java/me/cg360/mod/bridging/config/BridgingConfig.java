@@ -37,11 +37,14 @@ public class BridgingConfig extends DefaultValueTracker {
     @IncludeExtraDescription(extraParagraphs = 2)
     private boolean enableBridgingAssist = true;
     @Category("feature") @SerialEntry
-    @ContinuousRange(min = 0.5f, max = 10, sliderStep = 0.1f, formatTranslationKey = "config.bridgingmod.value.distance")   // Should this just be a box?
-    private float minimumBridgeReachHorizontal = 2.2f;
-    @Category("feature") @SerialEntry
-    @ContinuousRange(min = 0.5f, max = 10, sliderStep = 0.1f, formatTranslationKey = "config.bridgingmod.value.distance")   // Should this just be a box?
-    private float minimumBridgeReachVertical = 1.0f;
+    @ContinuousRange(min = 0.0f, max = 100.0f, sliderStep = 0.5f, formatTranslationKey = "config.bridgingmod.value.percentage")
+    private float minBridgeDistance = 20f;
+    @HideInConfigUI @Category("feature") @SerialEntry
+    @ContinuousRange(min = 0.0f, max = 10.0f, sliderStep = 0.1f, formatTranslationKey = "config.bridgingmod.value.distance")   // Should this just be a box?
+    private float minBridgeDistanceHorizontal = 1.0f; // TODO: FIX!
+    @HideInConfigUI  @Category("feature") @SerialEntry
+    @ContinuousRange(min = 0.0f, max = 10.0f, sliderStep = 0.1f, formatTranslationKey = "config.bridgingmod.value.distance")   // Should this just be a box?
+    private float minBridgeDistanceVertical = 0.1f;  // TODO: FIX!
     @Category("feature") @SerialEntry
     @IncludeExtraDescription
     private boolean onlyBridgeWhenCrouched = false;
@@ -109,12 +112,16 @@ public class BridgingConfig extends DefaultValueTracker {
         return this.enableBridgingAssist;
     }
 
-    public float getMinimumBridgeReachHorizontal() {
-        return this.minimumBridgeReachHorizontal;
+    public float getMinimumBridgeDistance() {
+        return this.minBridgeDistance;
     }
 
-    public float getMinimumBridgeReachVertical() {
-        return this.minimumBridgeReachVertical;
+    public float getMinimumBridgeDistanceHorizontal() {
+        return this.minBridgeDistanceHorizontal;
+    }
+
+    public float getMinimumBridgeDistanceVertical() {
+        return this.minBridgeDistanceVertical;
     }
 
     public float getBridgingSnapStrength() {

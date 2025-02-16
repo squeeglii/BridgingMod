@@ -101,15 +101,33 @@ public class PathTraversalHandler {
         Vec3 worldSpaceCameraOrigin = view.getPosition();
         double distance = worldSpaceViewEnd.distanceTo(worldSpaceCameraOrigin);
 
-        // parameter instead?
-        float minDistanceHorizontal = BridgingMod.getConfig().getMinimumBridgeReachHorizontal();
-        float minDistanceVertical = BridgingMod.getConfig().getMinimumBridgeReachVertical();
+        // this is extremely broken.
+        /*
+        float minDistanceHorizontal = BridgingMod.getConfig().getMinimumBridgeDistanceHorizontal();
+        float minDistanceVertical = BridgingMod.getConfig().getMinimumBridgeDistanceVertical();
 
         Vec3 viewDirection = new Vec3(view.getLookVector());
+        Vec3 farVec = viewDirection.scale(distance); // in world terms.
 
-        // I'm fairly sure this is the wrong maths.
-        Vec3 nearVec = viewDirection.multiply(minDistanceHorizontal, minDistanceVertical, minDistanceHorizontal);
+        Vec3 horizontalExtent = new Vec3(farVec.x, 0, farVec.z);
+        double currentHorizontal = horizontalExtent.length();
+        double minHorizontal = minDistanceHorizontal / currentHorizontal; // Calculate fraction minimum distance would be of full reach
+
+        double currentVertical = Math.abs(farVec.y); // do the same for vertical
+        double minVertical = minDistanceVertical / currentVertical;
+
+        Vec3 nearVec = viewDirection.scale(Math.max(minHorizontal, minVertical)); // Scale to appease whichever is more restrictive
+
+        if(nearVec.length() > farVec.length()) {
+            return new ArrayList<>();
+        }
+        */
+
+        float minDistance = BridgingMod.getConfig().getMinimumBridgeDistance() / 100.0f;
+
+        Vec3 viewDirection = new Vec3(view.getLookVector());
         Vec3 farVec = viewDirection.scale(distance);
+        Vec3 nearVec = farVec.scale(minDistance); // Scale to appease whichever is more restrictive
 
         BlockPos startPos = BlockPos.containing(worldSpaceCameraOrigin.add(nearVec));
         BlockPos endPos = BlockPos.containing(worldSpaceCameraOrigin.add(farVec));
