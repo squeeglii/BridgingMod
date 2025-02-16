@@ -3,9 +3,9 @@
     "bridgingmod.config.failed_integration.description": "Не вдалося відкрити інтерфейс конфігурації. Якщо ви використовуєте snapshot, будь ласка, не повідомляйте про це як про помилку.",
 
     "key.categories.bridgingmod": "Bridging Mod",
-    "key.bridgingmod.toggle_bridging": "Перемкнути розміщення з обходом",
+    "key.bridgingmod.toggle_bridging": "Режим будуванння мостів",
 
-    "notif.bridgingmod.toggle_bridging": "Перемкнуто розміщення з обходом",
+    "notif.bridgingmod.toggle_bridging": "Режим будування мостів",
     "notif.bridgingmod.action.enabled": "УВІМК",
     "notif.bridgingmod.action.disabled": "ВИМК",
 
