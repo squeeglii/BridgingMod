@@ -14,8 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.natte.bankstorage.BankStorage;
-import net.natte.bankstorage.container.BankItemStorage;
-import net.natte.bankstorage.container.CachedBankStorage;
+import net.natte.bankstorage.item.CachedBankStorage;
 import net.natte.bankstorage.options.BankOptions;
 import net.natte.bankstorage.util.Util;
 
@@ -39,7 +38,7 @@ public class BankStorageHandler implements SpecialBridgingHandler {
         }
 
         BankOptions options = Util.getOrCreateOptions(stack);
-        if(!options.buildMode().isActive()) {
+        if(!options.buildMode.isActive()) {
             return false;
         }
 
@@ -48,9 +47,8 @@ public class BankStorageHandler implements SpecialBridgingHandler {
             return false;
         }
 
-        int slot = stack.getOrDefault(BankStorage.SelectedSlotComponentType, 0);
-        ItemStack containedStack = storage.getSelectedItem(slot);
 
+        ItemStack containedStack = storage.getSelectedItem(options.selectedItemSlot);
         if(containedStack.isEmpty())
             return false;
 
@@ -64,11 +62,9 @@ public class BankStorageHandler implements SpecialBridgingHandler {
             return false;
         }
 
-        BankItem item = (BankItem) stack.getItem();
-        item.
 
-        int slot = stack.getOrDefault(BankStorage.SelectedSlotComponentType, 0);
-        ItemStack containedStack = storage.getSelectedItem(slot);
+        BankOptions options = Util.getOrCreateOptions(stack);
+        ItemStack containedStack = storage.getSelectedItem(options.selectedItemSlot);
         if(containedStack.isEmpty())
             return false;
 
@@ -82,8 +78,8 @@ public class BankStorageHandler implements SpecialBridgingHandler {
             return null;
         }
 
-        int slot = stack.getOrDefault(BankStorage.SelectedSlotComponentType, 0);
-        ItemStack containedStack = storage.getSelectedItem(slot);
+        BankOptions options = Util.getOrCreateOptions(stack);
+        ItemStack containedStack = storage.getSelectedItem(options.selectedItemSlot);
 
         return Bridge.getDefaultPlaceAssistTarget(containedStack, level, direction, pos);
     }

@@ -13,7 +13,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import tfar.dankstorage.item.DankItem;
+import tfar.dankstorage.item.CDankItem;
+import tfar.dankstorage.utils.CommonUtils;
+import tfar.dankstorage.world.ClientData;
 
 /**
  * Literally only needed for slab & torch support. Unboxes the item held by the bank.
@@ -28,18 +30,18 @@ public class DankStorageHandler implements SpecialBridgingHandler {
         Item item = stack.getItem();
 
         // TODO: Look for ItemComponents instead of an item type.
-        if(!(item instanceof DankItem)) {
+        if(!(item instanceof CDankItem)) {
             // not a dank bank. This compatibility class does nothing!
             ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
             LogUtils.getLogger().warn("Blocked using DankStorage compatibility for an unsupported item (%s)!".formatted(id));
             return false;
         }
 
-        if(!DankItem.isConstruction(stack))
+        if(!CommonUtils.isConstruction(stack))
             return false;
 
-        ItemStack containedStack = DankItem.getSelectedItem(stack);
-        if(containedStack.isEmpty())
+        ItemStack containedStack = ClientData.selectedItem;
+        if(containedStack == null || containedStack.isEmpty())
             return false;
 
         return GameSupport.passesDefaultPlacementCheck(containedStack);
@@ -47,13 +49,13 @@ public class DankStorageHandler implements SpecialBridgingHandler {
 
     @Override
     public boolean canBePlacedInWorld(ItemStack stack, Player player, Level level, BlockPos pos, Direction direction) {
-        ItemStack containedStack = DankItem.getSelectedItem(stack);
+        ItemStack containedStack = ClientData.selectedItem;
         return player.mayUseItemAt(pos, direction, containedStack);
     }
 
     @Override
     public BlockHitResult generatePlacementTarget(ItemStack stack, Player player, Level level, Direction direction, BlockPos pos) {
-        ItemStack containedStack = DankItem.getSelectedItem(stack);
+        ItemStack containedStack = ClientData.selectedItem;
         return Bridge.getDefaultPlaceAssistTarget(containedStack, level, direction, pos);
     }
 
