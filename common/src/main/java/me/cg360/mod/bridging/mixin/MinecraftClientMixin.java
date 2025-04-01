@@ -156,7 +156,7 @@ public abstract class MinecraftClientMixin {
                 return;
 
             this.player.swing(hand);
-            boolean stackSizeChanged = itemStack.getCount() != originalStackSize || this.gameMode.hasInfiniteItems();
+            boolean stackSizeChanged = itemStack.getCount() != originalStackSize || this.player.hasInfiniteMaterials();
 
             if (stackSizeChanged && !itemStack.isEmpty()) {
                 Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);

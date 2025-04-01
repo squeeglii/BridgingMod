@@ -26,7 +26,7 @@ public abstract class OutlineRendererMixin {
 
     @Shadow protected abstract void checkPoseStack(PoseStack poseStack);
 
-    @Inject(method = "Lnet/minecraft/client/renderer/LevelRenderer;renderBlockOutline(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;Z)V",
+    @Inject(method = "renderBlockOutline(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;Z)V",
             at = @At("HEAD")
             )
     public void renderTracedViewPath(Camera camera, MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, CallbackInfo ci) {

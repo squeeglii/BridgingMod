@@ -1,7 +1,9 @@
 package me.cg360.mod.bridging.mixin;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.raytrace.PlacementAlignment;
@@ -12,9 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.CoreShaders;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
@@ -24,6 +24,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 @Mixin(Gui.class)
 public class CrosshairRenderingMixin {
@@ -53,38 +56,35 @@ public class CrosshairRenderingMixin {
         Direction direction = BridgingStateTracker.getLastTickTarget().getB();
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShader(CoreShaders.RENDERTYPE_LINES);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(
-                GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR,
-                GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR,
-                GlStateManager.SourceFactor.ONE,
-                GlStateManager.DestFactor.ZERO
-        );
+        RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
+        GpuTexture texColour = renderTarget.getColorTexture();
+        GpuTexture texDepth = renderTarget.getDepthTexture();
 
-        int w = gui.guiWidth();
-        int h = gui.guiHeight();
+        try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(texColour, OptionalInt.empty(), texDepth, OptionalDouble.empty())) {
 
-        if(alignment == null) return;
+            pass.setPipeline(RenderPipelines.CROSSHAIR);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int x = ((w - ICON_SIZE + 1) / 2);
-        int y = ((h - ICON_SIZE + 1) / 2);
+            int w = gui.guiWidth();
+            int h = gui.guiHeight();
 
-        y += BridgingCrosshairTweaks.yShift;
-        y += this.debugOverlay.showDebugScreen() ? 15 : 0;
+            if(alignment == null) return;
 
-        gui.blitSprite(
-                RenderType::crosshair,
-                alignment.getTexturePath(),
-                x, y,
-                ICON_SIZE, ICON_SIZE
-        );
+            int x = ((w - ICON_SIZE + 1) / 2);
+            int y = ((h - ICON_SIZE + 1) / 2);
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShader(CoreShaders.RENDERTYPE_LINES);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+            y += BridgingCrosshairTweaks.yShift;
+            y += this.debugOverlay.showDebugScreen() ? 15 : 0;
+
+            gui.blitSprite(
+                    RenderType::crosshair,
+                    alignment.getTexturePath(),
+                    x, y,
+                    ICON_SIZE, ICON_SIZE
+            );
+        }
+
+
     }
 
 }
