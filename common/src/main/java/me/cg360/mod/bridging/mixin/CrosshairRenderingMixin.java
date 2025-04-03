@@ -56,33 +56,23 @@ public class CrosshairRenderingMixin {
         Direction direction = BridgingStateTracker.getLastTickTarget().getB();
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 
-        RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
-        GpuTexture texColour = renderTarget.getColorTexture();
-        GpuTexture texDepth = renderTarget.getDepthTexture();
+        if(alignment == null) return;
 
-        try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(texColour, OptionalInt.empty(), texDepth, OptionalDouble.empty())) {
+        int w = gui.guiWidth();
+        int h = gui.guiHeight();
 
-            pass.setPipeline(RenderPipelines.CROSSHAIR);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        int x = ((w - ICON_SIZE + 1) / 2);
+        int y = ((h - ICON_SIZE + 1) / 2);
 
-            int w = gui.guiWidth();
-            int h = gui.guiHeight();
+        y += BridgingCrosshairTweaks.yShift;
+        y += this.debugOverlay.showDebugScreen() ? 15 : 0;
 
-            if(alignment == null) return;
-
-            int x = ((w - ICON_SIZE + 1) / 2);
-            int y = ((h - ICON_SIZE + 1) / 2);
-
-            y += BridgingCrosshairTweaks.yShift;
-            y += this.debugOverlay.showDebugScreen() ? 15 : 0;
-
-            gui.blitSprite(
-                    RenderType::crosshair,
-                    alignment.getTexturePath(),
-                    x, y,
-                    ICON_SIZE, ICON_SIZE
-            );
-        }
+        gui.blitSprite(
+                RenderType::crosshair,
+                alignment.getTexturePath(),
+                x, y,
+                ICON_SIZE, ICON_SIZE
+        );
 
 
     }

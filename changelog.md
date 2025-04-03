@@ -1,3 +1,7 @@
+## Changelog for 2.6.3 (1.21.5 Only)
+
+- Hotfix for crosshair rendering crash.
+
 ## Changelog for 2.6.2 (All Versions)
 
 - Combined minBridgeDistance into a single slider for all directions.
