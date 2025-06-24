@@ -39,6 +39,6 @@
     },
 
     "recommends": {
-        "modmenu": ">=${modmenu_version}"
+        "modmenu": "*"
     }
 }

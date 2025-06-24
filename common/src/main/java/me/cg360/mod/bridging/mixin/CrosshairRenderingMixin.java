@@ -1,9 +1,5 @@
 package me.cg360.mod.bridging.mixin;
 
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTexture;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.raytrace.PlacementAlignment;
@@ -15,7 +11,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,9 +19,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 @Mixin(Gui.class)
 public class CrosshairRenderingMixin {
@@ -68,7 +60,7 @@ public class CrosshairRenderingMixin {
         y += this.debugOverlay.showDebugScreen() ? 15 : 0;
 
         gui.blitSprite(
-                RenderType::crosshair,
+                RenderPipelines.CROSSHAIR,
                 alignment.getTexturePath(),
                 x, y,
                 ICON_SIZE, ICON_SIZE

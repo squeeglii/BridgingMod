@@ -38,7 +38,8 @@ repositories {
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 
-    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
+    modApi 'thedarkcolour:kotlinforforge-neoforge:5.8.0'
+    modApi "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
