@@ -49,11 +49,11 @@
     "config.bridgingmod.option.supportedBridgeAxesWhenCrouched.description.1": "«Як зазвичай» копіює значення, встановлені для параметра «Вісь будування».",
 
     "enum.bridgingmod.placement_axis.horizontal": "Лише горизон.",
-    "enum.bridgingmod.placement_axis.vertical": "Лище вертик.",
+    "enum.bridgingmod.placement_axis.vertical": "Лише вертик.",
     "enum.bridgingmod.placement_axis.both": "Будь-який",
     "enum.bridgingmod.placement_axis.fallback": "Як зазвичай",
 
-    "enum.bridgingmod.source_perspective.copy_toggle_perspective": "Перпектива",
+    "enum.bridgingmod.source_perspective.copy_toggle_perspective": "Перспектива",
     "enum.bridgingmod.source_perspective.always_eyeline": "Слідувати за головою",
     "enum.bridgingmod.source_perspective.let_bridging_mod_decide": "Мод вирішує",
 
