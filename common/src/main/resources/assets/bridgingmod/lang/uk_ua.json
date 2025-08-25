@@ -75,7 +75,7 @@
     "config.bridgingmod.option.outlineColour.description.0": "Установлює колір контуру для будування.\n",
     "config.bridgingmod.option.outlineColour.description.1": "Рекомендується непрозорість 0,4, якщо вам не потрібні насичені кольори.",
 
-    "config.bridgingmod.option.enableSlabAssist": "Вирівнювати плит",
+    "config.bridgingmod.option.enableSlabAssist": "Вирівнювати плити",
     "config.bridgingmod.option.enableSlabAssist.description.0": "Розумніше розміщення плит! Робить плити (і люки) більш зручними для використання з модом:\n",
     "config.bridgingmod.option.enableSlabAssist.description.1": "— Вирівнює їх до вашої висоти при горизонтальному будуванні.",
     "config.bridgingmod.option.enableSlabAssist.description.2":" — Об'єднує їх у стопки при вертикальному будуванні",
