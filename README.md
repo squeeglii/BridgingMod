@@ -34,6 +34,11 @@ You can find Quark's source here:
 ### Translations
 
 - Mexican Spanish: @TheLegendofSaram
+- Ukranian: @Melishy, @StarmanMine142, @Tarteroycc, @Xicscon
+- Russian: @Melishy
+- Traditional Chinese: @yichifauzi
+- Chinese (Simplified): @Xinyang-Gao
+- Turkish: @RuyaSavascisi
 
 --- 
 
