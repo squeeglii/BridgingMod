@@ -11,7 +11,7 @@
 
     "config.bridgingmod.value.distance": "%1$.2f 格",
     "config.bridgingmod.value.ticks": "%1$.2f 刻",
-    "config.bridgingmod.value.percentage": "%1$.2f %",
+    "config.bridgingmod.value.percentage": "%1$.2f \uFF05",
 
     "config.bridgingmod.title": "Bridging Mod 搭橋模組",
     "config.bridgingmod.category.feature": "核心功能",
@@ -105,5 +105,7 @@
     "config.bridgingmod.option.showNonBridgingDebugHighlight": "在F3中顯示非搭橋輪廓",
     "config.bridgingmod.option.showNonBridgingDebugHighlight.description.0": "同視覺效果->顯示非搭橋方塊輪廓，但需開啟F3",
     "config.bridgingmod.option.showDebugTrace": "在F3中顯示搭橋軌跡",
-    "config.bridgingmod.option.showDebugTrace.description.0": "高亮顯示所有被檢測但跳過的搭橋目標位置。可能干擾遊戲！"
+    "config.bridgingmod.option.showDebugTrace.description.0": "高亮顯示所有被檢測但跳過的搭橋目標位置。可能干擾遊戲！",
+
+    "modmenu.descriptionTranslation.bridgingmod": "添加類似於基岩版和Quark模組建築機制的搭橋輔助功能"
 }

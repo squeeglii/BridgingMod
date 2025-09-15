@@ -105,5 +105,7 @@
     "config.bridgingmod.option.showNonBridgingDebugHighlight": "在F3中显示非搭桥轮廓",
     "config.bridgingmod.option.showNonBridgingDebugHighlight.description.0": "同视觉效果->显示非搭桥方块轮廓，但需开启F3",
     "config.bridgingmod.option.showDebugTrace": "在F3中显示搭桥轨迹",
-    "config.bridgingmod.option.showDebugTrace.description.0": "高亮显示所有被检测但跳过的搭桥目标位置。可能干扰游戏！"
+    "config.bridgingmod.option.showDebugTrace.description.0": "高亮显示所有被检测但跳过的搭桥目标位置。可能干扰游戏！",
+
+    "modmenu.descriptionTranslation.bridgingmod": "添加类似于基岩版和Quark模组建筑机制的搭桥辅助功能"
 }
