@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "Yapılandırma Kullanıcı Arayüzü Devre Dışı!",
     "bridgingmod.config.failed_integration.description": "Modun yapılandırması test sürümlerinde devre dışı bırakılmıştır",
 
-    "key.categories.bridgingmod": "Köprü Kurma Modu",
+    "key.category.bridgingmod.category": "Köprü Kurma Modu",
     "key.bridgingmod.toggle_bridging": "Köprü Kurma'yı Değiştir",
 
     "notif.bridgingmod.toggle_bridging": "Köprü Kurma Değiştirildi",

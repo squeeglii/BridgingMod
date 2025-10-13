@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "Config UI Disabled!",
     "bridgingmod.config.failed_integration.description": "Failed to open config UI. If you're in a snapshot, please do not report this as a bug.",
 
-    "key.categories.bridgingmod": "Bridging Mod",
+    "key.category.bridgingmod.category": "Bridging Mod",
     "key.bridgingmod.toggle_bridging": "Toggle Reacharound Placement",
 
     "notif.bridgingmod.toggle_bridging": "Toggled Reacharound Placement",
