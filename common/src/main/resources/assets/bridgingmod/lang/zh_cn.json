@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "配置界面已禁用！",
     "bridgingmod.config.failed_integration.description": "无法打开配置界面。若处于快照版本，请勿将此问题作为漏洞报告。",
 
-    "key.categories.bridgingmod": "Bridging Mod",
+    "key.category.bridgingmod.category": "Bridging Mod",
     "key.bridgingmod.toggle_bridging": "切换搭桥模式",
 
     "notif.bridgingmod.toggle_bridging": "搭桥模式已切换",

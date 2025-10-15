@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "設定介面已停用！",
     "bridgingmod.config.failed_integration.description": "無法開啟設定介面。若處於快照版本，請勿將此問題作為錯誤回報。",
 
-    "key.categories.bridgingmod": "Bridging Mod 搭橋模組",
+    "key.category.bridgingmod.category": "Bridging Mod 搭橋模組",
     "key.bridgingmod.toggle_bridging": "切換環繞放置模式",
 
     "notif.bridgingmod.toggle_bridging": "已切換環繞放置模式",

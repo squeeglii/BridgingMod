@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "Інтерфейс налаштувань вимкнено!",
     "bridgingmod.config.failed_integration.description": "Не вдалося відкрити налаштування. Якщо у вас знімок, будь ласка, не повідомляйте про це як про помилку.",
 
-    "key.categories.bridgingmod": "Bridging Mod",
+    "key.category.bridgingmod.category": "Bridging Mod",
     "key.bridgingmod.toggle_bridging": "Перемкнути досяжність",
 
     "notif.bridgingmod.toggle_bridging": "Режим будування",
