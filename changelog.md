@@ -1,4 +1,8 @@
-## Changelog for 2.6.3 (1.21.5 Only)
+## Changelog for 2.6.3 - 1.21.9/10
+
+- Ported by @cassiancc !
+
+## Changelog for 2.6.3 (1.21.5+)
 
 - Hotfix for crosshair rendering crash.
 
