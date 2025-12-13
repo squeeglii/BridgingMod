@@ -7,9 +7,9 @@ import me.cg360.mod.bridging.config.selector.SourcePerspective;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Render;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
@@ -50,7 +50,7 @@ public abstract class OutlineRendererMixin {
         if(!(isOutlineEnabled || isNonBridgeOutlineEnabled))
             return;
 
-        VertexConsumer vertices = bufferSource.getBuffer(RenderType.lines());
+        VertexConsumer vertices = bufferSource.getBuffer(RenderTypes.lines());
 
         // Creating a fresh pose stack should be fine - the main pose stack is meant to be
         // empty before rendering the vanilla outline anyway.

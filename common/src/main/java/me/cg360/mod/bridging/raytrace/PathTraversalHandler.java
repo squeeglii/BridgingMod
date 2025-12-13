@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.*;
 
@@ -44,7 +45,7 @@ public class PathTraversalHandler {
 
         List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, perspective);
 
-        Vector3f viewDirection = perspective.getLookVector();
+        Vector3fc viewDirection = perspective.getLookVector();
         List<Direction> validSides = PathTraversalHandler.getValidAssistSides(viewDirection);
 
         Direction validDirection = null;
@@ -140,7 +141,7 @@ public class PathTraversalHandler {
      * that the view is facing, then returning their opposites indicating at
      * what offset these sides can be found compared to a blockpos
      */
-    private static List<Direction> getValidAssistSides(Vector3f viewDirection) {
+    private static List<Direction> getValidAssistSides(Vector3fc viewDirection) {
         LinkedList<Direction> validSides = new LinkedList<>();
 
         for(Direction direction: Direction.values()) {

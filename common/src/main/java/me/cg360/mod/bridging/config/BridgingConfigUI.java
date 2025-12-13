@@ -6,7 +6,7 @@ import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.config.helper.*;
 import me.cg360.mod.bridging.util.ReflectSupport;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -111,7 +111,7 @@ public class BridgingConfigUI {
         // IncludeImage present
         if(imageNotation.length > 0) {
             IncludeImage imageAnnotation = imageNotation[0];
-            ResourceLocation checkedPath = BridgingMod.id(imageAnnotation.value());
+            Identifier checkedPath = BridgingMod.id(imageAnnotation.value());
             int width = imageAnnotation.width();
             int height = imageAnnotation.height();
             desc.image(checkedPath, width, height);
@@ -119,7 +119,7 @@ public class BridgingConfigUI {
 
         if(animatedImageNotation.length > 0) {
             IncludeAnimatedImage imageAnnotation = animatedImageNotation[0];
-            ResourceLocation checkedPath = BridgingMod.id(imageAnnotation.value());
+            Identifier checkedPath = BridgingMod.id(imageAnnotation.value());
             desc.webpImage(checkedPath);
         }
 

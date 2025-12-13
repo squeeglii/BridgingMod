@@ -68,11 +68,13 @@ public class Render {
 
             consumer.addVertex(pose.pose(), (float)(startX + x), (float)(startY + y), (float)(startZ + z))
                     .setColor(argbColor)
-                    .setNormal(pose, dx /= length, dy /= length, dz /= length);
+                    .setNormal(pose, dx /= length, dy /= length, dz /= length)
+                    .setLineWidth(1);
 
             consumer.addVertex(pose.pose(), (float)(endX + x), (float)(endY + y), (float)(endZ + z))
                     .setColor(argbColor)
-                    .setNormal(pose, dx, dy, dz);
+                    .setNormal(pose, dx, dy, dz)
+                    .setLineWidth(1);
         });
     }
 

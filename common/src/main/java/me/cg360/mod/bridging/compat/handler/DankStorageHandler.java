@@ -7,7 +7,7 @@ import me.cg360.mod.bridging.util.GameSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ public class DankStorageHandler implements SpecialBridgingHandler {
         // TODO: Look for ItemComponents instead of an item type.
         if(!(item instanceof DankItem)) {
             // not a dank bank. This compatibility class does nothing!
-            ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
+            Identifier id = BuiltInRegistries.ITEM.getKey(item);
             LogUtils.getLogger().warn("Blocked using DankStorage compatibility for an unsupported item (%s)!".formatted(id));
             return false;
         }

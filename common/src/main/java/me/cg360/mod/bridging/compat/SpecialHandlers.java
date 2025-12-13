@@ -1,7 +1,7 @@
 package me.cg360.mod.bridging.compat;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +18,7 @@ public class SpecialHandlers {
 
     // Item IDs have priority over groups. If an item has its own handler, it's more likely that
     // that's the intended handler.
-    private static HashMap<ResourceLocation, SpecialBridgingHandler> specialHandlers = new HashMap<>();
+    private static HashMap<Identifier, SpecialBridgingHandler> specialHandlers = new HashMap<>();
 
     // Run through all the activation conditions.
     private static LinkedList<SpecialGroupHandlerEntry> specialHandlerGroups = new LinkedList<>();
@@ -33,13 +33,13 @@ public class SpecialHandlers {
     }
 
 
-    public static void registerSpecialHandler(ResourceLocation itemId, SpecialBridgingHandler handler) {
+    public static void registerSpecialHandler(Identifier itemId, SpecialBridgingHandler handler) {
         specialHandlers.put(itemId, handler);
     }
 
     /* Items must be registered before this is possible. */
     public static void registerSpecialHandler(Item item, SpecialBridgingHandler handler) {
-        ResourceLocation itemKey = BuiltInRegistries.ITEM.getKey(item);
+        Identifier itemKey = BuiltInRegistries.ITEM.getKey(item);
         specialHandlers.put(itemKey, handler);
     }
 
@@ -50,7 +50,7 @@ public class SpecialHandlers {
 
 
     public static Optional<SpecialBridgingHandler> getSpecialHandler(ItemStack itemStack) {
-        ResourceLocation itemKey = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
+        Identifier itemKey = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
 
         if(specialHandlers.containsKey(itemKey)) {
             return Optional.of(specialHandlers.get(itemKey));
@@ -65,7 +65,7 @@ public class SpecialHandlers {
     }
 
     public static boolean hasSpecialHandler(ItemStack item) {
-        ResourceLocation itemKey = BuiltInRegistries.ITEM.getKey(item.getItem());
+        Identifier itemKey = BuiltInRegistries.ITEM.getKey(item.getItem());
 
         if(specialHandlers.containsKey(itemKey))
             return true;
