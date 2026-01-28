@@ -3,7 +3,7 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-orange?style=flat-square)](https://github.com/CloudG360/BridgingMod/blob/latest/LICENSE.md)
 
 [![Modrinth](https://img.shields.io/modrinth/dt/lO3s8hjs?logo=modrinth&style=flat-square)](https://modrinth.com/mod/bridging-mod)
-[![Curseforge](https://cf.way2muchnoise.eu/short_bridging-mod.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/bridging-mod)
+[![Curseforge](https://cf.way2muchnoise.eu/short_533942.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/bridging-mod)
 
 ---
 
