@@ -39,6 +39,7 @@ You can find Quark's source here:
 - Traditional Chinese: @yichifauzi
 - Chinese (Simplified): @Xinyang-Gao
 - Turkish: @RuyaSavascisi
+- Italian: @exclusive.adom
 
 --- 
 

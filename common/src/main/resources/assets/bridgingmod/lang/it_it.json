@@ -1,0 +1,127 @@
+{
+  "bridgingmod.config.failed_integration.title": "Interfaccia Configurazione Disattivata!",
+  "bridgingmod.config.failed_integration.description": "Impossibile aprire l'interfaccia di configurazione. Se stai usando una snapshot, non segnalare questo problema come bug.",
+
+  "key.category.bridgingmod.category": "Bridging Mod",
+  "key.bridgingmod.toggle_bridging": "Attiva/Disattiva Posizionamento Assistito",
+
+  "notif.bridgingmod.toggle_bridging": "Posizionamento Assistito Attivato/Disattivato",
+  "notif.bridgingmod.action.enabled": "ON",
+  "notif.bridgingmod.action.disabled": "OFF",
+
+  "config.bridgingmod.value.distance": "%1$.2f blocco/i",
+  "config.bridgingmod.value.ticks": "%1$.2f tick",
+  "config.bridgingmod.value.percentage": "%1$.2f %",
+
+  "config.bridgingmod.title": "Bridging Mod",
+  "config.bridgingmod.category.feature": "Funzionalità",
+  "config.bridgingmod.category.feature.tooltip": "Modifica le principali funzioni della mod",
+  "config.bridgingmod.category.vfx": "Aspetto",
+  "config.bridgingmod.category.vfx.tooltip": "Cambia l'aspetto degli indicatori",
+  "config.bridgingmod.category.fixes": "Correzioni",
+  "config.bridgingmod.category.fixes.tooltip": "Piccoli miglioramenti per rendere la mod più fluida.",
+  "config.bridgingmod.category.debug": "Debug",
+  "config.bridgingmod.category.debug.tooltip": "Funzioni utili per lo sviluppo e la diagnosi.",
+  "config.bridgingmod.category.other": "Altro",
+  "config.bridgingmod.category.other.tooltip": "Impostazioni varie",
+
+  "config.bridgingmod.option.enableBridgingAssist": "Abilita Bridging",
+  "config.bridgingmod.option.enableBridgingAssist.description.0": "Attiva il bridging in stile Bedrock. Abilita o disabilita la maggior parte della mod.\n",
+  "config.bridgingmod.option.enableBridgingAssist.description.1": "Associato anche a un tasto nei Controlli (predefinito: ',')",
+  "config.bridgingmod.option.enableBridgingAssist.description.2": "^ noto come Reacharound Placement, simile a Quark",
+
+  "config.bridgingmod.option.minBridgeDistance": "Distanza Minima Bridging",
+  "config.bridgingmod.option.minBridgeDistance.description.0": "Distanza minima da cui un blocco può essere piazzato.",
+
+  "config.bridgingmod.option.minBridgeDistanceHorizontal": "Distanza Orizzontale Minima",
+  "config.bridgingmod.option.minBridgeDistanceHorizontal.description.0": "Distanza orizzontale minima per il posizionamento assistito.",
+
+  "config.bridgingmod.option.minBridgeDistanceVertical": "Distanza Verticale Minima",
+  "config.bridgingmod.option.minBridgeDistanceVertical.description.0": "Distanza verticale minima per il posizionamento assistito.",
+
+  "config.bridgingmod.option.onlyBridgeWhenCrouched": "Bridging Solo Accovacciato",
+  "config.bridgingmod.option.onlyBridgeWhenCrouched.description.0": "Se attivo, il bridging funziona solo mentre sei accovacciato.\n",
+  "config.bridgingmod.option.onlyBridgeWhenCrouched.description.1": "Simile al tasto 'Attiva/Disattiva Posizionamento Assistito'.",
+
+  "config.bridgingmod.option.delayPostBridging": "Ritardo Dopo Bridging",
+  "config.bridgingmod.option.delayPostBridging.description.0": "Numero di tick (20 tick = 1 secondo) prima di poter piazzare un altro blocco.\n",
+  "config.bridgingmod.option.delayPostBridging.description.1": "3 = Più facile",
+  "config.bridgingmod.option.delayPostBridging.description.2": "4 = Comportamento Vanilla",
+
+  "config.bridgingmod.option.supportedBridgeAxes": "Asse di Bridging",
+  "config.bridgingmod.option.supportedBridgeAxes.description.0": "Limita il bridging a determinati assi, come su Bedrock.",
+
+  "config.bridgingmod.option.supportedBridgeAxesWhenCrouched": "Asse di Bridging Accovacciato",
+  "config.bridgingmod.option.supportedBridgeAxesWhenCrouched.description.0": "Come 'Asse di Bridging', ma valido solo quando sei accovacciato.\n",
+  "config.bridgingmod.option.supportedBridgeAxesWhenCrouched.description.1": "'Come Predefinito' usa l'impostazione normale.",
+
+  "enum.bridgingmod.placement_axis.horizontal": "Solo Orizzontale",
+  "enum.bridgingmod.placement_axis.vertical": "Solo Verticale",
+  "enum.bridgingmod.placement_axis.both": "Entrambi",
+  "enum.bridgingmod.placement_axis.fallback": "Come Predefinito",
+
+  "enum.bridgingmod.source_perspective.copy_toggle_perspective": "Copia Prospettiva",
+  "enum.bridgingmod.source_perspective.always_eyeline": "Segui Visuale",
+  "enum.bridgingmod.source_perspective.let_bridging_mod_decide": "Decide la Mod",
+
+  "enum.bridgingmod.bridging_adjacency.disabled": "Rigido",
+  "enum.bridgingmod.bridging_adjacency.faces": "Solo Facce",
+  "enum.bridgingmod.bridging_adjacency.edges": "Facce + Bordi",
+  "enum.bridgingmod.bridging_adjacency.corners": "Facce + Bordi + Angoli",
+
+  "config.bridgingmod.option.showCrosshair": "Mostra Mirino Bridging",
+  "config.bridgingmod.option.showCrosshair.description.0": "Aggiunge indicatori al mirino quando il bridging è attivo.",
+
+  "config.bridgingmod.option.showOutline": "Mostra Contorno Bridging",
+  "config.bridgingmod.option.showOutline.description.0": "Mostra il contorno del blocco quando il bridging è attivo.",
+
+  "config.bridgingmod.option.showOutlineEvenWhenNotBridging": "Mostra Contorno Normale",
+  "config.bridgingmod.option.showOutlineEvenWhenNotBridging.description.0": "Mostra il contorno anche nel posizionamento normale.",
+
+  "config.bridgingmod.option.nonBridgeRespectsCrouchRules": "Contorno Normale con Bridging Attivo",
+  "config.bridgingmod.option.nonBridgeRespectsCrouchRules.description.0": "Dipende da 'Bridging Solo Accovacciato'\n",
+  "config.bridgingmod.option.nonBridgeRespectsCrouchRules.description.1": "Il contorno normale è visibile solo quando il bridging è disponibile.",
+
+  "config.bridgingmod.option.outlineColour": "Colore Contorno Bridging",
+  "config.bridgingmod.option.outlineColour.description.0": "Imposta il colore del contorno.\n",
+  "config.bridgingmod.option.outlineColour.description.1": "Opacità consigliata: 0.4.",
+
+  "config.bridgingmod.option.enableSlabAssist": "Allinea Mezzi Blocchi",
+  "config.bridgingmod.option.enableSlabAssist.description.0": "Migliora il posizionamento di slab e botole:\n",
+  "config.bridgingmod.option.enableSlabAssist.description.1": "- Allineamento all'altezza del giocatore",
+  "config.bridgingmod.option.enableSlabAssist.description.2": "- Combinazione verticale",
+  "config.bridgingmod.option.enableSlabAssist.description.3": "- E altro",
+
+  "config.bridgingmod.option.skipTorchBridging": "Escludi Torce",
+  "config.bridgingmod.option.skipTorchBridging.description.0": "Evita il posizionamento accidentale delle torce.",
+
+  "config.bridgingmod.option.enableNonSolidReplace": "Sostituisci Blocchi Non Solidi",
+  "config.bridgingmod.option.enableNonSolidReplace.description.0": "Permette di sostituire blocchi come erba alta e acqua.",
+
+  "config.bridgingmod.option.perspectiveLock": "Blocco Prospettiva",
+  "config.bridgingmod.option.perspectiveLock.description.0": "Decide come calcolare il posizionamento dei blocchi.\n",
+  "config.bridgingmod.option.perspectiveLock.description.1": "Utile con mod che modificano la visuale.",
+
+  "config.bridgingmod.option.bridgingSnapStrength": "Intensità Aggancio Bridging",
+  "config.bridgingmod.option.bridgingSnapStrength.description.0": "⚠ Funzione sperimentale!\n",
+  "config.bridgingmod.option.bridgingSnapStrength.description.1": "Regola la sensibilità dell'aggancio.\n",
+  "config.bridgingmod.option.bridgingSnapStrength.description.2": "1.0 = Standard",
+  "config.bridgingmod.option.bridgingSnapStrength.description.3": "0.8 = Bilanciato",
+  "config.bridgingmod.option.bridgingSnapStrength.description.4": "0.0 = Rigido",
+
+  "config.bridgingmod.option.bridgingAdjacency": "Adiacenza Bridging",
+  "config.bridgingmod.option.bridgingAdjacency.description.0": "⚠ Funzione sperimentale!\n",
+  "config.bridgingmod.option.bridgingAdjacency.description.1": "Regola il comportamento dell'aggancio.\n",
+  "config.bridgingmod.option.bridgingAdjacency.description.2": "Rigido = Solo il blocco più vicino.",
+  "config.bridgingmod.option.bridgingAdjacency.description.3": "Facce = Include blocchi adiacenti.",
+  "config.bridgingmod.option.bridgingAdjacency.description.4": "E così via.",
+
+  "config.bridgingmod.option.showDebugHighlight": "Mostra Contorno Bridging in F3",
+  "config.bridgingmod.option.showDebugHighlight.description.0": "Versione debug del contorno bridging.",
+
+  "config.bridgingmod.option.showNonBridgingDebugHighlight": "Mostra Contorno Normale in F3",
+  "config.bridgingmod.option.showNonBridgingDebugHighlight.description.0": "Versione debug del contorno normale.",
+
+  "config.bridgingmod.option.showDebugTrace": "Mostra Traccia Bridging in F3",
+  "config.bridgingmod.option.showDebugTrace.description.0": "Mostra i blocchi controllati. Può risultare invasivo."
+}
