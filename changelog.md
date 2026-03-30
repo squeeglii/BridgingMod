@@ -1,3 +1,16 @@
+## Changelog for 2.6.5 - 26.1 Only
+
+- Removed compatibility for BankStorage, Dank Storage, & DynamicCrosshair
+  - Once they're updated to 26.1, a new version will be released with support.
+- Updated to 26.1
+- Enabled Bridging Outline by default.
+  - I've used this the entire time and it makes it so much more predictable. 
+  - Modpack devs, see `showOutline` in `bridgingmod.json` to revert it.
+
+## Changelog for 2.6.4 1.20.1+
+
+- Italian translations by @exclusive.adom
+
 ## Changelog for 2.6.3 - 1.21.11
 
 - Updated to 1.21.11

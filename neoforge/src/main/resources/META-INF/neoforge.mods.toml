@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "${neoforge_loader_version_range}"
-issueTrackerURL = "https://github.com/CloudG360/BridgingMod/issues"
+issueTrackerURL = "https://github.com/squeeglii/BridgingMod/issues"
 license = "MIT"
 
 [[mods]]
@@ -10,7 +10,7 @@ displayName = "Bridging Mod"
 authors = "CG360"
 description = "Adds bridging assist similar to Bedrock & Quark's building mechanics."
 logoFile = "assets/bridgingmod/icon.png"
-displayURL = "https://github.com/CloudG360/BridgingMod"
+displayURL = "https://github.com/squeeglii/BridgingMod"
 displayTest = "IGNORE_ALL_VERSION"
 
 [[mixins]]
@@ -35,11 +35,4 @@ modId = "yet_another_config_lib_v3"
 mandatory = true
 versionRange = "[${yacl_version},)"
 ordering = "NONE"
-side = "CLIENT"
-
-[[dependencies.bridgingmod]]
-modId = "dynamiccrosshair"
-type = "optional"
-versionRange = "[${dynamiccrosshair_version},)"
-ordering = "AFTER"
 side = "CLIENT"

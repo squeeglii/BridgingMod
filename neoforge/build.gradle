@@ -1,6 +1,6 @@
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
-apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "com.gradleup.shadow"
 apply plugin: "com.modrinth.minotaur"
 apply plugin: "net.darkhax.curseforgegradle"
 
@@ -38,24 +38,23 @@ repositories {
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 
-    modApi 'thedarkcolour:kotlinforforge-neoforge:5.8.0'
-    modApi "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
+    //api "thedarkcolour:kotlinforforge-neoforge:${project.kotlin_for_forge}"    // I can't remember why this is here but dev runs are broke both with and without it.
+    api "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
 
 shadowJar {
+    dependsOn jar
+
+    //mainSpec.sourcePaths.clear()
+    //from(zipTree(jar.archiveFile))
+
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
 
     configurations = [ project.configurations.shadowCommon ]
-    archiveClassifier.set("dev-shadow")
-}
-
-remapJar {
-    inputFile.set shadowJar.archiveFile
-    dependsOn shadowJar
     archiveClassifier.set("release")
 }
 
@@ -63,24 +62,11 @@ jar {
     archiveClassifier.set("dev")
 }
 
-processResources {
-
-    // 1.20.5 support - this'll probably be covered by architectury soon enough.
-    rename "mods.toml", "neoforge.mods.toml"
-}
-
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
 }
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
-}
-
 
 modrinth {
     String[] versions = getSupportedVersions(project.properties);
@@ -90,7 +76,7 @@ modrinth {
     versionName = "Bridging Mod ${formattedBaseVersion} (NeoForge)"
     versionNumber = project.version.toString()
     versionType = project.properties["release_type"].toString()
-    uploadFile = remapJar
+    uploadFile = shadowJar
     gameVersions = Arrays.asList(versions)
     loaders = [ "neoforge" ]
 
@@ -122,7 +108,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     if(shouldPublish != null && shouldPublish.toString().equalsIgnoreCase("true"))
         debugMode = true
 
-    def mainFile = upload(projectId, remapJar)
+    def mainFile = upload(projectId, shadowJar)
     mainFile.displayName = "[NeoForge %s] v%s Bridging Mod".formatted(mcVer, projectVer)
     mainFile.addModLoader("neoforge")
     mainFile.releaseType = project.properties["release_type"]

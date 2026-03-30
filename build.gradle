@@ -1,13 +1,13 @@
 import java.util.regex.Pattern
 
 plugins {
-	id "architectury-plugin" version "3.4-SNAPSHOT"
-	id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
+	id("architectury-plugin") version "3.5-SNAPSHOT"
+	id("dev.architectury.loom-no-remap") version "1.14-SNAPSHOT" apply false
 
-	id "com.github.johnrengelman.shadow" version "7.1.2" apply false
+	id("com.gradleup.shadow") version "9.4.0" apply false
 
-	id "com.modrinth.minotaur" version "2.+" apply false
-	id "net.darkhax.curseforgegradle" version "1.1.18" apply false
+	id("com.modrinth.minotaur") version "2.+" apply false
+	id("net.darkhax.curseforgegradle") version "1.1.18" apply false
 }
 
 apply from: "$rootDir/publishing.gradle"
@@ -27,23 +27,10 @@ architectury {
 }
 
 subprojects {
-	apply plugin: "dev.architectury.loom"
-
-	loom {
-		silentMojangMappingsLicense()
-	}
+	apply plugin: "dev.architectury.loom-no-remap"
 
 	dependencies {
 		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-
-		if(project.parchment_version != "") {
-			mappings loom.layered() {
-				officialMojangMappings()
-				parchment("org.parchmentmc.data:${project.parchment_version}@zip")
-			}
-		} else {
-			mappings loom.officialMojangMappings()
-		}
 	}
 
 	processResources {
@@ -82,11 +69,6 @@ allprojects {
 	version = "%s.%s".formatted(formattedBaseVersion, project.name)
 
 	repositories {
-		maven {
-			name = 'ParchmentMC'
-			url = "https://maven.parchmentmc.org/"
-		}
-
 		// Mod Deps
 		maven { url "https://maven.shedaniel.me/" }
 		maven { url "https://maven.terraformersmc.com/releases/" }
@@ -112,7 +94,7 @@ allprojects {
 
 	tasks.withType(JavaCompile).configureEach {
 		options.encoding = "UTF-8"
-		options.release.set(21)
+		options.release.set(25)
 
 		// Shows details related to the xlint "unchecked" and "derecation" warning notes.
 		if (rootProject.properties["show_dev_warnings"] == "true") {
@@ -165,7 +147,7 @@ def collectJars = tasks.register('collectJars', Copy) {
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 	dependsOn subprojects.collect({
 		def discovered = it.tasks.findAll {
-			it.name == "remapSourcesJar" || it.name == "remapJar"
+			it.name == "shadowJar"
 		}
 
 		return discovered == null

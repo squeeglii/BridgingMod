@@ -1,6 +1,6 @@
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
-apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "com.gradleup.shadow"
 apply plugin: "com.modrinth.minotaur"
 apply plugin: "net.darkhax.curseforgegradle"
 
@@ -24,28 +24,22 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_version}"
 
-    modApi("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
+     api "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
 
-    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
+    implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
 shadowJar {
+    dependsOn jar
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set("dev-shadow")
-}
-
-remapJar {
-    injectAccessWidener = true
-    inputFile.set shadowJar.archiveFile
-    dependsOn shadowJar
     archiveClassifier.set("release")
 }
 
@@ -60,9 +54,9 @@ sourcesJar {
 }
 
 components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
+    //withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+    //    skip()
+    //}
 }
 
 modrinth {
@@ -73,7 +67,7 @@ modrinth {
     versionName = "Bridging Mod ${formattedBaseVersion} (Fabric)"
     versionNumber = project.version.toString()
     versionType = project.properties["release_type"].toString()
-    uploadFile = remapJar
+    uploadFile = shadowJar
     gameVersions = Arrays.asList(versions)
     loaders = [ "fabric", "quilt" ]
 
@@ -107,7 +101,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     if(shouldPublish != null && shouldPublish.toString().equalsIgnoreCase("true"))
         debugMode = true
 
-    def mainFile = upload(projectId, remapJar)
+    def mainFile = upload(projectId, shadowJar)
     mainFile.displayName = "[Fabric %s] v%s Bridging Mod".formatted(mcVer, projectVer)
     mainFile.addModLoader("fabric")
     mainFile.addModLoader("quilt")

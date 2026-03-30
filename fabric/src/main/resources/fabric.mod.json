@@ -7,8 +7,8 @@
     "description": "Adds bridging assist similar to Bedrock & Quark's building mechanics",
     "authors": [ "CG360" ],
     "contact": {
-        "homepage": "https://github.com/CloudG360/BridgingMod",
-        "sources": "https://github.com/CloudG360/BridgingMod"
+        "sources": "https://github.com/squeeglii/BridgingMod",
+        "issues": "https://github.com/squeeglii/BridgingMod/issues"
     },
 
     "license": "MIT",
@@ -21,9 +21,6 @@
         ],
         "modmenu": [
             "me.cg360.mod.bridging.compat.fabric.ModMenuIntegration"
-        ],
-        "dynamiccrosshair": [
-          "me.cg360.mod.bridging.compat.impl.DynamicCrosshairCompat"
         ]
     },
     "mixins": [
@@ -32,9 +29,9 @@
 
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
-        "fabric": "*",
+        "fabric-api": "*",
         "minecraft": "${supported_minecraft_versions_fabric}",
-        "java": ">=17",
+        "java": ">=25",
         "yet_another_config_lib_v3": ">=${yacl_version}"
     },
 
