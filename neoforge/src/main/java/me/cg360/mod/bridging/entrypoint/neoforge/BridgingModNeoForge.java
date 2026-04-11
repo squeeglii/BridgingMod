@@ -3,9 +3,8 @@ package me.cg360.mod.bridging.entrypoint.neoforge;
 import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.ModIds;
-//import me.cg360.mod.bridging.compat.impl.BankStorageCompat;
-//import me.cg360.mod.bridging.compat.impl.DankStorageCompat;
-//import me.cg360.mod.bridging.compat.impl.DynamicCrosshairCompat;
+import me.cg360.mod.bridging.compat.impl.DankStorageCompat;
+import me.cg360.mod.bridging.compat.impl.DynamicCrosshairCompat;
 import me.cg360.mod.bridging.config.BridgingConfigUI;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -38,13 +37,13 @@ public class BridgingModNeoForge {
         );
 
         if(ModList.get().isLoaded(ModIds.DYNAMIC_CROSSHAIR)) {
-            BridgingMod.getLogger().warn("Dynamic Crosshair support disabled. Submit an issue with BridgingMod if it is now on 26.1");
-            //InterModComms.sendTo(ModIds.DYNAMIC_CROSSHAIR, "register_api", DynamicCrosshairCompat::new);
+            //BridgingMod.getLogger().warn("Dynamic Crosshair support disabled. Submit an issue with BridgingMod if it is now on 26.1");
+            InterModComms.sendTo(ModIds.DYNAMIC_CROSSHAIR, "register_api", DynamicCrosshairCompat::new);
         }
 
         if(ModList.get().isLoaded(ModIds.DANK_STORAGE)) {
-            BridgingMod.getLogger().warn("Dank Storage Compat disabled. Submit an issue with BridgingMod if it is now on 26.1");
-            //new DankStorageCompat();
+            //BridgingMod.getLogger().warn("Dank Storage Compat disabled. Submit an issue with BridgingMod if it is now on 26.1");
+            new DankStorageCompat();
         }
 
         if(ModList.get().isLoaded(ModIds.BANK_STORAGE)) {

@@ -8,7 +8,8 @@
     "authors": [ "CG360" ],
     "contact": {
         "sources": "https://github.com/squeeglii/BridgingMod",
-        "issues": "https://github.com/squeeglii/BridgingMod/issues"
+        "issues": "https://github.com/squeeglii/BridgingMod/issues",
+        "discord": "https://discord.gg/94c45XagEH"
     },
 
     "license": "MIT",
@@ -21,6 +22,9 @@
         ],
         "modmenu": [
             "me.cg360.mod.bridging.compat.fabric.ModMenuIntegration"
+        ],
+        "dynamiccrosshair": [
+            "me.cg360.mod.bridging.compat.impl.DynamicCrosshairCompat"
         ]
     },
     "mixins": [

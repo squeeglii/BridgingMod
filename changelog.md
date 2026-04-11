@@ -1,3 +1,7 @@
+## Changelog for 2.6.6 - 26.1 Only
+
+- Re-enabled DynamicCrosshair & Dank Storage compatibility.
+
 ## Changelog for 2.6.5 - 26.1 Only
 
 - Removed compatibility for BankStorage, Dank Storage, & DynamicCrosshair

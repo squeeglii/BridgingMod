@@ -36,3 +36,10 @@ mandatory = true
 versionRange = "[${yacl_version},)"
 ordering = "NONE"
 side = "CLIENT"
+
+[[dependencies.bridgingmod]]
+modId = "dynamiccrosshair"
+type = "optional"
+versionRange = "[${dynamiccrosshair_version},)"
+ordering = "AFTER"
+side = "CLIENT"

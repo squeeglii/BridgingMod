@@ -1,5 +1,3 @@
-import org.codehaus.groovy.runtime.MethodClosure
-
 import java.util.regex.Pattern
 
 static String getModrinthToken(Project project) {

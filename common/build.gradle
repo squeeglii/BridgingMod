@@ -12,11 +12,11 @@ dependencies {
 
     api "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
 
-    //todo: re-enable when updated to 26.1 \/\/\/
 
-    //compileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_artifact}-fabric:api")
+
+    compileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_artifact}-fabric:api")
 
     // optional compat
-    //compileOnly("curse.maven:dankstorage-335673:${rootProject.dank_storage_file_id}")
-    //compileOnly("maven.modrinth:bank-storage:${rootProject.bank_storage_file_id}")
+    compileOnly("curse.maven:dankstorage-335673:${rootProject.dank_storage_file_id}")
+    //compileOnly("maven.modrinth:bank-storage:${rootProject.bank_storage_file_id}") //todo: re-enable when updated to 26.1
 }
