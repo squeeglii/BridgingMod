@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "Interface de Configuração Desativada!",
     "bridgingmod.config.failed_integration.description": "Falha ao abrir a interface de configuração. Se você estiver em uma snapshot, por favor, não relate isso como um bug.",
 
-    "key.categories.bridgingmod": "Bridging Mod",
+    "key.categories.bridgingmod": "Mod de Ponte",
     "key.bridgingmod.toggle_bridging": "Alternar Colocação Estendida",
 
     "notif.bridgingmod.toggle_bridging": "Colocação Estendida Alternada",
@@ -13,7 +13,7 @@
     "config.bridgingmod.value.ticks": "%1$.2f tick(s)",
     "config.bridgingmod.value.percentage": "%1$.2f \uFF05",
 
-    "config.bridgingmod.title": "Bridging Mod",
+    "config.bridgingmod.title": "Mod de Ponte",
     "config.bridgingmod.category.feature": "Recursos",
     "config.bridgingmod.category.feature.tooltip": "Ajuste os principais componentes do mod",
     "config.bridgingmod.category.vfx": "Visuais",
@@ -53,9 +53,9 @@
     "enum.bridgingmod.placement_axis.both": "Qualquer",
     "enum.bridgingmod.placement_axis.fallback": "O Mesmo de Sempre",
 
-    "enum.bridgingmod.source_perspective.copy_toggle_perspective": "Copiar Perspectiva",
-    "enum.bridgingmod.source_perspective.always_eyeline": "Seguir Apenas a Cabeça",
-    "enum.bridgingmod.source_perspective.let_bridging_mod_decide": "Deixar o Mod Decidir",
+    "enum.bridgingmod.source_perspective.copy_toggle_perspective": "Copiar perspectiva",
+    "enum.bridgingmod.source_perspective.always_eyeline": "Seguir apenas a cabeça",
+    "enum.bridgingmod.source_perspective.let_bridging_mod_decide": "Deixar o mod Decidir",
 
     "enum.bridgingmod.bridging_adjacency.disabled": "Estrito",
     "enum.bridgingmod.bridging_adjacency.faces": "Apenas Faces",
