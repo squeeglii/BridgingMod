@@ -1,8 +1,8 @@
-package me.cg360.mod.bridging.compat.handler;
+package me.cg360.mod.bridging.compat.impl.handler;
 
 import com.mojang.logging.LogUtils;
 import me.cg360.mod.bridging.building.Bridge;
-import me.cg360.mod.bridging.compat.SpecialBridgingHandler;
+import me.cg360.mod.bridging.compat.type.SpecialBridgingItemHandler;
 import me.cg360.mod.bridging.util.GameSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,9 +19,9 @@ import tfar.dankstorage.item.DankItem;
  * Literally only needed for slab & torch support. Unboxes the item held by the bank.
  * WARNING: Only load when DankStorage is present.
  */
-public class DankStorageHandler implements SpecialBridgingHandler {
+public class DankStorageItemHandler implements SpecialBridgingItemHandler {
 
-    public static final DankStorageHandler INSTANCE = new DankStorageHandler();
+    public static final DankStorageItemHandler INSTANCE = new DankStorageItemHandler();
 
     @Override
     public boolean canBePlaced(ItemStack stack) {

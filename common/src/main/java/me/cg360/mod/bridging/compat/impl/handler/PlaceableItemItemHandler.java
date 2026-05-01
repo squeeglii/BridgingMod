@@ -1,15 +1,15 @@
-package me.cg360.mod.bridging.compat.handler;
+package me.cg360.mod.bridging.compat.impl.handler;
 
-import me.cg360.mod.bridging.compat.SpecialBridgingHandler;
+import me.cg360.mod.bridging.compat.type.SpecialBridgingItemHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class PlaceableItemHandler implements SpecialBridgingHandler {
+public class PlaceableItemItemHandler implements SpecialBridgingItemHandler {
 
-    public static final PlaceableItemHandler INSTANCE = new PlaceableItemHandler();
+    public static final PlaceableItemItemHandler INSTANCE = new PlaceableItemItemHandler();
 
     @Override
     public boolean canBePlaced(ItemStack stack) {

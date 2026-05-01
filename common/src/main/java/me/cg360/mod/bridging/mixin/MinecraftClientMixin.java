@@ -3,13 +3,11 @@ package me.cg360.mod.bridging.mixin;
 import me.cg360.mod.bridging.BridgingKeyMappings;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.building.Bridge;
-import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
-import me.cg360.mod.bridging.compat.SpecialBridgingHandler;
+import me.cg360.mod.bridging.compat.type.SpecialBridgingItemHandler;
 import me.cg360.mod.bridging.compat.SpecialHandlers;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.InfoStrings;
-import me.cg360.mod.bridging.util.Path;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -21,17 +19,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.FoodOnAStickItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -117,11 +107,11 @@ public abstract class MinecraftClientMixin {
             int originalStackSize = itemStack.getCount();
 
             // Compatibility Api - allow custom handling of blocks.
-            Optional<SpecialBridgingHandler> optHandler = SpecialHandlers.getSpecialHandler(itemStack);
+            Optional<SpecialBridgingItemHandler> optHandler = SpecialHandlers.getSpecialItemHandler(itemStack);
             boolean canBePlaced, canBePlacedInWorld;
 
             if(optHandler.isPresent()) {
-                SpecialBridgingHandler handler = optHandler.get();
+                SpecialBridgingItemHandler handler = optHandler.get();
 
                 canBePlaced = handler.canBePlaced(itemStack);
                 canBePlacedInWorld = handler.canBePlacedInWorld(itemStack, this.player, this.level, pos, dir);
@@ -167,7 +157,7 @@ public abstract class MinecraftClientMixin {
 
     @Unique
     @NotNull
-    private BlockHitResult bridgingmod$getFinalPlaceAssistTarget(ItemStack heldItem, Direction dir, BlockPos pos, SpecialBridgingHandler specialHandler) {
+    private BlockHitResult bridgingmod$getFinalPlaceAssistTarget(ItemStack heldItem, Direction dir, BlockPos pos, SpecialBridgingItemHandler specialHandler) {
         // Where is the placement action coming from?
         // This is used by the game to determine the state used for directional blocks.
 

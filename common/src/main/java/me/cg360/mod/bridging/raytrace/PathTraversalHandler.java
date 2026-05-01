@@ -1,6 +1,8 @@
 package me.cg360.mod.bridging.raytrace;
 
 import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.compat.SpecialHandlers;
+import me.cg360.mod.bridging.compat.type.SpecialBridgingEnvironmentHandler;
 import me.cg360.mod.bridging.config.selector.SourcePerspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Path;
@@ -11,6 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -26,7 +30,7 @@ public class PathTraversalHandler {
      * @param player the player whose view line should be used.
      * @return the closest block position in view that supports bridge assist.
      */
-    public static Tuple<BlockPos, Direction> getClosestAssistTarget(Entity player) {
+    public static Tuple<BlockPos, Direction> getClosestAssistTarget(Player player) {
         ClientLevel level = Minecraft.getInstance().level;
 
         if(level == null)
@@ -34,7 +38,7 @@ public class PathTraversalHandler {
 
         SourcePerspective perspectiveLock = BridgingMod.getCompatibleSourcePerspective();
 
-        Perspective perspective = switch (perspectiveLock) {
+        Perspective initialPerspective = switch (perspectiveLock) {
             case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
                     Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
 
@@ -42,9 +46,22 @@ public class PathTraversalHandler {
                     Perspective.fromEntity(player);
         };
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, perspective);
+        BridgingPreContext preContext = new BridgingPreContext(
+                player.level(),
+                initialPerspective,
+                player
+        );
 
-        Vector3f viewDirection = perspective.getLookVector();
+        BridgingPreContext finalContext = SpecialHandlers.getSpecialEnvironmentHandlers().stream()
+                .map(env -> env.generatePlacementContextOverride(preContext))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst()
+                .orElse(preContext);
+
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(finalContext.player(), finalContext.perspective());
+
+        Vector3f viewDirection = finalContext.perspective().getLookVector();
         List<Direction> validSides = PathTraversalHandler.getValidAssistSides(viewDirection);
 
         Direction validDirection = null;
@@ -54,13 +71,14 @@ public class PathTraversalHandler {
         for(BlockPos pos: path) {
 
             // Invalidate any position that can't have blocks placed there normally.
-            if(!PathTraversalHandler.isBridgingPlacementAllowedAt(pos))
+            if(!PathTraversalHandler.isBridgingPlacementAllowedAt(pos, finalContext.level()))
                 continue;
 
             Vec3 collideMin = Vec3.atLowerCornerOf(pos);
             Vec3 collideMax = Vec3.atLowerCornerWithOffset(pos, 1, 1, 1);
 
             // Invalidate any position that is within the player's bounding box.
+            // todo: how on earth will this work with rotated bounding boxes.
             if(player.getBoundingBox().intersects(collideMin, collideMax))
                 continue;
 
@@ -68,7 +86,7 @@ public class PathTraversalHandler {
             // first valid one. Validity includes them being placeable against, as well
             // as facing a similar direction to the camera.
             Optional<Direction> firstValidDirection = validSides.stream()
-                    .filter(dir -> PathTraversalHandler.canSideBeBuiltOffOf(pos, dir))
+                    .filter(dir -> PathTraversalHandler.canSideBeBuiltOffOf(pos, dir, finalContext.level()))
                     .findFirst();
 
             if(firstValidDirection.isEmpty())
@@ -102,27 +120,6 @@ public class PathTraversalHandler {
         double distance = worldSpaceViewEnd.distanceTo(worldSpaceCameraOrigin);
 
         // this is extremely broken.
-        /*
-        float minDistanceHorizontal = BridgingMod.getConfig().getMinimumBridgeDistanceHorizontal();
-        float minDistanceVertical = BridgingMod.getConfig().getMinimumBridgeDistanceVertical();
-
-        Vec3 viewDirection = new Vec3(view.getLookVector());
-        Vec3 farVec = viewDirection.scale(distance); // in world terms.
-
-        Vec3 horizontalExtent = new Vec3(farVec.x, 0, farVec.z);
-        double currentHorizontal = horizontalExtent.length();
-        double minHorizontal = minDistanceHorizontal / currentHorizontal; // Calculate fraction minimum distance would be of full reach
-
-        double currentVertical = Math.abs(farVec.y); // do the same for vertical
-        double minVertical = minDistanceVertical / currentVertical;
-
-        Vec3 nearVec = viewDirection.scale(Math.max(minHorizontal, minVertical)); // Scale to appease whichever is more restrictive
-
-        if(nearVec.length() > farVec.length()) {
-            return new ArrayList<>();
-        }
-        */
-
         float minDistance = BridgingMod.getConfig().getMinimumBridgeDistance() / 100.0f;
 
         Vec3 viewDirection = new Vec3(view.getLookVector());
@@ -162,9 +159,7 @@ public class PathTraversalHandler {
      * if building off of a surface in a given direction when in relation to the position
      * surface|  <<< checkSide <<< |block
      */
-    private static boolean canSideBeBuiltOffOf(BlockPos placementTarget, Direction checkSide) {
-        ClientLevel level = Minecraft.getInstance().level;
-
+    private static boolean canSideBeBuiltOffOf(BlockPos placementTarget, Direction checkSide, Level level) {
         if(level == null)
             return false;
 
@@ -199,9 +194,7 @@ public class PathTraversalHandler {
         return !level.getBlockState(blockPlacingOffOf).canBeReplaced();
     }
 
-    private static boolean isBridgingPlacementAllowedAt(BlockPos placementTarget) {
-        ClientLevel level = Minecraft.getInstance().level;
-
+    private static boolean isBridgingPlacementAllowedAt(BlockPos placementTarget, Level level) {
         if(level == null)
             return false;
 
