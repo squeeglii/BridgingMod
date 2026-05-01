@@ -1,8 +1,8 @@
-package me.cg360.mod.bridging.compat.handler;
+package me.cg360.mod.bridging.compat.impl.items;
 
 import com.mojang.logging.LogUtils;
 import me.cg360.mod.bridging.building.Bridge;
-import me.cg360.mod.bridging.compat.SpecialBridgingHandler;
+import me.cg360.mod.bridging.compat.type.SpecialBridgingItemHandler;
 import me.cg360.mod.bridging.util.GameSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.natte.bankstorage.BankStorage;
-import net.natte.bankstorage.container.BankItemStorage;
 import net.natte.bankstorage.container.CachedBankStorage;
 import net.natte.bankstorage.options.BankOptions;
 import net.natte.bankstorage.util.Util;
@@ -23,9 +22,9 @@ import net.natte.bankstorage.util.Util;
  * Literally only needed for slab & torch support. Unboxes the item held by the bank.
  * WARNING: Only load when BankStorage is present.
  */
-public class BankStorageHandler implements SpecialBridgingHandler {
+public class BankStorageItemHandler implements SpecialBridgingItemHandler {
 
-    public static final BankStorageHandler INSTANCE = new BankStorageHandler();
+    public static final BankStorageItemHandler INSTANCE = new BankStorageItemHandler();
 
     @Override
     public boolean canBePlaced(ItemStack stack) {

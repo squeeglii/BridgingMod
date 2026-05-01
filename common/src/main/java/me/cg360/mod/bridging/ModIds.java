@@ -6,5 +6,6 @@ public class ModIds {
     public static final String FREE_LOOK = "freelook";
     public static final String DANK_STORAGE = "dankstorage";
     public static final String BANK_STORAGE = "bankstorage";
+    public static final String SABLE = "sable";
 
 }

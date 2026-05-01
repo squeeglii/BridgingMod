@@ -1,5 +1,6 @@
-package me.cg360.mod.bridging.compat;
+package me.cg360.mod.bridging.compat.type;
 
+import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -8,10 +9,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
+import java.util.Optional;
+
 /**
  * Extend this and register it in SpecialHandlers!
  */
-public interface SpecialBridgingHandler {
+public interface SpecialBridgingItemHandler {
 
     /**
      * @return If stack is valid for placement without any world context.

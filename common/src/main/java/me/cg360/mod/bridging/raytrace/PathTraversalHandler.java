@@ -1,16 +1,19 @@
 package me.cg360.mod.bridging.raytrace;
 
 import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.compat.SpecialHandlers;
 import me.cg360.mod.bridging.config.selector.SourcePerspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Path;
 import me.cg360.mod.bridging.config.selector.PlacementAxisMode;
+import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -26,25 +29,27 @@ public class PathTraversalHandler {
      * @param player the player whose view line should be used.
      * @return the closest block position in view that supports bridge assist.
      */
-    public static Tuple<BlockPos, Direction> getClosestAssistTarget(Entity player) {
+    public static BridgingResult getClosestAssistTarget(Player player) {
         ClientLevel level = Minecraft.getInstance().level;
 
         if(level == null)
             return null;
 
-        SourcePerspective perspectiveLock = BridgingMod.getCompatibleSourcePerspective();
+        Perspective initialPerspective = Perspective.getSourcePerspective(player);
 
-        Perspective perspective = switch (perspectiveLock) {
-            case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
-                    Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
+        BridgingPreContext preContext = new BridgingPreContext(
+                player.level(),
+                initialPerspective,
+                Perspective.fromEntity(player),
+                player,
+                Flags.empty()
+        );
 
-            case ALWAYS_EYELINE ->
-                    Perspective.fromEntity(player);
-        };
+        BridgingPreContext finalContext = PathTraversalHandler.adjustPathForSpecialHandlers(preContext);
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, perspective);
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(finalContext);
 
-        Vector3f viewDirection = perspective.getLookVector();
+        Vector3f viewDirection = finalContext.cameraPerspective().getLookVector();
         List<Direction> validSides = PathTraversalHandler.getValidAssistSides(viewDirection);
 
         Direction validDirection = null;
@@ -54,13 +59,14 @@ public class PathTraversalHandler {
         for(BlockPos pos: path) {
 
             // Invalidate any position that can't have blocks placed there normally.
-            if(!PathTraversalHandler.isBridgingPlacementAllowedAt(pos))
+            if(!PathTraversalHandler.isBridgingPlacementAllowedAt(pos, finalContext.level()))
                 continue;
 
             Vec3 collideMin = Vec3.atLowerCornerOf(pos);
             Vec3 collideMax = Vec3.atLowerCornerWithOffset(pos, 1, 1, 1);
 
             // Invalidate any position that is within the player's bounding box.
+            // todo: how on earth will this work with rotated bounding boxes.
             if(player.getBoundingBox().intersects(collideMin, collideMax))
                 continue;
 
@@ -68,7 +74,7 @@ public class PathTraversalHandler {
             // first valid one. Validity includes them being placeable against, as well
             // as facing a similar direction to the camera.
             Optional<Direction> firstValidDirection = validSides.stream()
-                    .filter(dir -> PathTraversalHandler.canSideBeBuiltOffOf(pos, dir))
+                    .filter(dir -> PathTraversalHandler.canSideBeBuiltOffOf(pos, dir, finalContext.level()))
                     .findFirst();
 
             if(firstValidDirection.isEmpty())
@@ -82,47 +88,29 @@ public class PathTraversalHandler {
         if(validDirection == null || validPos == null)
             return null;
 
-        return new Tuple<>(validPos, validDirection);
+        return new BridgingResult(validPos, validDirection, finalContext);
     }
 
     /**
      * Generates a list of blocks which follow the reach line of a given
      * player from a certain distance.
      */
-    public static List<BlockPos> getViewBlockPath(Entity player, Perspective view) {
-        if(player == null)
+    public static List<BlockPos> getViewBlockPath(BridgingPreContext context) {
+        if(context.player() == null)
             return new ArrayList<>();
+
+        Perspective view = context.cameraPerspective();
+        Perspective local = context.playerPerspective();
 
         // Figure out the diff between the player's current edge of placement
         // & the camera's pos. This is now the max diff.
-        double playerReach = GameSupport.getReach();
-        Vec3 playerViewVec = player.getViewVector(1f).scale(playerReach);
-        Vec3 worldSpaceViewEnd = playerViewVec.add(player.getPosition(1f));
+        float playerReach = GameSupport.getReach();
+        Vec3 playerViewVec = new Vec3(local.getLookVector().mul(playerReach));
+        Vec3 worldSpaceViewEnd = playerViewVec.add(local.getPosition());
         Vec3 worldSpaceCameraOrigin = view.getPosition();
         double distance = worldSpaceViewEnd.distanceTo(worldSpaceCameraOrigin);
 
         // this is extremely broken.
-        /*
-        float minDistanceHorizontal = BridgingMod.getConfig().getMinimumBridgeDistanceHorizontal();
-        float minDistanceVertical = BridgingMod.getConfig().getMinimumBridgeDistanceVertical();
-
-        Vec3 viewDirection = new Vec3(view.getLookVector());
-        Vec3 farVec = viewDirection.scale(distance); // in world terms.
-
-        Vec3 horizontalExtent = new Vec3(farVec.x, 0, farVec.z);
-        double currentHorizontal = horizontalExtent.length();
-        double minHorizontal = minDistanceHorizontal / currentHorizontal; // Calculate fraction minimum distance would be of full reach
-
-        double currentVertical = Math.abs(farVec.y); // do the same for vertical
-        double minVertical = minDistanceVertical / currentVertical;
-
-        Vec3 nearVec = viewDirection.scale(Math.max(minHorizontal, minVertical)); // Scale to appease whichever is more restrictive
-
-        if(nearVec.length() > farVec.length()) {
-            return new ArrayList<>();
-        }
-        */
-
         float minDistance = BridgingMod.getConfig().getMinimumBridgeDistance() / 100.0f;
 
         Vec3 viewDirection = new Vec3(view.getLookVector());
@@ -162,9 +150,7 @@ public class PathTraversalHandler {
      * if building off of a surface in a given direction when in relation to the position
      * surface|  <<< checkSide <<< |block
      */
-    private static boolean canSideBeBuiltOffOf(BlockPos placementTarget, Direction checkSide) {
-        ClientLevel level = Minecraft.getInstance().level;
-
+    private static boolean canSideBeBuiltOffOf(BlockPos placementTarget, Direction checkSide, Level level) {
         if(level == null)
             return false;
 
@@ -199,9 +185,7 @@ public class PathTraversalHandler {
         return !level.getBlockState(blockPlacingOffOf).canBeReplaced();
     }
 
-    private static boolean isBridgingPlacementAllowedAt(BlockPos placementTarget) {
-        ClientLevel level = Minecraft.getInstance().level;
-
+    private static boolean isBridgingPlacementAllowedAt(BlockPos placementTarget, Level level) {
         if(level == null)
             return false;
 
@@ -210,6 +194,15 @@ public class PathTraversalHandler {
         return BridgingMod.getConfig().isNonSolidReplaceEnabled()
                 ? target.canBeReplaced() // Plants can be replaced ! Crush em all !!1!
                 : target.isAir(); // Plants (non-solids) can't be replaced - only allow self-declared 'air'
+    }
+
+    public static BridgingPreContext adjustPathForSpecialHandlers(BridgingPreContext initialContext) {
+        return SpecialHandlers.getSpecialEnvironmentHandlers().stream()
+                .map(env -> env.generatePlacementContextOverride(initialContext))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst()
+                .orElse(initialContext);
     }
 
 }

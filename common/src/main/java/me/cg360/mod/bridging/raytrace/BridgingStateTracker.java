@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class BridgingStateTracker {
 
-    private static Tuple<BlockPos, Direction> lastTickTarget = null;
+    private static BridgingResult lastTickTarget = null;
 
     public static double lastKnownYFrac = 0; // used for slab assist.
 
@@ -27,7 +27,7 @@ public class BridgingStateTracker {
      * Generates a bridge assist target for a given player, under the condition
      * that they can't already place a block under vanilla conditions.
      */
-    public static Tuple<BlockPos, Direction> getBridgeAssistTargetFor(Player player) {
+    public static BridgingResult getBridgeAssistTargetFor(Player player) {
         if(player == null)
             return null;
 
@@ -55,7 +55,7 @@ public class BridgingStateTracker {
         lastTickTarget = BridgingStateTracker.getBridgeAssistTargetFor(player);
     }
 
-    public static Tuple<BlockPos, Direction> getLastTickTarget() {
+    public static BridgingResult getLastTickTarget() {
         return BridgingStateTracker.lastTickTarget;
     }
 

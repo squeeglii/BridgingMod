@@ -1,6 +1,6 @@
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
-apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "com.gradleup.shadow"
 apply plugin: "com.modrinth.minotaur"
 apply plugin: "net.darkhax.curseforgegradle"
 

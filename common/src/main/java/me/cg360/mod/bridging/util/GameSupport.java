@@ -1,15 +1,13 @@
 package me.cg360.mod.bridging.util;
 
 import me.cg360.mod.bridging.BridgingMod;
-import me.cg360.mod.bridging.compat.SpecialBridgingHandler;
+import me.cg360.mod.bridging.compat.type.SpecialBridgingItemHandler;
 import me.cg360.mod.bridging.compat.SpecialHandlers;
-import me.cg360.mod.bridging.config.BridgingConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BaseTorchBlock;
-import net.minecraft.world.level.block.TorchBlock;
 
 import java.util.Optional;
 
@@ -17,13 +15,13 @@ public class GameSupport {
 
     public static final double TRAPDOOR_HEIGHT = 3/16d;
     public static final double SLAB_HEIGHT = 8/16d;
-    public static final double MAXIMUM_PLACE_REACH = 4.5d;
+    public static final float MAXIMUM_PLACE_REACH = 4.5f;
 
-    public static double getReach() {
+    public static float getReach() {
         if(Minecraft.getInstance().player == null)
             return MAXIMUM_PLACE_REACH;
 
-        return Minecraft.getInstance().player.blockInteractionRange();
+        return (float) Minecraft.getInstance().player.blockInteractionRange();
     }
 
     public static boolean isControllerCrouching() {
@@ -41,7 +39,7 @@ public class GameSupport {
     public static boolean isStackPlaceable(ItemStack stack) {
         if(stack == null) return false;
 
-        Optional<SpecialBridgingHandler> handler = SpecialHandlers.getSpecialHandler(stack);
+        Optional<SpecialBridgingItemHandler> handler = SpecialHandlers.getSpecialItemHandler(stack);
 
         if(handler.isPresent()) {
             return handler.get().canBePlaced(stack);

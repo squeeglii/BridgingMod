@@ -1,19 +1,19 @@
 package me.cg360.mod.bridging.compat.impl;
 
 import me.cg360.mod.bridging.compat.SpecialHandlers;
-import me.cg360.mod.bridging.compat.handler.DankStorageHandler;
+import me.cg360.mod.bridging.compat.impl.items.DankStorageItemHandler;
 import net.minecraft.resources.ResourceLocation;
 
 public class DankStorageCompat {
 
     public DankStorageCompat() {
-        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_1"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_2"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_3"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_4"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_5"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_6"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_7"), DankStorageHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_1"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_2"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_3"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_4"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_5"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_6"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(ResourceLocation.fromNamespaceAndPath("dankstorage", "dank_7"), DankStorageItemHandler.INSTANCE);
     }
 
 }
