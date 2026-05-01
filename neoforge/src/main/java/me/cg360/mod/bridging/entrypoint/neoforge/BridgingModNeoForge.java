@@ -5,6 +5,7 @@ import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.ModIds;
 import me.cg360.mod.bridging.compat.impl.DankStorageCompat;
 import me.cg360.mod.bridging.compat.impl.DynamicCrosshairCompat;
+import me.cg360.mod.bridging.compat.impl.SableCompat;
 import me.cg360.mod.bridging.config.BridgingConfigUI;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -49,6 +50,10 @@ public class BridgingModNeoForge {
         if(ModList.get().isLoaded(ModIds.BANK_STORAGE)) {
             BridgingMod.getLogger().warn("Bank Storage Compat disabled. Submit an issue with BridgingMod if it is now on 26.1");
             //new BankStorageCompat();
+        }
+
+        if(ModList.get().isLoaded(ModIds.SABLE)) {
+            new SableCompat().setAsInstance();
         }
     }
 

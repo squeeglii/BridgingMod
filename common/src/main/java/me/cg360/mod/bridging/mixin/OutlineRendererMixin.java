@@ -1,12 +1,15 @@
 package me.cg360.mod.bridging.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.config.selector.SourcePerspective;
+import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Render;
+import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -30,7 +33,7 @@ public abstract class OutlineRendererMixin {
     @Inject(method = "renderBlockOutline",
             at = @At("HEAD")
             )
-    public void renderTracedViewPath(MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, LevelRenderState levelRenderState, CallbackInfo ci) {
+    public void renderTracedViewPath(MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, LevelRenderState levelRenderState, CallbackInfo ci, @Local(ordinal = 0) float f) {
         boolean isInDebugMenu = this.minecraft.getDebugOverlay().showDebugScreen();
 
         // Rules to display any bridging - whether these are followed or not depends on the config :)
@@ -58,24 +61,27 @@ public abstract class OutlineRendererMixin {
         // what.
 
 
-        SourcePerspective perspectiveLock = BridgingMod.getCompatibleSourcePerspective();
         Player player = Minecraft.getInstance().player;
 
-        if(player == null)
-            perspectiveLock = SourcePerspective.COPY_TOGGLE_PERSPECTIVE;
+        // There may be a few cases where this would be useful to still show bridging for,
+        // but that makes headaches.
+        if (player == null)
+            return;
 
-        Perspective view = switch (perspectiveLock) {
-            case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
-                    Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
+        Perspective view = Perspective.getSourcePerspective(player);
 
-            case ALWAYS_EYELINE ->
-                    Perspective.fromEntity(player);
-        };
+        BridgingPreContext preContext = new BridgingPreContext(
+                player.level(),
+                view,
+                Perspective.fromEntity(player),
+                player,
+                Flags.empty()
+        );
 
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
-            Render.blocksInViewPath(poseStack, vertices, view);
+            Render.blocksInViewPath(poseStack, vertices, preContext);
 
-        if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, view, vertices);
+        if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, vertices, f);
         if(isNonBridgeOutlineEnabled) Render.currentNonBridgingOutline(poseStack, view, vertices);
 
         this.checkPoseStack(poseStack);

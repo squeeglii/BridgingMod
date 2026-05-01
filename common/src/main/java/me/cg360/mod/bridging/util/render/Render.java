@@ -1,20 +1,18 @@
-package me.cg360.mod.bridging.util;
+package me.cg360.mod.bridging.util.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
-import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
-import me.cg360.mod.bridging.raytrace.PathTraversalHandler;
-import me.cg360.mod.bridging.raytrace.Perspective;
-import net.minecraft.client.Camera;
+import me.cg360.mod.bridging.compat.SpecialHandlers;
+import me.cg360.mod.bridging.raytrace.*;
+import me.cg360.mod.bridging.util.GameSupport;
+import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -22,22 +20,26 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Render {
 
-    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, Perspective view) {
+    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, BridgingPreContext initialContext) {
         LocalPlayer player = Minecraft.getInstance().player;
 
         if(player == null)
             return;
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, view);
+        // Sable support inplements perspective modifiers:
+        BridgingPreContext context = PathTraversalHandler.adjustPathForSpecialHandlers(initialContext);
+
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(context);
 
         if(path.isEmpty())
             return;
 
         for(BlockPos pos: path)
-            Render.cubeTrace(poseStack, vertexConsumer, view, pos);
+            Render.cubeTrace(poseStack, vertexConsumer, context.cameraPerspective(), pos);
     }
 
     public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Perspective view, BlockPos pos) {
@@ -109,15 +111,31 @@ public class Render {
         Render.cubeOutline(poseStack, vertices, view, placeTarget, outlineColour);
     }
 
-    public static void currentBridgingOutline(PoseStack poseStack, Perspective view, VertexConsumer vertices) {
-        Tuple<BlockPos, Direction> lastTarget = BridgingStateTracker.getLastTickTarget();
+    public static void currentBridgingOutline(PoseStack poseStack, VertexConsumer vertices, float partialTicks) {
+        BridgingResult lastTarget = BridgingStateTracker.getLastTickTarget();
 
         if(lastTarget == null)
             return;
 
+        if(lastTarget.context().flags().hasAll(Flags.SKIP_OUTLINE_RENDERING))
+            return; // Usually if the rendering is in a weird state.
+
         int outlineColour = BridgingMod.getConfig().getOutlineColour().getRGB();
 
-        Render.cubeOutline(poseStack, vertices, view, lastTarget.getA(), outlineColour);
+        AtomicBoolean hasRendered = new AtomicBoolean(false);
+        CubeRenderTask renderTask = (poseStk, verts, perspective, pos, outlineCol) -> {
+            Render.cubeOutline(poseStk, verts, perspective, pos, outlineCol);
+            hasRendered.set(true);
+        };
+
+        SpecialHandlers.getSpecialEnvironmentHandlers()
+                .forEach(handler -> handler.transformBridgingOutlineRendering(
+                        lastTarget, renderTask, hasRendered.get(), partialTicks,
+                        poseStack, vertices, lastTarget.context().cameraPerspective(), lastTarget.blockPos(),
+                        outlineColour));
+
+        if(!hasRendered.get())
+            renderTask.render(poseStack, vertices, lastTarget.context().cameraPerspective(), lastTarget.blockPos(), outlineColour);
     }
 
 }

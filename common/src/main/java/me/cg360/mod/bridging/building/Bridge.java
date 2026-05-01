@@ -32,7 +32,7 @@ public class Bridge {
             Block placementBlock = heldBlockItem.getBlock();
             boolean isSlabAssistTarget = SpecialHandlers.slabAssistFilters
                     .stream()
-                    .anyMatch(f -> f.apply(placementBlock));
+                    .anyMatch(f -> f.test(placementBlock));
 
             if(isSlabAssistTarget) {
                 BlockHitResult override = switch (dir.getAxis()) {

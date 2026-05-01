@@ -6,6 +6,7 @@ import me.cg360.mod.bridging.ModIds;
 import me.cg360.mod.bridging.compat.impl.DankStorageCompat;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import me.cg360.mod.bridging.compat.impl.SableCompat;
 
 public class BridgingModFabric {
 
@@ -25,6 +26,10 @@ public class BridgingModFabric {
         if(FabricLoader.getInstance().isModLoaded(ModIds.BANK_STORAGE)) {
             BridgingMod.getLogger().warn("Bank Storage Compat disabled. Submit an issue with BridgingMod if it is now on 26.1");
             //new BankStorageCompat();
+        }
+
+        if(FabricLoader.getInstance().isModLoaded(ModIds.SABLE)) {
+            new SableCompat().setAsInstance();
         }
     }
 

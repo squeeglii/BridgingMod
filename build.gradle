@@ -89,6 +89,18 @@ allprojects {
 			name 'Xander Maven'
 			url 'https://maven.isxander.dev/releases'
 		}
+		exclusiveContent { // Sable
+			forRepository {
+				maven {
+					url = "https://maven.ryanhcode.dev/releases"
+					name = "RyanHCode Maven"
+				}
+			}
+			filter {
+				includeGroup("dev.ryanhcode.sable")
+				includeGroup("dev.ryanhcode.sable-companion")
+			}
+		}
 	}
 
 

@@ -45,7 +45,7 @@ public class CrosshairRenderingMixin {
         if(!isBridgingActive)
             return;
 
-        Direction direction = BridgingStateTracker.getLastTickTarget().getB();
+        Direction direction = BridgingStateTracker.getLastTickTarget().direction();
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 
         if(alignment == null) return;
