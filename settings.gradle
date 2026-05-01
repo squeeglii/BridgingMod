@@ -18,6 +18,7 @@ pluginManagement {
             name = 'Forge'
             url = "https://maven.minecraftforge.net"
         }
+        mavenCentral()
         gradlePluginPortal()
     }
 }
