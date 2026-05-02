@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "Interface de Configuração Desativada!",
     "bridgingmod.config.failed_integration.description": "Falha ao abrir a interface de configuração. Se você estiver em uma snapshot, por favor, não relate isso como um bug.",
 
-    "key.categories.bridgingmod": "Mod de Ponte",
+    "key.category.bridgingmod": "Bridging Mod",
     "key.bridgingmod.toggle_bridging": "Alternar Colocação Estendida",
 
     "notif.bridgingmod.toggle_bridging": "Colocação Estendida Alternada",
@@ -13,7 +13,7 @@
     "config.bridgingmod.value.ticks": "%1$.2f tick(s)",
     "config.bridgingmod.value.percentage": "%1$.2f \uFF05",
 
-    "config.bridgingmod.title": "Mod de Ponte",
+    "config.bridgingmod.title": "Bridging Mod",
     "config.bridgingmod.category.feature": "Recursos",
     "config.bridgingmod.category.feature.tooltip": "Ajuste os principais componentes do mod",
     "config.bridgingmod.category.vfx": "Visuais",
