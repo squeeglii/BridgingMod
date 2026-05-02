@@ -1,4 +1,4 @@
-package me.cg360.mod.bridging.compat.impl.handler;
+package me.cg360.mod.bridging.compat.impl.items;
 
 import me.cg360.mod.bridging.compat.type.SpecialBridgingItemHandler;
 import net.minecraft.core.BlockPos;

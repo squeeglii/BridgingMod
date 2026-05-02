@@ -1,7 +1,7 @@
 package me.cg360.mod.bridging.compat.impl;
 
 import me.cg360.mod.bridging.compat.SpecialHandlers;
-import me.cg360.mod.bridging.compat.impl.handler.DankStorageItemHandler;
+import me.cg360.mod.bridging.compat.impl.items.DankStorageItemHandler;
 import net.minecraft.resources.ResourceLocation;
 
 public class DankStorageCompat {
