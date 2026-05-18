@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class SpecialHandlers {
 
@@ -29,7 +30,7 @@ public class SpecialHandlers {
     // If there's a block that isn't handled by slab assist but should be,
     // add a filter to the list.
     //TODO: Implement as a SpecialBridgingHandler
-    public static List<Function<Block, Boolean>> slabAssistFilters = new LinkedList<>();
+    public static List<Predicate<Block>> slabAssistFilters = new LinkedList<>();
     static {
         slabAssistFilters.add(block -> block instanceof SlabBlock);
         slabAssistFilters.add(block -> block instanceof TrapDoorBlock);
@@ -84,6 +85,10 @@ public class SpecialHandlers {
         return specialItemGroupHandlers.stream()
                 .map(SpecialGroupHandlerEntry::groupSelector)
                 .anyMatch(selector -> selector.passes(item));
+    }
+
+    static {
+
     }
 
     // Group selector is NOT the placement condition.

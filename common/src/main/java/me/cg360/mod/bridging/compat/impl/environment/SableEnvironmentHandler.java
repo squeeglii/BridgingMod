@@ -7,14 +7,11 @@ import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.type.SpecialBridgingEnvironmentHandler;
 import me.cg360.mod.bridging.raytrace.BridgingPreContext;
+import me.cg360.mod.bridging.raytrace.Perspective;
 import net.minecraft.core.Position;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 
 import java.util.Optional;
-
-import static com.ibm.icu.text.PluralRules.Operand.e;
 
 public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandler {
 
@@ -24,19 +21,33 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
     public Optional<BridgingPreContext> generatePlacementContextOverride(BridgingPreContext initialContext) {
         Player player = initialContext.player();
 
-        ClientSubLevelAccess subLevel = SableCompanion.INSTANCE.getContainingClient(player);
-        //SubLevelAccess subLevel = SableCompanion.INSTANCE.getTrackingSubLevel(player);
+        SubLevelAccess targetSubLevel = SableCompanion.INSTANCE.getTrackingSubLevel(player);
 
         // Not on a sublevel, so don't check bridging for it
-        if(subLevel == null)
+        if(targetSubLevel == null)
             return Optional.empty();
+
+        BridgingMod.getLogger().info("SubLevel check pass!");
 
         Position pos = initialContext.perspective().getPosition();
 
         return SableCompanion.INSTANCE.runIncludingSubLevels(
-                initialContext.level(), pos, true, subLevel,
+                initialContext.level(), pos, true, targetSubLevel,
                 (sublevel, block) -> {
-                    return null; // okay it'll be in this
+
+                    if (sublevel == null)
+                        return Optional.empty(); // Sanity check ig. Should be covered by above I think.
+
+                    // calc based on subLevel Logical pose
+                    Perspective newPerspective = new Perspective(
+
+                    );
+
+                    return Optional.of(new BridgingPreContext(
+                            initialContext.level(),
+                            newPerspective,
+                            initialContext.player()
+                    )); // okay it'll be in this
                 }
         );
     }
