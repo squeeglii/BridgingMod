@@ -2,7 +2,6 @@ package me.cg360.mod.bridging.raytrace;
 
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.SpecialHandlers;
-import me.cg360.mod.bridging.compat.type.SpecialBridgingEnvironmentHandler;
 import me.cg360.mod.bridging.config.selector.SourcePerspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Path;
@@ -12,7 +11,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -49,6 +47,7 @@ public class PathTraversalHandler {
         BridgingPreContext preContext = new BridgingPreContext(
                 player.level(),
                 initialPerspective,
+                Perspective.fromEntity(player),
                 player
         );
 
@@ -59,9 +58,9 @@ public class PathTraversalHandler {
                 .findFirst()
                 .orElse(preContext);
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(finalContext.player(), finalContext.perspective());
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(finalContext);
 
-        Vector3f viewDirection = finalContext.perspective().getLookVector();
+        Vector3f viewDirection = finalContext.cameraPerspective().getLookVector();
         List<Direction> validSides = PathTraversalHandler.getValidAssistSides(viewDirection);
 
         Direction validDirection = null;
@@ -107,15 +106,18 @@ public class PathTraversalHandler {
      * Generates a list of blocks which follow the reach line of a given
      * player from a certain distance.
      */
-    public static List<BlockPos> getViewBlockPath(Entity player, Perspective view) {
-        if(player == null)
+    public static List<BlockPos> getViewBlockPath(BridgingPreContext context) {
+        if(context.player() == null)
             return new ArrayList<>();
+
+        Perspective view = context.cameraPerspective();
+        Perspective local = context.playerPerspective();
 
         // Figure out the diff between the player's current edge of placement
         // & the camera's pos. This is now the max diff.
-        double playerReach = GameSupport.getReach();
-        Vec3 playerViewVec = player.getViewVector(1f).scale(playerReach);
-        Vec3 worldSpaceViewEnd = playerViewVec.add(player.getPosition(1f));
+        float playerReach = GameSupport.getReach();
+        Vec3 playerViewVec = new Vec3(local.getLookVector().mul(playerReach));
+        Vec3 worldSpaceViewEnd = playerViewVec.add(local.getPosition());
         Vec3 worldSpaceCameraOrigin = view.getPosition();
         double distance = worldSpaceViewEnd.distanceTo(worldSpaceCameraOrigin);
 

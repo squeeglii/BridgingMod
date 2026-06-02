@@ -3,10 +3,10 @@ package me.cg360.mod.bridging.util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.raytrace.PathTraversalHandler;
 import me.cg360.mod.bridging.raytrace.Perspective;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -14,7 +14,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -25,19 +24,19 @@ import java.util.List;
 
 public class Render {
 
-    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, Perspective view) {
+    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, BridgingPreContext context) {
         LocalPlayer player = Minecraft.getInstance().player;
 
         if(player == null)
             return;
 
-        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(player, view);
+        List<BlockPos> path = PathTraversalHandler.getViewBlockPath(context);
 
         if(path.isEmpty())
             return;
 
         for(BlockPos pos: path)
-            Render.cubeTrace(poseStack, vertexConsumer, view, pos);
+            Render.cubeTrace(poseStack, vertexConsumer, context.cameraPerspective(), pos);
     }
 
     public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Perspective view, BlockPos pos) {

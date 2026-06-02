@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.config.selector.SourcePerspective;
+import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Render;
@@ -61,8 +62,10 @@ public abstract class OutlineRendererMixin {
         SourcePerspective perspectiveLock = BridgingMod.getCompatibleSourcePerspective();
         Player player = Minecraft.getInstance().player;
 
-        if(player == null)
-            perspectiveLock = SourcePerspective.COPY_TOGGLE_PERSPECTIVE;
+        // There may be a few cases where this would be useful to still show bridging for,
+        // but that makes headaches.
+        if (player == null)
+            return;
 
         Perspective view = switch (perspectiveLock) {
             case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
@@ -72,12 +75,19 @@ public abstract class OutlineRendererMixin {
                     Perspective.fromEntity(player);
         };
 
+        BridgingPreContext preContext = new BridgingPreContext(
+                player.level(),
+                view,
+                Perspective.fromEntity(player),
+                player
+        );
+
         // Creating a fresh pose stack should be fine - the main pose stack is meant to be
         // empty before rendering the vanilla outline anyway. -1.21.1
         PoseStack poseStack = new PoseStack();
 
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
-            Render.blocksInViewPath(poseStack, vertices, view);
+            Render.blocksInViewPath(poseStack, vertices, preContext);
 
         if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, view, vertices);
         if(isNonBridgeOutlineEnabled) Render.currentNonBridgingOutline(poseStack, view, vertices);
