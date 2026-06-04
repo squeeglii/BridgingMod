@@ -51,12 +51,7 @@ public class PathTraversalHandler {
                 player
         );
 
-        BridgingPreContext finalContext = SpecialHandlers.getSpecialEnvironmentHandlers().stream()
-                .map(env -> env.generatePlacementContextOverride(preContext))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findFirst()
-                .orElse(preContext);
+        BridgingPreContext finalContext = PathTraversalHandler.adjustPathForSpecialHandlers(preContext);
 
         List<BlockPos> path = PathTraversalHandler.getViewBlockPath(finalContext);
 
@@ -205,6 +200,15 @@ public class PathTraversalHandler {
         return BridgingMod.getConfig().isNonSolidReplaceEnabled()
                 ? target.canBeReplaced() // Plants can be replaced ! Crush em all !!1!
                 : target.isAir(); // Plants (non-solids) can't be replaced - only allow self-declared 'air'
+    }
+
+    public static BridgingPreContext adjustPathForSpecialHandlers(BridgingPreContext initialContext) {
+        return SpecialHandlers.getSpecialEnvironmentHandlers().stream()
+                .map(env -> env.generatePlacementContextOverride(initialContext))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst()
+                .orElse(initialContext);
     }
 
 }

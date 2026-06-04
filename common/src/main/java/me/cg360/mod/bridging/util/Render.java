@@ -24,11 +24,15 @@ import java.util.List;
 
 public class Render {
 
-    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, BridgingPreContext context) {
+    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, BridgingPreContext initialContext) {
         LocalPlayer player = Minecraft.getInstance().player;
 
         if(player == null)
             return;
+
+
+        // Sable support inplements perspective modifiers:
+        BridgingPreContext context = PathTraversalHandler.adjustPathForSpecialHandlers(initialContext);
 
         List<BlockPos> path = PathTraversalHandler.getViewBlockPath(context);
 
