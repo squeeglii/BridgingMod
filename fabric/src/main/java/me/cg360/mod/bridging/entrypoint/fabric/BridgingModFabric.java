@@ -29,7 +29,7 @@ public class BridgingModFabric {
         }
 
         if(FabricLoader.getInstance().isModLoaded(ModIds.SABLE)) {
-            new SableCompat();
+            new SableCompat().setAsInstance();
         }
     }
 

@@ -1,18 +1,17 @@
-package me.cg360.mod.bridging.util;
+package me.cg360.mod.bridging.util.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
-import me.cg360.mod.bridging.raytrace.BridgingPreContext;
-import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
-import me.cg360.mod.bridging.raytrace.PathTraversalHandler;
-import me.cg360.mod.bridging.raytrace.Perspective;
+import me.cg360.mod.bridging.compat.SpecialHandlers;
+import me.cg360.mod.bridging.raytrace.*;
+import me.cg360.mod.bridging.util.GameSupport;
+import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -21,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Render {
 
@@ -110,14 +110,27 @@ public class Render {
     }
 
     public static void currentBridgingOutline(PoseStack poseStack, Perspective view, VertexConsumer vertices) {
-        Tuple<BlockPos, Direction> lastTarget = BridgingStateTracker.getLastTickTarget();
+        BridgingResult lastTarget = BridgingStateTracker.getLastTickTarget();
 
         if(lastTarget == null)
             return;
 
+        if(lastTarget.context().flags().hasAll(Flags.SKIP_OUTLINE_RENDERING))
+            return; // Usually if the rendering is in a weird state.
+
         int outlineColour = BridgingMod.getConfig().getOutlineColour().getRGB();
 
-        Render.cubeOutline(poseStack, vertices, view, lastTarget.getA(), outlineColour);
+        AtomicBoolean hasRendered = new AtomicBoolean(false);
+        CubeRenderTask renderTask = (poseStk, verts, perspective, pos, outlineCol) -> {
+            Render.cubeOutline(poseStk, verts, perspective, pos, outlineCol);
+            hasRendered.set(true);
+        };
+
+        SpecialHandlers.getSpecialEnvironmentHandlers()
+                .forEach(handler -> handler.transformOutlineRendering(lastTarget, renderTask, hasRendered.get()));
+
+        if(!hasRendered.get())
+            renderTask.render(poseStack, vertices, view, lastTarget.blockPos(), outlineColour);
     }
 
 }

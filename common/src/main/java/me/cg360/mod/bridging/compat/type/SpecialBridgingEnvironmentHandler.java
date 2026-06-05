@@ -1,13 +1,8 @@
 package me.cg360.mod.bridging.compat.type;
 
 import me.cg360.mod.bridging.raytrace.BridgingPreContext;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
+import me.cg360.mod.bridging.raytrace.BridgingResult;
+import me.cg360.mod.bridging.util.render.CubeRenderTask;
 
 import java.util.Optional;
 
@@ -22,5 +17,7 @@ public interface SpecialBridgingEnvironmentHandler {
     default Optional<BridgingPreContext> generatePlacementContextOverride(BridgingPreContext initialContext) {
         return Optional.empty();
     }
+
+    default void transformOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered) { }
 
 }

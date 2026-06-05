@@ -6,6 +6,7 @@ import me.cg360.mod.bridging.config.selector.SourcePerspective;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.Path;
 import me.cg360.mod.bridging.config.selector.PlacementAxisMode;
+import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -28,7 +29,7 @@ public class PathTraversalHandler {
      * @param player the player whose view line should be used.
      * @return the closest block position in view that supports bridge assist.
      */
-    public static Tuple<BlockPos, Direction> getClosestAssistTarget(Player player) {
+    public static BridgingResult getClosestAssistTarget(Player player) {
         ClientLevel level = Minecraft.getInstance().level;
 
         if(level == null)
@@ -48,7 +49,8 @@ public class PathTraversalHandler {
                 player.level(),
                 initialPerspective,
                 Perspective.fromEntity(player),
-                player
+                player,
+                Flags.empty()
         );
 
         BridgingPreContext finalContext = PathTraversalHandler.adjustPathForSpecialHandlers(preContext);
@@ -94,7 +96,7 @@ public class PathTraversalHandler {
         if(validDirection == null || validPos == null)
             return null;
 
-        return new Tuple<>(validPos, validDirection);
+        return new BridgingResult(validPos, validDirection, finalContext);
     }
 
     /**

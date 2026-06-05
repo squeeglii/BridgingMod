@@ -5,6 +5,7 @@ import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.building.Bridge;
 import me.cg360.mod.bridging.compat.type.SpecialBridgingItemHandler;
 import me.cg360.mod.bridging.compat.SpecialHandlers;
+import me.cg360.mod.bridging.raytrace.BridgingResult;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.InfoStrings;
@@ -16,7 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -81,9 +81,9 @@ public abstract class MinecraftClientMixin {
         if(!passesCrouchTest)
             return;
 
-        Tuple<BlockPos, Direction> pair = BridgingStateTracker.getLastTickTarget();
+        BridgingResult result = BridgingStateTracker.getLastTickTarget();
 
-        if (pair == null) return;
+        if (result == null) return;
 
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);
@@ -100,8 +100,8 @@ public abstract class MinecraftClientMixin {
                 continue;
             }
 
-            BlockPos pos = pair.getA();
-            Direction dir = pair.getB().getOpposite(); // Fixes placing on vertical axes -- doesn't affect most horizontal blocks for some reason.
+            BlockPos pos = result.blockPos();
+            Direction dir = result.direction().getOpposite(); // Fixes placing on vertical axes -- doesn't affect most horizontal blocks for some reason.
 
             InteractionResult blockPlaceResult = null;
             int originalStackSize = itemStack.getCount();

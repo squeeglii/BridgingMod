@@ -50,7 +50,7 @@ public class BridgingModNeoForge {
         }
 
         if(ModList.get().isLoaded(ModIds.SABLE)) {
-            new SableCompat();
+            new SableCompat().setAsInstance();
         }
     }
 

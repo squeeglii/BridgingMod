@@ -7,31 +7,27 @@ import me.cg360.mod.bridging.compat.SpecialHandlers;
 import me.cg360.mod.bridging.compat.impl.environment.SableEnvironmentHandler;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.VectorSupport;
-import org.joml.Quaterniond;
-import org.joml.Quaternionf;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
+import me.cg360.mod.bridging.util.flags.Flag;
+import org.joml.*;
+
+import java.util.Optional;
 
 public class SableCompat {
 
     public static final Vector3f FORWARD_VEC = new Vector3f(0.0F, 0.0F, -1.0F); //Camera.FORWARDS
 
+    public static final Flag IN_SUB_LEVEL = new Flag("WITHIN_SUB_LEVEL");
+
+
+    private static SableCompat instance = null;
+    private Pose3dc lastContraptionPose = null;
+
     public SableCompat() {
         SpecialHandlers.registerSpecialEnvironmentHandler(new SableEnvironmentHandler());
     }
 
-    // todo: new thought - there's a good chance all the outline rendering just won't work as
-    // Sable will have its own pipeline for rendering those far reaching regions. Try to just get the indicator working.
-
-    public static Pose3d perspectiveToPose(Perspective perspective) {
-        Quaternionf viewDeviation = new Quaternionf().rotationTo(FORWARD_VEC, perspective.getLookVector());
-
-        return new Pose3d(
-                new Vector3d(perspective.getPosition().toVector3f()),
-                new Quaterniond(viewDeviation),
-                new Vector3d(perspective.getPosition().toVector3f()),  // View rotated around position.
-                new Vector3d(1, 1, 1)
-        );
+    public void setAsInstance() {
+        instance = this;
     }
 
     // It's easier in my head to just take the two points and rotate them,
@@ -50,6 +46,26 @@ public class SableCompat {
                 () -> VectorSupport.toVector3f(lookPos)
         );
 
+    }
+
+    public void setLastContraptionPose(Pose3dc pose) {
+        this.lastContraptionPose = pose;
+    }
+
+    public void nullLastContraptionPose() {
+        this.lastContraptionPose = null;
+    }
+
+    public Pose3dc getLastContraptionPose() {
+        return this.lastContraptionPose;
+    }
+
+    public static SableCompat get() {
+        return instance;
+    }
+
+    public static Optional<SableCompat> getOpt() {
+        return Optional.ofNullable(instance);
     }
 
 }

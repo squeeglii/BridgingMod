@@ -7,7 +7,8 @@ import me.cg360.mod.bridging.config.selector.SourcePerspective;
 import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.GameSupport;
-import me.cg360.mod.bridging.util.Render;
+import me.cg360.mod.bridging.util.render.Render;
+import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -79,7 +80,8 @@ public abstract class OutlineRendererMixin {
                 player.level(),
                 view,
                 Perspective.fromEntity(player),
-                player
+                player,
+                Flags.empty()
         );
 
         // Creating a fresh pose stack should be fine - the main pose stack is meant to be
