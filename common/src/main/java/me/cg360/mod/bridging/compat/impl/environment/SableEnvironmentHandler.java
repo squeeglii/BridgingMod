@@ -3,12 +3,13 @@ package me.cg360.mod.bridging.compat.impl.environment;
 import dev.ryanhcode.sable.companion.SableCompanion;
 import dev.ryanhcode.sable.companion.SubLevelAccess;
 import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.compat.impl.SableCompat;
 import me.cg360.mod.bridging.compat.type.SpecialBridgingEnvironmentHandler;
 import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.player.Player;
-import org.joml.Quaternionf;
+import org.joml.*;
 
 import java.util.Optional;
 
@@ -19,7 +20,6 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
     @Override
     public Optional<BridgingPreContext> generatePlacementContextOverride(BridgingPreContext initialContext) {
         Player player = initialContext.player();
-
         SubLevelAccess targetSubLevel = SableCompanion.INSTANCE.getTrackingSubLevel(player);
 
         // Not on a sublevel, so don't check bridging for it
@@ -36,12 +36,8 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
                         return Optional.empty(); // Sanity check ig. Should be covered by above I think.
 
                     // calc based on subLevel Logical pose
-                    Perspective newPlayer = inSublevel(initialContext.playerPerspective(), sublevel);
-                    Perspective newCamera = inSublevel(initialContext.cameraPerspective(), sublevel);
-
-                    BridgingMod.getLogger().info("Camera: {}, {}", newCamera.getPosition(), newCamera.getLookVector());
-                    BridgingMod.getLogger().info("Player: {}, {}", newPlayer.getPosition(), newPlayer.getLookVector());
-                    BridgingMod.getLogger().info("Sublevel: {}", sublevel.boundingBox());
+                    Perspective newPlayer = SableCompat.transformOnPose(initialContext.playerPerspective(), sublevel.logicalPose());
+                    Perspective newCamera = SableCompat.transformOnPose(initialContext.cameraPerspective(), sublevel.logicalPose());
 
                     return Optional.of(new BridgingPreContext(
                             initialContext.level(),
@@ -50,16 +46,6 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
                             initialContext.player()
                     ));
                 }
-        );
-    }
-
-
-    public static Perspective inSublevel(Perspective perspective, SubLevelAccess sublevel) {
-        // todo: this probs needs work to rotate it around the correct origin. Look into new pose.
-
-        return new Perspective(
-                () -> sublevel.logicalPose().transformPosition(perspective.getPosition()),
-                () -> perspective.getLookVector().rotate(new Quaternionf(sublevel.logicalPose().orientation()))
         );
     }
 }

@@ -30,7 +30,6 @@ public class Render {
         if(player == null)
             return;
 
-
         // Sable support inplements perspective modifiers:
         BridgingPreContext context = PathTraversalHandler.adjustPathForSpecialHandlers(initialContext);
 
