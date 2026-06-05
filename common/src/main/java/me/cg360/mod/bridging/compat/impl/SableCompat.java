@@ -39,8 +39,6 @@ public class SableCompat {
         pose.transformPositionInverse(pos); // mutate pos.
         pose.transformPositionInverse(lookPos).sub(pos); // Mutate lookpos using contraption space pos.
 
-        BridgingMod.getLogger().info("Look Dir: {} (len: {})", lookPos, lookPos.length());
-
         return new Perspective(
                 () -> VectorSupport.toVec3(pos),
                 () -> VectorSupport.toVector3f(lookPos)

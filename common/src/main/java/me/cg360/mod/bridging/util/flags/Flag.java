@@ -7,13 +7,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Flag implements Comparable<Flag> {
 
-    private static AtomicInteger flagId;
+    private static final AtomicInteger flagIncrementor = new AtomicInteger(0);
 
     private final int id;
     private final String label; // debugging really. Doesn't do anything functional.
 
     public Flag(String label) {
-        this.id = flagId.getAndAdd(1);
+        this.id = flagIncrementor.getAndAdd(1);
         this.label = label;
     }
 

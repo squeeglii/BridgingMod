@@ -1,8 +1,12 @@
 package me.cg360.mod.bridging.compat.type;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.BridgingResult;
+import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.render.CubeRenderTask;
+import net.minecraft.core.BlockPos;
 
 import java.util.Optional;
 
@@ -18,6 +22,6 @@ public interface SpecialBridgingEnvironmentHandler {
         return Optional.empty();
     }
 
-    default void transformOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered) { }
+    default void transformOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered, PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) { }
 
 }

@@ -62,6 +62,8 @@ public class Render {
         double y = pos.getY() - camPos.y();
         double z = pos.getZ() - camPos.z();
 
+        BridgingMod.getLogger().info("Cube: {} {} {}", x, y, z);
+
         Shapes.block().forAllEdges((startX, startY, startZ, endX, endY, endZ) -> {
             float dx = (float)(endX - startX);
             float dy = (float)(endY - startY);
@@ -127,10 +129,13 @@ public class Render {
         };
 
         SpecialHandlers.getSpecialEnvironmentHandlers()
-                .forEach(handler -> handler.transformOutlineRendering(lastTarget, renderTask, hasRendered.get()));
+                .forEach(handler -> handler.transformOutlineRendering(
+                        lastTarget, renderTask, hasRendered.get(),
+                        poseStack, vertices, lastTarget.context().cameraPerspective(), lastTarget.blockPos(), outlineColour
+                ));
 
         if(!hasRendered.get())
-            renderTask.render(poseStack, vertices, view, lastTarget.blockPos(), outlineColour);
+            renderTask.render(poseStack, vertices, lastTarget.context().cameraPerspective(), lastTarget.blockPos(), outlineColour);
     }
 
 }
