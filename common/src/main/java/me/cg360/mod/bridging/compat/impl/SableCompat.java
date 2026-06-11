@@ -1,9 +1,8 @@
 package me.cg360.mod.bridging.compat.impl;
 
-import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
-import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.SpecialHandlers;
+import me.cg360.mod.bridging.compat.helper.RenderPoseProvider;
 import me.cg360.mod.bridging.compat.impl.environment.SableEnvironmentHandler;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.VectorSupport;
@@ -14,13 +13,13 @@ import java.util.Optional;
 
 public class SableCompat {
 
-    public static final Vector3f FORWARD_VEC = new Vector3f(0.0F, 0.0F, -1.0F); //Camera.FORWARDS
+    public static final RenderPoseProvider NULL_RENDER_POSE = partialTicks -> Optional.empty();
 
     public static final Flag IN_SUB_LEVEL = new Flag("WITHIN_SUB_LEVEL");
 
 
     private static SableCompat instance = null;
-    private Pose3dc lastContraptionPose = null;
+    private RenderPoseProvider lastContraptionPose = NULL_RENDER_POSE;
 
     public SableCompat() {
         SpecialHandlers.registerSpecialEnvironmentHandler(new SableEnvironmentHandler());
@@ -46,16 +45,16 @@ public class SableCompat {
 
     }
 
-    public void setLastContraptionPose(Pose3dc pose) {
-        this.lastContraptionPose = pose;
+    public void setLastContraptionPose(RenderPoseProvider poseProvider) {
+        this.lastContraptionPose = poseProvider;
     }
 
     public void nullLastContraptionPose() {
-        this.lastContraptionPose = null;
+        this.lastContraptionPose = NULL_RENDER_POSE;
     }
 
-    public Pose3dc getLastContraptionPose() {
-        return this.lastContraptionPose;
+    public Optional<Pose3dc> getLastContraptionPose(float partialTicks) {
+        return this.lastContraptionPose.getRenderPose(partialTicks);
     }
 
     public static SableCompat get() {

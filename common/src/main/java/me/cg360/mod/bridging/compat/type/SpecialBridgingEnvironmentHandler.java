@@ -22,6 +22,8 @@ public interface SpecialBridgingEnvironmentHandler {
         return Optional.empty();
     }
 
-    default void transformOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered, PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) { }
+    default void transformBridgingOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks, PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) { }
+
+    default void transformNonBridgingOutlineRendering(CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks, PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) { }
 
 }

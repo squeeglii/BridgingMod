@@ -1,5 +1,6 @@
 package me.cg360.mod.bridging.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
@@ -37,7 +38,7 @@ public abstract class OutlineRendererMixin {
                     shift = At.Shift.BEFORE,
                     ordinal = 0
             ))
-    public void renderTracedViewPath(DeltaTracker deltaTracker, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
+    public void renderTracedViewPath(DeltaTracker deltaTracker, boolean bl, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci, @Local(ordinal = 0) float f) {
         boolean isInDebugMenu = this.minecraft.getDebugOverlay().showDebugScreen();
 
         // Rules to display any bridging - whether these are followed or not depends on the config :)
@@ -60,7 +61,6 @@ public abstract class OutlineRendererMixin {
         MultiBufferSource.BufferSource bufferSource = this.renderBuffers.bufferSource();
         VertexConsumer vertices = bufferSource.getBuffer(RenderType.lines());
 
-        SourcePerspective perspectiveLock = BridgingMod.getCompatibleSourcePerspective();
         Player player = Minecraft.getInstance().player;
 
         // There may be a few cases where this would be useful to still show bridging for,
@@ -68,13 +68,7 @@ public abstract class OutlineRendererMixin {
         if (player == null)
             return;
 
-        Perspective view = switch (perspectiveLock) {
-            case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
-                    Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
-
-            case ALWAYS_EYELINE ->
-                    Perspective.fromEntity(player);
-        };
+        Perspective view = Perspective.getSourcePerspective(player);
 
         BridgingPreContext preContext = new BridgingPreContext(
                 player.level(),
@@ -91,7 +85,7 @@ public abstract class OutlineRendererMixin {
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
             Render.blocksInViewPath(poseStack, vertices, preContext);
 
-        if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, view, vertices);
+        if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, vertices, f);
         if(isNonBridgeOutlineEnabled) Render.currentNonBridgingOutline(poseStack, view, vertices);
 
         this.checkPoseStack(poseStack);

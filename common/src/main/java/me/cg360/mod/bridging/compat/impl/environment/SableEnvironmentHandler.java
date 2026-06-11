@@ -2,11 +2,11 @@ package me.cg360.mod.bridging.compat.impl.environment;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.ryanhcode.sable.companion.ClientSubLevelAccess;
 import dev.ryanhcode.sable.companion.SableCompanion;
 import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
-import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.compat.impl.SableCompat;
 import me.cg360.mod.bridging.compat.type.SpecialBridgingEnvironmentHandler;
 import me.cg360.mod.bridging.raytrace.BridgingPreContext;
@@ -56,7 +56,11 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
                     Flags flags;
 
                     if(optCompat.isPresent()) {
-                        optCompat.get().setLastContraptionPose(sublevel.logicalPose());
+                        optCompat.get().setLastContraptionPose(sublevel instanceof ClientSubLevelAccess clientSubLevel
+                                ? partialTicks -> Optional.ofNullable(clientSubLevel.renderPose(partialTicks))
+                                : partialTicks -> Optional.ofNullable(sublevel.logicalPose()) // Looks buggy, aim not to use this but the API is opaque.
+                        );
+
                         flags = initialContext.flags().extend(SableCompat.IN_SUB_LEVEL);
                     } else {
                         flags = initialContext.flags().extend(Flags.SKIP_OUTLINE_RENDERING);
@@ -74,8 +78,8 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
     }
 
     @Override
-    public void transformOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered,
-                                          PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) {
+    public void transformBridgingOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks,
+                                                  PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) {
 
         if(hasAlreadyRendered) return;
         if(!result.context().flags().hasAll(SableCompat.IN_SUB_LEVEL)) return;
@@ -83,8 +87,10 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
         SableCompat compat = SableCompat.get();
         if(compat == null) return;
 
-        Pose3dc pose = compat.getLastContraptionPose();
-        if(pose == null) return; // Shouldn't happen if SableCompat flag is set.
+        Optional<Pose3dc> optPose = compat.getLastContraptionPose(0f);
+        if(optPose.isEmpty()) return; // Shouldn't happen if SableCompat flag is set.
+
+        Pose3dc pose = optPose.get();
 
         Pose3d modifiedPose = new Pose3d(
                 new Vector3d(),
@@ -96,9 +102,12 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
         Matrix4d mat = modifiedPose.bakeIntoMatrix(new Matrix4d());
         Matrix4f mojangPose = new Matrix4f(mat);
 
+        Perspective frameAccuratePerspective = Perspective.getSourcePerspective(result.context().player(), 0f);
+        Perspective correctedPerspective = SableCompat.transformOnPose(perspective, pose);
+
         poseStack.pushPose();
         poseStack.mulPose(mojangPose);
-        task.render(poseStack, vertices, perspective, pos, outlineColour);
+        task.render(poseStack, vertices, correctedPerspective, pos, outlineColour);
         poseStack.popPose();
     }
 }

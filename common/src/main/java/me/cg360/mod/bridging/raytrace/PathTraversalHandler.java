@@ -35,15 +35,7 @@ public class PathTraversalHandler {
         if(level == null)
             return null;
 
-        SourcePerspective perspectiveLock = BridgingMod.getCompatibleSourcePerspective();
-
-        Perspective initialPerspective = switch (perspectiveLock) {
-            case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
-                    Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
-
-            case ALWAYS_EYELINE ->
-                    Perspective.fromEntity(player);
-        };
+        Perspective initialPerspective = Perspective.getSourcePerspective(player);
 
         BridgingPreContext preContext = new BridgingPreContext(
                 player.level(),
