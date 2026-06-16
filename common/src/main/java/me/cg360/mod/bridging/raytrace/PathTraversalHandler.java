@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -106,7 +105,7 @@ public class PathTraversalHandler {
         // Figure out the diff between the player's current edge of placement
         // & the camera's pos. This is now the max diff.
         float playerReach = GameSupport.getReach();
-        Vec3 playerViewVec = new Vec3(local.getLookVector().mul(playerReach));
+        Vec3 playerViewVec = new Vec3(local.getLookVector().mul(playerReach, new Vector3f()));
         Vec3 worldSpaceViewEnd = playerViewVec.add(local.getPosition());
         Vec3 worldSpaceCameraOrigin = view.getPosition();
         double distance = worldSpaceViewEnd.distanceTo(worldSpaceCameraOrigin);

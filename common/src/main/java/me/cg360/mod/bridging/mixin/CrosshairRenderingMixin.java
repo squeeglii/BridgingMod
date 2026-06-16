@@ -9,6 +9,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
@@ -20,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Gui.class)
+@Mixin(Hud.class)
 public class CrosshairRenderingMixin {
 
     @Unique
@@ -35,7 +36,7 @@ public class CrosshairRenderingMixin {
     public void renderPlacementAssistMarker(GuiGraphicsExtractor gui, DeltaTracker deltaTracker, CallbackInfo ci) {
         if(BridgingStateTracker.getLastTickTarget() == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
-        if(this.minecraft.options.hideGui) return;
+        if(this.minecraft.gameRenderer.gameRenderState().guiRenderState.isHudHidden) return;
 
         if(!BridgingMod.getConfig().shouldShowCrosshair()) return;
 

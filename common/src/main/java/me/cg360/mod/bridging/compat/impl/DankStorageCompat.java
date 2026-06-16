@@ -7,13 +7,13 @@ import net.minecraft.resources.Identifier;
 public class DankStorageCompat {
 
     public DankStorageCompat() {
-        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_1"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_2"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_3"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_4"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_5"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_6"), DankStorageHandler.INSTANCE);
-        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_7"), DankStorageHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_1"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_2"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_3"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_4"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_5"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_6"), DankStorageItemHandler.INSTANCE);
+        SpecialHandlers.registerSpecialItemHandler(Identifier.fromNamespaceAndPath("dankstorage", "dank_7"), DankStorageItemHandler.INSTANCE);
     }
 
 }

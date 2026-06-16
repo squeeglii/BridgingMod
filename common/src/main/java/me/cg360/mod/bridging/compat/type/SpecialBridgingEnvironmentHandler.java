@@ -6,6 +6,7 @@ import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.BridgingResult;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.render.CubeRenderTask;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.core.BlockPos;
 
 import java.util.Optional;
@@ -22,8 +23,8 @@ public interface SpecialBridgingEnvironmentHandler {
         return Optional.empty();
     }
 
-    default void transformBridgingOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks, PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) { }
+    default void transformBridgingOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Perspective perspective, BlockPos pos, int outlineColour) { }
 
-    default void transformNonBridgingOutlineRendering(CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks, PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) { }
+    default void transformNonBridgingOutlineRendering(CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Perspective perspective, BlockPos pos, int outlineColour) { }
 
 }

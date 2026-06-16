@@ -58,7 +58,7 @@ public abstract class MinecraftClientMixin {
                     ? InfoStrings.ON
                     : InfoStrings.OFF;
             Component text = InfoStrings.TOGGLE_BRIDGING.copy().append(stateMsg);
-            Minecraft.getInstance().gui.setOverlayMessage(text, false);
+            Minecraft.getInstance().gui.hud.setOverlayMessage(text, false);
         }
 
         BridgingStateTracker.tick(this.player);

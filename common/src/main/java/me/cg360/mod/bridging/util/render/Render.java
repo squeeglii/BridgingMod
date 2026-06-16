@@ -9,6 +9,8 @@ import me.cg360.mod.bridging.util.GameSupport;
 import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -24,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Render {
 
-    public static void blocksInViewPath(PoseStack poseStack, VertexConsumer vertexConsumer, BridgingPreContext initialContext) {
+    public static void blocksInViewPath(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, BridgingPreContext initialContext) {
         LocalPlayer player = Minecraft.getInstance().player;
 
         if(player == null)
@@ -39,49 +41,41 @@ public class Render {
             return;
 
         for(BlockPos pos: path)
-            Render.cubeTrace(poseStack, vertexConsumer, context.cameraPerspective(), pos);
+            Render.cubeTrace(poseStack, submitNodeCollector, context.cameraPerspective(), pos);
     }
 
-    public static void cubeHighlight(PoseStack poseStack, VertexConsumer vertices, Perspective view, BlockPos pos) {
-        Render.cubeOutline(poseStack, vertices, view, pos, 0x260099FF);
+    public static void cubeHighlight(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Perspective view, BlockPos pos) {
+        Render.cubeOutline(poseStack, submitNodeCollector, view, pos, 0x260099FF);
     }
 
-    public static void cubeTrace(PoseStack poseStack, VertexConsumer vertices, Perspective view, BlockPos pos) {
-        Render.cubeOutline(poseStack, vertices, view, pos, 0x16333333);
+    public static void cubeTrace(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Perspective view, BlockPos pos) {
+        Render.cubeOutline(poseStack, submitNodeCollector, view, pos, 0x16333333);
     }
 
-    public static void cubeTermination(PoseStack poseStack, VertexConsumer vertices, Perspective view, BlockPos pos) {
-        Render.cubeOutline(poseStack, vertices, view, pos, 0x7FFF0000);
+    public static void cubeTermination(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Perspective view, BlockPos pos) {
+        Render.cubeOutline(poseStack, submitNodeCollector, view, pos, 0x7FFF0000);
     }
 
-    public static void cubeOutline(PoseStack poseStack, VertexConsumer consumer, Perspective view, BlockPos pos, int argbColor) {
-        PoseStack.Pose pose = poseStack.last();
+    public static void cubeOutline(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Perspective view, BlockPos pos, int argbColor) {
         Vec3 camPos = view.getPosition();
 
         double x = pos.getX() - camPos.x();
         double y = pos.getY() - camPos.y();
         double z = pos.getZ() - camPos.z();
 
-        Shapes.block().forAllEdges((startX, startY, startZ, endX, endY, endZ) -> {
-            float dx = (float)(endX - startX);
-            float dy = (float)(endY - startY);
-            float dz = (float)(endZ - startZ);
-            float length = Mth.sqrt(dx * dx + dy * dy + dz * dz);
+        poseStack.pushPose();
 
-            consumer.addVertex(pose.pose(), (float)(startX + x), (float)(startY + y), (float)(startZ + z))
-                    .setColor(argbColor)
-                    .setNormal(pose, dx /= length, dy /= length, dz /= length)
-                    .setLineWidth(1);
+        poseStack.translate(x, y, z);
 
-            consumer.addVertex(pose.pose(), (float)(endX + x), (float)(endY + y), (float)(endZ + z))
-                    .setColor(argbColor)
-                    .setNormal(pose, dx, dy, dz)
-                    .setLineWidth(1);
-        });
+        float lineWidth = Minecraft.getInstance().gameRenderer.gameRenderState().windowRenderState.appropriateLineWidth;
+        boolean afterTerrain = (argbColor & 0xFF000000) > 0; // todo: vanilla checks translucency in the blockoutlinerenderstate - I think this might be blockstate based.
+        submitNodeCollector.submitShapeOutline(poseStack, Shapes.block(), RenderTypes.lines(), argbColor, lineWidth, true);
+
+        poseStack.popPose();
     }
 
 
-    public static void currentNonBridgingOutline(PoseStack poseStack, Perspective view, VertexConsumer vertices) {
+    public static void currentNonBridgingOutline(PoseStack poseStack, Perspective view, SubmitNodeCollector submitNodeCollector) {
         HitResult hit = Minecraft.getInstance().hitResult;
 
         // Skip non-placement hits.
@@ -108,10 +102,10 @@ public class Render {
             return;
 
         int outlineColour = BridgingMod.getConfig().getOutlineColour().getRGB();
-        Render.cubeOutline(poseStack, vertices, view, placeTarget, outlineColour);
+        Render.cubeOutline(poseStack, submitNodeCollector, view, placeTarget, outlineColour);
     }
 
-    public static void currentBridgingOutline(PoseStack poseStack, VertexConsumer vertices, float partialTicks) {
+    public static void currentBridgingOutline(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, float partialTicks) {
         BridgingResult lastTarget = BridgingStateTracker.getLastTickTarget();
 
         if(lastTarget == null)
@@ -131,11 +125,11 @@ public class Render {
         SpecialHandlers.getSpecialEnvironmentHandlers()
                 .forEach(handler -> handler.transformBridgingOutlineRendering(
                         lastTarget, renderTask, hasRendered.get(), partialTicks,
-                        poseStack, vertices, lastTarget.context().cameraPerspective(), lastTarget.blockPos(),
+                        poseStack, submitNodeCollector, lastTarget.context().cameraPerspective(), lastTarget.blockPos(),
                         outlineColour));
 
         if(!hasRendered.get())
-            renderTask.render(poseStack, vertices, lastTarget.context().cameraPerspective(), lastTarget.blockPos(), outlineColour);
+            renderTask.render(poseStack, submitNodeCollector, lastTarget.context().cameraPerspective(), lastTarget.blockPos(), outlineColour);
     }
 
 }

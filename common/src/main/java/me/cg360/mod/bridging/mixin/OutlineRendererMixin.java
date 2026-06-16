@@ -1,21 +1,16 @@
 package me.cg360.mod.bridging.mixin;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.cg360.mod.bridging.BridgingMod;
-import me.cg360.mod.bridging.config.selector.SourcePerspective;
 import me.cg360.mod.bridging.raytrace.BridgingPreContext;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.GameSupport;
-import me.cg360.mod.bridging.util.Render;
+import me.cg360.mod.bridging.util.render.Render;
 import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.entity.player.Player;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,16 +20,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LevelRenderer.class)
 public abstract class OutlineRendererMixin {
 
-    @Shadow @Final private RenderBuffers renderBuffers;
-    @Shadow @Final private Minecraft minecraft;
-
     @Shadow protected abstract void checkPoseStack(PoseStack poseStack);
 
-    @Inject(method = "renderBlockOutline",
+    @Inject(method = "submitBlockOutline",
             at = @At("HEAD")
             )
-    public void renderTracedViewPath(MultiBufferSource.BufferSource bufferSource, PoseStack poseStack, boolean bl, LevelRenderState levelRenderState, CallbackInfo ci, @Local(ordinal = 0) float f) {
-        boolean isInDebugMenu = this.minecraft.getDebugOverlay().showDebugScreen();
+    public void renderTracedViewPath(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, LevelRenderState levelRenderState, CallbackInfo ci) {
+        boolean isInDebugMenu = Minecraft.getInstance().getDebugOverlay().showDebugScreen();
 
         // Rules to display any bridging - whether these are followed or not depends on the config :)
         boolean isBridgingEnabled = BridgingMod.getConfig().isBridgingEnabled() &&
@@ -52,14 +44,6 @@ public abstract class OutlineRendererMixin {
         // Skip if nothing is valid to render.
         if(!(isOutlineEnabled || isNonBridgeOutlineEnabled))
             return;
-
-        VertexConsumer vertices = bufferSource.getBuffer(RenderTypes.lines());
-
-        // Creating a fresh pose stack should be fine - the main pose stack is meant to be
-        // empty before rendering the vanilla outline anyway.
-        //PoseStack poseStack = new PoseStack();
-        // what.
-
 
         Player player = Minecraft.getInstance().player;
 
@@ -79,10 +63,10 @@ public abstract class OutlineRendererMixin {
         );
 
         if(isInDebugMenu && BridgingMod.getConfig().shouldShowDebugTrace())
-            Render.blocksInViewPath(poseStack, vertices, preContext);
+            Render.blocksInViewPath(poseStack, submitNodeCollector, preContext);
 
-        if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, vertices, f);
-        if(isNonBridgeOutlineEnabled) Render.currentNonBridgingOutline(poseStack, view, vertices);
+        if(isOutlineEnabled) Render.currentBridgingOutline(poseStack, submitNodeCollector, 0f); //todo: where are partial ticks now.
+        if(isNonBridgeOutlineEnabled) Render.currentNonBridgingOutline(poseStack, view, submitNodeCollector);
 
         this.checkPoseStack(poseStack);
     }

@@ -13,7 +13,7 @@ dependencies {
     api "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
 
     compileOnly("maven.modrinth:dynamiccrosshair:${rootProject.dynamiccrosshair_version_artifact}-fabric:api")
-    api("dev.ryanhcode.sable-companion:sable-companion-common-${project.minecraft_version}:${rootProject.sable_companion_version}")
+    api("dev.ryanhcode.sable-companion:sable-companion-common-${rootProject.sable_companion_version}")
 
     // optional compat
     compileOnly("curse.maven:dankstorage-335673:${rootProject.dank_storage_file_id}")

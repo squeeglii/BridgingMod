@@ -14,6 +14,7 @@ import me.cg360.mod.bridging.raytrace.BridgingResult;
 import me.cg360.mod.bridging.raytrace.Perspective;
 import me.cg360.mod.bridging.util.flags.Flags;
 import me.cg360.mod.bridging.util.render.CubeRenderTask;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.player.Player;
@@ -79,7 +80,7 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
 
     @Override
     public void transformBridgingOutlineRendering(BridgingResult result, CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks,
-                                                  PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) {
+                                                  PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Perspective perspective, BlockPos pos, int outlineColour) {
 
         if(hasAlreadyRendered) return;
         if(!result.context().flags().hasAll(SableCompat.IN_SUB_LEVEL)) return;
@@ -107,7 +108,7 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
 
         poseStack.pushPose();
         poseStack.mulPose(mojangPose);
-        task.render(poseStack, vertices, correctedPerspective, pos, outlineColour);
+        task.render(poseStack, submitNodeCollector, correctedPerspective, pos, outlineColour);
         poseStack.popPose();
     }
 }

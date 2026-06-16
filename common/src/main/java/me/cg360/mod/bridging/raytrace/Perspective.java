@@ -49,7 +49,7 @@ public class Perspective {
 
         return switch (perspectiveLock) {
             case COPY_TOGGLE_PERSPECTIVE, LET_BRIDGING_MOD_DECIDE ->
-                    Perspective.fromCamera(Minecraft.getInstance().gameRenderer.getMainCamera());
+                    Perspective.fromCamera(Minecraft.getInstance().gameRenderer.mainCamera());
 
             case ALWAYS_EYELINE ->
                     Perspective.fromEntity(player, partialTicks);
