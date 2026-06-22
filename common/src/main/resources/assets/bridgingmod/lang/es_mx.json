@@ -2,7 +2,7 @@
     "bridgingmod.config.failed_integration.title": "¡Configuración de UI desactivada!",
     "bridgingmod.config.failed_integration.description": "La configuración del mod está desactivada en SnapShots",
 
-    "key.categories.bridgingmod": "Bridging mod",
+    "key.category.bridgingmod.category": "Bridging mod",
     "key.bridgingmod.toggle_bridging": "Alternar Puentes",
 
     "config.bridgingmod.title": "Bridging mod",
