@@ -63,7 +63,7 @@ public class BridgingConfig extends DefaultValueTracker {
     private boolean showCrosshair = true;
     @Category("vfx") @SerialEntry
     @IncludeImage("textures/gui/config/bridging_outline.png")
-    private boolean showOutline = false;
+    private boolean showOutline = true;
     @Category("vfx") @SerialEntry
     @IncludeImage("textures/gui/config/non_bridging_outline.png")
     private boolean showOutlineEvenWhenNotBridging = false;
