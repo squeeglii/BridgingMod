@@ -3,7 +3,9 @@ package me.cg360.mod.bridging.mixin;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.cg360.mod.bridging.BridgingMod;
-import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
+import me.cg360.mod.bridging.compat.SpecialHandlers;
+import me.cg360.mod.bridging.compat.type.SpecialBridgingEnvironmentHandler;
+import me.cg360.mod.bridging.raytrace.BridgingResult;
 import me.cg360.mod.bridging.raytrace.PlacementAlignment;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;
@@ -22,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Optional;
+
 @Mixin(Gui.class)
 public class CrosshairRenderingMixin {
 
@@ -36,9 +40,7 @@ public class CrosshairRenderingMixin {
             at = @At(value = "TAIL"))
     public void renderPlacementAssistMarker(GuiGraphics gui, DeltaTracker deltaTracker, CallbackInfo ci) {
         if(BridgingStateTracker.getLastTickTarget() == null) return;
-        if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;
-
         if(!BridgingMod.getConfig().shouldShowCrosshair()) return;
 
         boolean isBridgingActive = BridgingMod.getConfig().isBridgingEnabled() &&
@@ -47,7 +49,13 @@ public class CrosshairRenderingMixin {
         if(!isBridgingActive)
             return;
 
-        Direction direction = BridgingStateTracker.getLastTickTarget().direction();
+        BridgingResult result = BridgingStateTracker.getLastTickTarget();
+        boolean forceHideCrosshair = SpecialHandlers.getSpecialEnvironmentHandlers().stream().anyMatch(handler -> handler.forceHideCrosshair(result));
+
+        if(forceHideCrosshair)
+            return;
+
+        Direction direction = result.direction();
         PlacementAlignment alignment = PlacementAlignment.from(direction);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -68,7 +76,7 @@ public class CrosshairRenderingMixin {
         int x = ((w - ICON_SIZE + 1) / 2);
         int y = ((h - ICON_SIZE + 1) / 2);
 
-        y += BridgingCrosshairTweaks.yShift;
+        y += bridgingmod$getModCompatCrosshairHeight();
         y += this.debugOverlay.showDebugScreen() ? 15 : 0;
 
         gui.blitSprite(
@@ -81,6 +89,23 @@ public class CrosshairRenderingMixin {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+    }
+
+    @Unique
+    private static int bridgingmod$getModCompatCrosshairHeight() {
+        boolean wasModified = false;
+        int currentShift = 0;
+
+        for (SpecialBridgingEnvironmentHandler handler: SpecialHandlers.getSpecialEnvironmentHandlers()) {
+            Optional<Integer> optShift = handler.modifyCrosshairHeight(currentShift, wasModified);
+
+            if (optShift.isPresent()) {
+                currentShift = optShift.get();
+                wasModified = true;
+            }
+        }
+
+        return currentShift;
     }
 
 }

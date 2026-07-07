@@ -1,6 +1,8 @@
 package me.cg360.mod.bridging.compat.impl;
 
 import me.cg360.mod.bridging.BridgingMod;
+import me.cg360.mod.bridging.compat.SpecialHandlers;
+import me.cg360.mod.bridging.compat.impl.environment.DyCrosshairEnvironmentHandler;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;
 import mod.crend.dynamiccrosshairapi.DynamicCrosshairApi;
@@ -10,6 +12,10 @@ import mod.crend.dynamiccrosshairapi.interaction.InteractionType;
 import net.minecraft.world.phys.HitResult;
 
 public class DynamicCrosshairCompat implements DynamicCrosshairApi {
+
+	public DynamicCrosshairCompat() {
+		SpecialHandlers.registerSpecialEnvironmentHandler(new DyCrosshairEnvironmentHandler());
+	}
 
 	@Override
 	public String getNamespace() {

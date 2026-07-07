@@ -1,7 +1,6 @@
 package me.cg360.mod.bridging.building;
 
 import me.cg360.mod.bridging.BridgingMod;
-import me.cg360.mod.bridging.compat.BridgingCrosshairTweaks;
 import me.cg360.mod.bridging.compat.SpecialHandlers;
 import me.cg360.mod.bridging.raytrace.BridgingStateTracker;
 import me.cg360.mod.bridging.util.GameSupport;

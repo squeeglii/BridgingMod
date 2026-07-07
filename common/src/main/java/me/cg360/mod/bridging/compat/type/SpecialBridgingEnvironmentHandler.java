@@ -26,4 +26,10 @@ public interface SpecialBridgingEnvironmentHandler {
 
     default void transformNonBridgingOutlineRendering(CubeRenderTask task, boolean hasAlreadyRendered, float partialTicks, PoseStack poseStack, VertexConsumer vertices, Perspective perspective, BlockPos pos, int outlineColour) { }
 
+    default boolean forceHideCrosshair(BridgingResult result) { return false; }
+
+    default Optional<Integer> modifyCrosshairHeight(int yShift, boolean alreadyModified) {
+        return Optional.empty();
+    }
+
 }
