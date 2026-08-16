@@ -29,6 +29,9 @@ public class CrosshairRenderingMixin {
     @Unique
     private static final int ICON_SIZE = 31;
 
+    @Unique
+    private static boolean bridgingmod$loggedActive = false;
+
     @Shadow @Final private Minecraft minecraft;
 
     @Shadow @Final private DebugScreenOverlay debugOverlay;
@@ -36,6 +39,11 @@ public class CrosshairRenderingMixin {
     @Inject(method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At(value = "TAIL"))
     public void renderPlacementAssistMarker(GuiGraphics gui, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if(!bridgingmod$loggedActive) {
+            bridgingmod$loggedActive = true;
+            com.mojang.logging.LogUtils.getLogger().info("[BridgingMod/trace] CrosshairRenderingMixin is active");
+        }
+
         if(BridgingStateTracker.getLastTickTarget() == null) return;
         if(BridgingCrosshairTweaks.forceHidden) return;
         if(this.minecraft.options.hideGui) return;

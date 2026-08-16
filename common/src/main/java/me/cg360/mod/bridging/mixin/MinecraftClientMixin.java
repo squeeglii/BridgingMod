@@ -38,8 +38,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Minecraft.class)
+@Mixin(value = Minecraft.class, priority = 2000)
 public abstract class MinecraftClientMixin {
+
+    @Unique
+    private static final org.slf4j.Logger bridgingmod$LOGGER = LogUtils.getLogger();
+
+    @Unique
+    private int bridgingmod$heartbeatTicks = 0;
 
     @Unique
     private double bridgingmod$lastKnownYFrac = 0;
@@ -54,6 +60,16 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("TAIL"), method = "tick()V")
     public void onTick(CallbackInfo ci) {
+
+        this.bridgingmod$heartbeatTicks++;
+        if(this.bridgingmod$heartbeatTicks >= 20) {
+            this.bridgingmod$heartbeatTicks = 0;
+            bridgingmod$LOGGER.info(
+                    "[BridgingMod/trace] heartbeat debugTrace=%s bridgingEnabled=%s",
+                    BridgingMod.getConfig().shouldShowDebugTrace(),
+                    BridgingMod.getConfig().isBridgingEnabled()
+            );
+        }
 
         if(this.player != null && this.player.onGround()) {
             this.bridgingmod$lastKnownYFrac = Mth.frac(this.player.getY());
@@ -75,39 +91,77 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("HEAD"), method = "startUseItem()V", cancellable = true)
     public void onItemUse(CallbackInfo info) {
-        if(!BridgingMod.getConfig().isBridgingEnabled()) return;
-        if(this.player == null) return;
-        if(this.gameMode == null) return;
-        if(this.player.isHandsBusy() || this.gameMode.isDestroying()) return;
+        if(!BridgingMod.getConfig().isBridgingEnabled()) {
+            bridgingmod$trace("skip: bridging disabled");
+            return;
+        }
+        if(this.player == null) {
+            bridgingmod$trace("skip: player null");
+            return;
+        }
+        if(this.gameMode == null) {
+            bridgingmod$trace("skip: gameMode null");
+            return;
+        }
+        if(this.player.isHandsBusy() || this.gameMode.isDestroying()) {
+            bridgingmod$trace("skip: handsBusy=%s destroying=%s", this.player.isHandsBusy(), this.gameMode.isDestroying());
+            return;
+        }
 
         // Should only bridge if all other options to interact are exhausted
-        if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) return;
+        if(this.hitResult != null && this.hitResult.getType() != HitResult.Type.MISS) {
+            bridgingmod$trace("skip: vanilla hitResult=%s", this.hitResult.getType());
+            return;
+        }
 
         boolean passesCrouchTest = !BridgingMod.getConfig().shouldOnlyBridgeWhenCrouched() ||
                                     this.player.isCrouching();
 
-        if(!passesCrouchTest)
+        if(!passesCrouchTest) {
+            bridgingmod$trace("skip: crouch rule failed (crouching=%s)", this.player.isCrouching());
             return;
+        }
 
         Tuple<BlockPos, Direction> pair = BridgingStateTracker.getLastTickTarget();
 
-        if (pair == null) return;
+        if (pair == null) {
+            bridgingmod$trace("skip: no bridge target this tick");
+            return;
+        }
+
+        bridgingmod$trace("target: pos=%s dir=%s", pair.getA(), pair.getB());
 
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.player.getItemInHand(hand);
 
-            BlockPos pos = pair.getA();
-            Direction dir = pair.getB().getOpposite(); // Fixes placing on vertical axes -- doesn't affect most horizontal blocks for some reason.
-
-            if (!this.player.mayUseItemAt(pos, dir, itemStack))
+            if(!GameSupport.isStackPlaceable(itemStack)) {
+                bridgingmod$trace("hand %s: not placeable item=%s", hand, itemStack.getItem());
                 continue;
+            }
+
+            BlockPos pos = pair.getA();
+            Direction dir = pair.getB();
 
             BlockHitResult blockHitResult = bridgingmod$getFinalPlaceAssistTarget(itemStack, dir, pos);
 
             int originalStackSize = itemStack.getCount();
             InteractionResult blockPlaceResult = this.gameMode.useItemOn(this.player, hand, blockHitResult);
+            bridgingmod$trace("hand %s: useItemOn dir=%s result=%s", hand, dir, blockPlaceResult);
 
-            if (!blockPlaceResult.consumesAction()) continue;
+            if (!blockPlaceResult.consumesAction()) {
+                Direction fallbackDir = dir.getOpposite();
+
+                if (fallbackDir != dir) {
+                    BlockHitResult fallbackTarget = bridgingmod$getFinalPlaceAssistTarget(itemStack, fallbackDir, pos);
+                    blockPlaceResult = this.gameMode.useItemOn(this.player, hand, fallbackTarget);
+                    bridgingmod$trace("hand %s: fallback dir=%s result=%s", hand, fallbackDir, blockPlaceResult);
+                }
+            }
+
+            if (!blockPlaceResult.consumesAction()) {
+                bridgingmod$trace("hand %s: no action consumed", hand);
+                continue;
+            }
 
             // if successful place occurred, cancel all future behaviour for
             // item placement as this takes over instead. Stops off-hand
@@ -115,10 +169,14 @@ public abstract class MinecraftClientMixin {
             this.rightClickDelay = Math.max(0, BridgingMod.getConfig().getDelayPostBridging());
             info.cancel();
 
-            if (!blockPlaceResult.shouldSwing()) return;
+            if (!blockPlaceResult.shouldSwing()) {
+                bridgingmod$trace("hand %s: placed without swing, end", hand);
+                return;
+            }
 
             this.player.swing(hand);
             boolean stackSizeChanged = itemStack.getCount() != originalStackSize || this.gameMode.hasInfiniteItems();
+            bridgingmod$trace("hand %s: placed success stackChanged=%s", hand, stackSizeChanged);
 
             if (stackSizeChanged && !itemStack.isEmpty()) {
                 Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
@@ -191,5 +249,13 @@ public abstract class MinecraftClientMixin {
 
         Vec3 placerOrigin = Vec3.atCenterOf(pos);
         return new BlockHitResult(placerOrigin, dir, buildingOffPos, false);
+    }
+
+    @Unique
+    private void bridgingmod$trace(String template, Object... args) {
+        if(!BridgingMod.getConfig().shouldShowDebugTrace())
+            return;
+
+        bridgingmod$LOGGER.info("[BridgingMod/trace] " + template.formatted(args));
     }
 }

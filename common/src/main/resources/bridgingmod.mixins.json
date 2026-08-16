@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "me.cg360.mod.bridging.mixin",
   "compatibilityLevel": "JAVA_17",
+  "refmap": "BridgingMod-common-refmap.json",
   "mixins": [],
   "client": [
     "CrosshairRenderingMixin",

@@ -50,6 +50,7 @@ subprojects {
 		filteringCharset "UTF-8"
 
 		HashMap modifiedSrc = new HashMap<>(project.properties)
+		modifiedSrc.put("build_timestamp", new Date().format("yyyy-MM-dd HH:mm:ss Z"))
 		modifiedSrc.put("mod_id", project.properties["archives_base_name"].toString().toLowerCase())
 		modifiedSrc.put("version", formattedBaseVersion)
 

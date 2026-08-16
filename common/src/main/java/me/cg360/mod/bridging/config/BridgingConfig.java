@@ -1,25 +1,19 @@
 package me.cg360.mod.bridging.config;
 
-import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
-import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import me.cg360.mod.bridging.BridgingMod;
 import me.cg360.mod.bridging.config.helper.*;
 import me.cg360.mod.bridging.util.PlacementAxisMode;
 import me.cg360.mod.bridging.util.PlacementAxisModeOverride;
-import net.fabricmc.loader.api.FabricLoader;
 
 import java.awt.*;
 
 public class BridgingConfig extends DefaultValueTracker {
 
-    public static ConfigClassHandler<BridgingConfig> HANDLER = ConfigClassHandler.createBuilder(BridgingConfig.class)
-            .id(BridgingMod.id("main"))
-            .serializer(config -> GsonConfigSerializerBuilder.create(config)
-                    .setPath(FabricLoader.getInstance().getConfigDir().resolve(BridgingMod.MOD_ID + ".json"))
-                    .setJson5(false)
-                    .build())
-            .build();
+    public static SimpleConfigHandler<BridgingConfig> HANDLER = new SimpleConfigHandler<>(
+            SimpleConfigHandler.resolveDefaultPath(BridgingMod.MOD_ID),
+            BridgingConfig.class,
+            BridgingConfig::new
+    );
 
     public BridgingConfig() {
         this.upgrade();
@@ -27,39 +21,39 @@ public class BridgingConfig extends DefaultValueTracker {
     }
 
 
-    @SerialEntry @HideInConfigUI
+    @HideInConfigUI
     private int version = 3;
 
-    @Category("feature") @SerialEntry
+    @Category("feature")
     @IncludeAnimatedImage("textures/gui/config/bridging.webp")
     @IncludeExtraDescription
     private boolean enableBridgingAssist = true;
-    @Category("feature") @SerialEntry
+    @Category("feature")
     @IncludeExtraDescription
     private boolean onlyBridgeWhenCrouched = false;
-    @Category("feature") @SerialEntry
+    @Category("feature")
     private PlacementAxisMode supportedBridgeAxes = PlacementAxisMode.BOTH;
-    @Category("feature") @SerialEntry
+    @Category("feature")
     private PlacementAxisModeOverride supportedBridgeAxesWhenCrouched = PlacementAxisModeOverride.FALLBACK;
-    @Category("feature") @SerialEntry
+    @Category("feature")
     @IncludeExtraDescription(extraParagraphs = 2)
     @DiscreteRange(min = 0, max = 20)
     private int delayPostBridging = 4; // 4 is vanilla - 3 allows for better forward bridging.
 
 
-    @Category("vfx") @SerialEntry
+    @Category("vfx")
     @IncludeImage("textures/gui/config/show_crosshair.png")
     private boolean showCrosshair = true;
-    @Category("vfx") @SerialEntry
+    @Category("vfx")
     @IncludeImage("textures/gui/config/bridging_outline.png")
     private boolean showOutline = false;
-    @Category("vfx") @SerialEntry
+    @Category("vfx")
     @IncludeImage("textures/gui/config/non_bridging_outline.png")
     private boolean showOutlineEvenWhenNotBridging = false;
-    @Category("vfx") @SerialEntry
+    @Category("vfx")
     @IncludeExtraDescription
     private boolean nonBridgeRespectsCrouchRules = true;
-    @Category("vfx") @SerialEntry
+    @Category("vfx")
     @IncludeImage("textures/gui/config/outline_colour.png")
     @IncludeExtraDescription
     private Color outlineColour = new Color(0, 0, 0, 0.4f);
@@ -67,20 +61,20 @@ public class BridgingConfig extends DefaultValueTracker {
 
     /* = Fixes = */
     /* Fixes are simple toggles that are a bit too nitpicky for the features tab.*/
-    @Category("fixes") @SerialEntry
+    @Category("fixes")
     private boolean skipTorchBridging = true;
-    @Category("fixes") @SerialEntry
+    @Category("fixes")
     @IncludeExtraDescription(extraParagraphs = 3)
     private boolean enableSlabAssist = true;
-    @Category("fixes") @SerialEntry
+    @Category("fixes")
     private boolean enableNonSolidReplace = true;
 
 
-    @Category("debug") @SerialEntry
+    @Category("debug")
     private boolean showDebugHighlight = true;
-    @Category("debug") @SerialEntry
+    @Category("debug")
     private boolean showNonBridgingDebugHighlight = false;
-    @Category("debug") @SerialEntry
+    @Category("debug")
     private boolean showDebugTrace = false;
 
 
@@ -153,9 +147,33 @@ public class BridgingConfig extends DefaultValueTracker {
         return this.skipTorchBridging;
     }
 
+    public void setBridgingEnabled(boolean enableBridgingAssist) {
+        this.enableBridgingAssist = enableBridgingAssist;
+    }
+
+    public void setOnlyBridgeWhenCrouched(boolean onlyBridgeWhenCrouched) {
+        this.onlyBridgeWhenCrouched = onlyBridgeWhenCrouched;
+    }
+
+    public void setShowCrosshair(boolean showCrosshair) {
+        this.showCrosshair = showCrosshair;
+    }
+
+    public void setShowOutline(boolean showOutline) {
+        this.showOutline = showOutline;
+    }
+
+    public void setShowOutlineEvenWhenNotBridging(boolean showOutlineEvenWhenNotBridging) {
+        this.showOutlineEvenWhenNotBridging = showOutlineEvenWhenNotBridging;
+    }
+
+    public void save() {
+        BridgingConfig.HANDLER.save();
+    }
+
     public void toggleBridgingEnabled() {
         this.enableBridgingAssist = !this.isBridgingEnabled();
-        BridgingConfig.HANDLER.save();
+        this.save();
     }
 
     public void upgrade() {

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class DefaultValueTracker {
 
-    private HashMap<String, Object> defaultValues = null;
+    private transient HashMap<String, Object> defaultValues = null;
 
     public void saveDefaults() {
         if(this.defaultValues != null) {
