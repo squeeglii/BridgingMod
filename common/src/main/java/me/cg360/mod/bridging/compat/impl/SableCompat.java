@@ -18,6 +18,11 @@ public class SableCompat {
     public static final Flag IN_SUB_LEVEL = new Flag("WITHIN_SUB_LEVEL");
 
 
+    //TODO: To fix:
+    // - Crosshair indicators can be incorrect on rotated structure. Account for.
+    // - Outline is broken on contraption bridging again. poo.
+
+
     private static SableCompat instance = null;
     private RenderPoseProvider lastContraptionPose = NULL_RENDER_POSE;
 

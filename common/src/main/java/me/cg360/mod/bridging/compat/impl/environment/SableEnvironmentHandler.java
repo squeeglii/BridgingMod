@@ -87,7 +87,7 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
         SableCompat compat = SableCompat.get();
         if(compat == null) return;
 
-        Optional<Pose3dc> optPose = compat.getLastContraptionPose(0f);
+        Optional<Pose3dc> optPose = compat.getLastContraptionPose(partialTicks);
         if(optPose.isEmpty()) return; // Shouldn't happen if SableCompat flag is set.
 
         Pose3dc pose = optPose.get();
@@ -102,8 +102,8 @@ public class SableEnvironmentHandler implements SpecialBridgingEnvironmentHandle
         Matrix4d mat = modifiedPose.bakeIntoMatrix(new Matrix4d());
         Matrix4f mojangPose = new Matrix4f(mat);
 
-        Perspective frameAccuratePerspective = Perspective.getSourcePerspective(result.context().player(), 0f);
-        Perspective correctedPerspective = SableCompat.transformOnPose(perspective, pose);
+        Perspective frameAccuratePerspective = Perspective.getSourcePerspective(result.context().player(), partialTicks);
+        Perspective correctedPerspective = SableCompat.transformOnPose(frameAccuratePerspective, pose);
 
         poseStack.pushPose();
         poseStack.mulPose(mojangPose);
