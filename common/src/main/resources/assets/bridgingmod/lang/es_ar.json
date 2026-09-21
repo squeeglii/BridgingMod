@@ -2,7 +2,7 @@
   "bridgingmod.config.failed_integration.title": "¡UI de configuración desactivada!",
   "bridgingmod.config.failed_integration.description": "No se pudo abrir la UI de configuración. Si estás en una snapshot, por favor no informes esto como un error.",
 
-  "key.categories.bridgingmod": "Mod de Puentes",
+  "key.category.bridgingmod.category": "Mod de Puentes",
   "key.bridgingmod.toggle_bridging": "Alternar colocación por extensión",
 
   "notif.bridgingmod.toggle_bridging": "Colocación por extensión alternada",
@@ -105,5 +105,5 @@
   "config.bridgingmod.option.showNonBridgingDebugHighlight": "Mostrar contorno de bloque sin puentes en F3",
   "config.bridgingmod.option.showNonBridgingDebugHighlight.description.0": "Ver Visuales -> Mostrar contorno de bloque sin puentes, pero con F3",
   "config.bridgingmod.option.showDebugTrace": "Mostrar rastro de bloque para puentes en F3",
-  "config.bridgingmod.option.showDebugTrace.description.0": "Dibuja ligeramente el contorno de todas las posiciones de bloques que se han comprobado y omitido al intentar encontrar un objetivo de construcción. ¡Bastante distraído!"
+  "config.bridgingmod.option.showDebugTrace.description.0": "Dibuja ligeramente el contorno de todas las posiciones de bloques que se han comprobado y omitido al intentar encontrar un objetivo de construcción. ¡Bastante distraído!",
 }
