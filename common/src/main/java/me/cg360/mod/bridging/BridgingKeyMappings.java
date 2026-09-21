@@ -3,7 +3,6 @@ package me.cg360.mod.bridging;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -15,7 +14,7 @@ public class BridgingKeyMappings {
     private static final ArrayList<KeyMapping> KEY_MAPPINGS = new ArrayList<>();
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "category"));
 
-    public static final KeyMapping TOGGLE_BRIDGING = defineMapping(new KeyMapping("key.bridgingmod.toggle_bridging", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_COMMA, CATEGORY));
+    public static final KeyMapping TOGGLE_BRIDGING = defineMapping(new KeyMapping("key.bridgingmod.toggle_bridging", InputConstants.Type.KEYBOARD, InputConstants.KEY_COMMA, CATEGORY));
 
 
 

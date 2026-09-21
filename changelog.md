@@ -1,6 +1,6 @@
 ## Changelog for 2.7.0
 
-- 26.2 Support
+- 26.2 & 26.3 Support
 - Brazilian Portuguese translation by @PrincessStellar
 - Fixed keymapping ordering (@cassiancc)
 - Significant backend API changes to block targeting.

@@ -20,6 +20,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
@@ -142,14 +143,16 @@ public abstract class MinecraftClientMixin {
             this.rightClickDelay = Math.max(0, BridgingMod.getConfig().getDelayPostBridging());
             info.cancel();
 
-            if(successResult.swingSource() != InteractionResult.SwingSource.CLIENT)
+            if(successResult.swingSource() != InteractionResult.SwingSource.PREDICTED)
                 return;
 
-            this.player.swing(hand);
+            SwingAnimation swingAnimation = itemStack.getInteractAnimation();
+
+            this.player.swing(hand, swingAnimation, false);
             boolean stackSizeChanged = itemStack.getCount() != originalStackSize || this.player.hasInfiniteMaterials();
 
             if (stackSizeChanged && !itemStack.isEmpty()) {
-                Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
+                this.player.itemUsed(hand);
             }
 
             return;
