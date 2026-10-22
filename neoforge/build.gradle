@@ -116,6 +116,8 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     mainFile.changelogType = "markdown"
     mainFile.changelog = new File(project.getRootDir(), "changelog.md")
 
+    mainFile.addGameVersion("Client")
+
     for(String version: getSupportedVersions(project.properties))
         mainFile.addGameVersion(version)
 
