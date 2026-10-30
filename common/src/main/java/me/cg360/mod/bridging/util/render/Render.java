@@ -10,6 +10,7 @@ import me.cg360.mod.bridging.util.flags.Flags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -68,8 +69,14 @@ public class Render {
         poseStack.translate(x, y, z);
 
         float lineWidth = Minecraft.getInstance().gameRenderer.gameRenderState().windowRenderState.appropriateLineWidth;
-        boolean afterTerrain = (argbColor & 0xFF000000) > 0; // todo: vanilla checks translucency in the blockoutlinerenderstate - I think this might be blockstate based.
-        submitNodeCollector.submitShapeOutline(poseStack, Shapes.block(), RenderTypes.lines(), argbColor, lineWidth, true);
+
+        // Vanilla hitbox rendering passes translucency & high-contrast requirement through
+        // a state. We don't have that here, so hopefully this suffices.
+        RenderType renderType = Minecraft.getInstance().gameRenderer.useImprovedTransparency()
+                ? RenderTypes.linesTranslucentNoDepthWrite()
+                : RenderTypes.linesTranslucent();
+
+        submitNodeCollector.submitShapeOutline(poseStack, Shapes.block(), renderType, argbColor, lineWidth, true);
 
         poseStack.popPose();
     }
